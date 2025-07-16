@@ -14,29 +14,44 @@
     overflow-x: hidden;
   }
   
-  /* 🧁 Bannière */
+/* 🧁 Bannière */
+.banniere {
+  background-color: var(--rose-foncé);
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.banniere h1 {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  color: var(--blanc);
+  font-size: 2.2rem;
+  margin: 0.3rem 0;
+}
+
+.banniere p {
+  color: var(--rose-clair);
+  font-size: 1rem;
+  margin: 0.2rem 0;
+}
+
+/* 📱 Responsive pour mobiles */
+@media (max-width: 768px) {
   .banniere {
-    background-color: var(--rose-foncé);
-    padding: 2rem;
-    text-align: center;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 1rem;
   }
-  
+
   .banniere h1 {
-    font-family: 'Times New Roman', Times, serif;
-    font-weight: bold;
-    color: var(--blanc);
-    font-size: 3rem;
-    margin: 0;
-  }  
-  
-  .banniere p {
-    color: var(--rose-clair);
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
+    font-size: 1.6rem;
   }
+
+  .banniere p {
+    font-size: 0.9rem;
+  }
+}
   
   /* 🖼️ Galerie */
   .galerie {

@@ -88,18 +88,22 @@
     <p>Une question ou une demande ? Écris-nous 💌</p>
   </header>
 
-  <form class="form-contact" action="mailto:minipalettesroses@email.com" method="POST" enctype="text/plain">
-    <label for="nom">Nom :</label>
-    <input type="text" id="nom" name="Nom" required />
+<form class="form-contact" action="https://formsubmit.co/b1620718a3039f63beda7f60e577dfed" method="POST"> <!-- Remplacer b1620718a3039f63beda7f60e577dfed par le bon email de réception -->
+  <label for="nom">Nom :</label>
+  <input type="text" id="nom" name="Nom" required />
 
-    <label for="email">Courriel :</label>
-    <input type="email" id="email" name="Courriel" required />
+  <label for="email">Courriel :</label>
+  <input type="email" id="email" name="Courriel" required />
 
-    <label for="message">Message :</label>
-    <textarea id="message" name="Message" rows="5" required></textarea>
+  <label for="message">Message :</label>
+  <textarea id="message" name="Message" rows="5" required></textarea>
 
-    <button type="submit" class="btn-envoyer">📨 Envoyer</button>
-  </form>
+  <!-- Champs cachés -->
+<input type="hidden" name="_next" id="next-url">
+  <input type="hidden" name="_captcha" value="false">
+
+  <button type="submit" class="btn-envoyer">📨 Envoyer</button>
+</form>
 
   <div style="text-align: center;">
     <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
@@ -114,5 +118,11 @@
       document.getElementById('footer-container').outerHTML = data;
     });
 </script>
+
+<script>
+  // Détecte dynamiquement l'URL de base et construit le lien vers merci.html
+  document.getElementById('next-url').value = window.location.origin + '/merci.html';
+</script>
+
 </body>
 </html>
