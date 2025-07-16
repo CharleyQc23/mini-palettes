@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nous rejoindre | Mini Palettes Roses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 2rem;
+      background-color: #fff8fb;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--rose-foncé, #e91e63);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-contact {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-contact label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    .form-contact input,
+    .form-contact textarea {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 0.3rem;
+      font-size: 1rem;
+    }
+
+    .btn-envoyer {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.5rem;
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-envoyer:hover {
+      background-color: #c2185b;
+    }
+
+    .btn-retour {
+      display: inline-block;
+      margin-top: 2rem;
+      color: var(--rose-foncé, #e91e63);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn-retour:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <header>
+    <h1>Nous rejoindre</h1>
+    <p>Une question ou une demande ? Écris-nous 💌</p>
+  </header>
+
+  <form class="form-contact" action="mailto:minipalettesroses@email.com" method="POST" enctype="text/plain">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="Nom" required />
+
+    <label for="email">Courriel :</label>
+    <input type="email" id="email" name="Courriel" required />
+
+    <label for="message">Message :</label>
+    <textarea id="message" name="Message" rows="5" required></textarea>
+
+    <button type="submit" class="btn-envoyer">📨 Envoyer</button>
+  </form>
+
+  <div style="text-align: center;">
+    <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+  </div>
+
+<div id="footer-container"></div>
+
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+</body>
+</html>

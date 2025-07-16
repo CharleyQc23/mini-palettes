@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confirmation de commande</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    main {
+      max-width: 700px;
+      margin: 2rem auto;
+      background-color: var(--blanc);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+      text-align: left;
+    }
+    li {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    li strong {
+      font-size: 1.15rem;
+      color: var(--rose-foncé, #c2185b);
+    }
+    #total-final {
+      font-size: 1.3rem;
+      color: var(--rose-foncé, #c2185b);
+    }
+    #checkout-button {
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    #checkout-button:hover {
+      background-color: #c2185b;
+    }
+    .btn-retour {
+      margin-top: 2rem;
+      background-color: #eee;
+      border: none;
+      color: var(--rose-foncé, #c2185b);
+      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-retour:hover {
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+    }
+  </style>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+<header class="banniere">
+  <div class="entete-logo-texte">
+    <a href="index.html">
+      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site" />
+    </a>
+    <div>
+      <h1>Mini Palettes Roses</h1>
+      <p>La boutique officielle des futures Palettes Roses!</p>
+    </div>
+  </div>
+  <a href="a-propos.html" class="btn-contact">🏒 À propos de nous</a>
+  <a href="contact.html" class="btn-contact">📩 Nous rejoindre</a>
+</header>
+
+<main>
+  <h2>Merci pour ta commande ! 💖</h2>
+  <p>Voici le résumé :</p>
+  <ul id="recap-commande"></ul>
+  <p><strong>Total : <span id="total-final">0.00</span> $</strong></p>
+
+  <!-- Bouton Stripe -->
+  <button id="checkout-button">Procéder au paiement</button>
+
+  <button class="btn-retour" onclick="window.location.href='index.html'">← Retour à l'accueil</button>
+</main>
+
+<script>
+  const panier = JSON.parse(sessionStorage.getItem('dernierPanier')) || JSON.parse(localStorage.getItem('panier')) || [];
+  const recap = document.getElementById('recap-commande');
+  const totalSpan = document.getElementById('total-final');
+  let total = 0;
+
+  if (panier.length === 0) {
+    recap.innerHTML = "<li>Ton panier était vide.</li>";
+  } else {
+    panier.forEach(item => {
+      total += item.prix;
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${item.nom}</strong><br>
+        Taille : ${item.taille}<br>
+        Personnalisation : ${item.personnalisation}<br>
+        ${item.nom_broderie ? `Nom brodé : ${item.nom_broderie}<br>` : ''}
+        ${item.numero_broderie ? `Numéro brodé : ${item.numero_broderie}<br>` : ''}
+        Quantité : ${item.quantite}<br>
+        Prix : ${item.prix.toFixed(2)} $
+      `;
+      recap.appendChild(li);
+    });
+  }
+
+  totalSpan.textContent = total.toFixed(2);
+
+  // Nettoyage du stockage (optionnel, à ajuster selon besoin)
+  localStorage.removeItem('panier');
+  sessionStorage.removeItem('dernierPanier');
+</script>
+
+<!-- Inclure ton script Stripe paiement -->
+<script src="paiement.js"></script>
+
+<div id="footer-container"></div>
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+:root {
+    --rose-clair: #fce4ec;
+    --rose: #f8bbd0;
+    --rose-foncé: #ec407a;
+    --blanc: #ffffff;
+    --gris: #f5f5f5;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--rose-clair);
+    color: var(--rose-foncé);
+    overflow-x: hidden;
+  }
+  
+  /* 🧁 Bannière */
+  .banniere {
+    background-color: var(--rose-foncé);
+    padding: 2rem;
+    text-align: center;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .banniere h1 {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: var(--blanc);
+    font-size: 3rem;
+    margin: 0;
+  }  
+  
+  .banniere p {
+    color: var(--rose-clair);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* 🖼️ Galerie */
+  .galerie {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .produit {
+    background-color: var(--blanc);
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+  
+  .produit:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  
+  .produit img {
+    max-width: 100%;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+  }
+  
+  .produit:hover img {
+    transform: scale(1.05);
+  }
+  
+  .produit h3 {
+    margin: 0.8rem 0 0.3rem;
+    font-size: 1.2rem;
+    color: var(--rose-foncé);
+  }
+  
+  .produit p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.3rem 0 1rem;
+  }
+  
+  /* 🛍️ Bouton Ajouter au panier */
+  .btn-ajouter {
+    background-color: var(--rose-foncé);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-ajouter:hover {
+    background-color: #c2185b;
+    transform: scale(1.05);
+  }
+  
+  /* 🛒 Bouton fixe pour ouvrir le panier */
+  #btn-panier {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background-color: var(--rose-foncé);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+  }
+  
+  #btn-panier:hover {
+    background-color: #c2185b;
+  }
+  
+  /* 🧾 Sidebar panier */
+  #sidebar-panier {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    height: 100%;
+    background-color: var(--blanc);
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+    padding: 2rem 1.5rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+  }
+  
+  #sidebar-panier.open {
+    transform: translateX(0);
+  }
+  
+  /* ❌ Bouton fermer */
+  #btn-fermer-panier {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--rose-foncé);
+  }
+  
+  /* 📝 Contenu du panier */
+  #sidebar-panier h2 {
+    margin-top: 2rem;
+    color: var(--rose-foncé);
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  
+  #sidebar-panier ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+  
+  #sidebar-panier li {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* 💳 Bouton Paiement */
+  #payer {
+    margin-top: 1.5rem;
+    width: 100%;
+    background-color: var(--rose-foncé);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  #payer:hover {
+    background-color: #c2185b;
+    transform: scale(1.03);
+  }
+  
+  .btn-supprimer {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1rem;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  .btn-supprimer:hover {
+    color: darkred;
+  }
+  #vider-panier {
+  margin-top: 0.7rem;
+  padding: 0.6rem 1rem;
+  background-color: var(--rose-foncé, #e91e63);
+  border: 2px solid transparent;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#vider-panier:hover {
+  background-color: #c2185b;
+  transform: scale(1.03);
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+#btn-panier.pop {
+  animation: pop 0.3s ease;
+}
+
+.section-contact {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #fff0f6;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.section-contact h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--rose-foncé, #e91e63);
+  font-family: 'Pacifico', cursive;
+}
+
+.form-contact label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.form-contact input,
+.form-contact textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.btn-envoyer {
+  margin-top: 1.5rem;
+  background-color: var(--rose-foncé, #e91e63);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+}
+
+.btn-envoyer:hover {
+  background-color: #c2185b;
+}
+
+.btn-contact {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--rose-foncé, #e91e63);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ✅ l’ombre douce */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-contact:hover {
+  background-color: #c2185b;
+  transform: scale(1.03);
+}
+.entete-logo-texte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.logo-site {
+  height: 115px;
+  width: auto;
+}
+
+.footer {
+  background-color: var(--rose-foncé);
+  color: var(--blanc);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  margin-top: 3rem;
+}
+
+.footer .contenu-footer p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.lien-footer {
+  color: var(--rose-clair);
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.lien-footer:hover {
+  text-decoration: underline;
+  color: white;
+}
+.footer {
+  background-color: var(--rose-foncé);
+  color: white;
+  padding: 1rem 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+  text-align: center; /* Centre le contenu */
+}
+
+.footer-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column; /* Empile verticalement */
+  align-items: center;
+  gap: 0rem; /* Espace entre logo et texte */
+}
+
+.footer-socials a {
+  display: inline-block;
+  transition: opacity 0.3s ease;
+}
+
+.footer-socials a:hover {
+  opacity: 0.7;
+}
+
+.social-icon {
+  width: 32px;
+  height: 32px;
+  filter: invert(1); /* Icône blanche */
+}
+
+.bandeau-taxes {
+  background-color: #d81b60;
+  color: white;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10000;
+}
+
+.btn-panier:hover {
+  background-color: #c2185b;
+}

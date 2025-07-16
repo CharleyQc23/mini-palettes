@@ -1,0 +1,28 @@
+{
+  "name": "site-web",
+  "version": "1.0.0",
+  "main": "paiement.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CharleyQc23/Mini-Palettes-Roses.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CharleyQc23/Mini-Palettes-Roses/issues"
+  },
+  "homepage": "https://github.com/CharleyQc23/Mini-Palettes-Roses#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "stripe": "^18.3.0"
+  }
+  
+}

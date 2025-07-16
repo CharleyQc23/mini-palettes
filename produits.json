@@ -1,0 +1,45 @@
+{
+
+
+    "pantalon-noir": {
+      "nom": "Pantalon noir sport",
+      "prix": 47,
+      "image": "images/pantalon-noir.png"
+    },
+    "kangourou-blanc": {
+      "nom": "Kangourou blanc",
+      "prix": 39,
+      "image": "images/kangourou-blanc.png"
+    },
+    "kangourou-noir": {
+      "nom": "Kangourou noir",
+      "prix": 47,
+      "image": "images/kangourou-noir.png"
+    },
+
+    "tuque-pompon-fausse-fourrure-blanche": {
+      "nom": "Tuque pompon fausse fourrure blanche",
+      "prix": 36,
+      "image": "images/tuque-pompon-blanche.png"
+    },
+
+    "tuque-pompon-fausse-fourrure-noire": {
+      "nom": "Tuque pompon en fausse fourrure noire",
+      "prix": 36,
+      "image": "images/tuque-pompon-noire.png"
+    },
+
+    "T-shirt-Femmes-col-V": {
+      "nom": "T-shirt Femmes col V",
+      "prix": 30,
+      "image": "images/t-shirt-Femmes-col-V.png"
+    },
+
+    "T-shirt-manches-longues": {
+      "nom": "T-shirt manches longues",
+      "prix": 35,
+      "image": "images/t-shirt-manches-longues.png"
+    }
+
+  }
+  

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paiement réussi - Mini Palettes Roses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 3rem;
+      background: #fff0f6;
+      color: #c2185b;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+    a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Merci pour ta commande ! 🎉</h1>
+  <p>Ton paiement a été reçu avec succès.</p>
+  <p>Nous préparons ta commande et te contacterons bientôt.</p>
+  <p><a href="index.html">Retour à l'accueil</a></p>
+    <script>
+    // Vider le panier local après achat réussi
+    localStorage.removeItem('panier');
+  </script>
+</body>
+</html>

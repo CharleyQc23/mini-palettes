@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Palettes Roses - Accueil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .accueil {
+      padding: 3rem 1rem;
+      text-align: center;
+      background: #fff0f6;
+    }
+
+    .accueil h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #c2185b;
+    }
+
+    .accueil p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-rose {
+      padding: 0.8rem 1.6rem;
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-rose:hover {
+      background-color: #c2185b;
+      transform: scale(1.05);
+    }
+
+    .image-accueil {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      margin-top: 2rem;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    nav {
+      margin-top: 1rem;
+    }
+
+    nav a {
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="banniere">
+  <div class="entete-logo-texte">
+    <a href="index.html">
+      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+    </a>
+    <div>
+      <h1>Mini-palettes roses</h1>
+      <p>La boutique officielle des futures Palettes Roses!</p>
+    </div>
+  </div>
+</header>
+
+<style>
+/* Slider */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 1s ease, transform 1s ease;
+  z-index: 0;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+.slide-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.slide-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #c2185b;
+}
+
+.slide-content a {
+  text-decoration: none;
+}
+
+/* Bouton rose réutilisé */
+.btn-rose {
+  padding: 0.8rem 1.6rem;
+  background-color: var(--rose-foncé, #e91e63);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+}
+.btn-rose:hover {
+  background-color: #c2185b;
+  transform: scale(1.05);
+}
+
+/* Flèches */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 3rem;
+  color: #c2185b;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+.arrow:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+.arrow.left {
+  left: 20px;
+}
+.arrow.right {
+  right: 20px;
+}
+
+/* Masquer les flèches sur mobile */
+@media (max-width: 768px) {
+  .arrow {
+    display: none;
+  }
+
+  .slide-content {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .slide-content h2 {
+    font-size: 1.5rem;
+  }
+}
+  </style>
+  
+  <div class="slider">
+    <div class="slide active" style="background-image: url('images/slide-boutique.webp');">
+      <div class="slide-content">
+        <h2>Découvrez nos produits personnalisés</h2>
+        <a href="boutique.html" class="btn-rose">Boutique</a>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('images/slide-apropos.webp');">
+      <div class="slide-content">
+        <h2>Notre mission pour les joueuses</h2>
+        <a href="a-propos.html" class="btn-rose">🏒 À propos</a>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('images/slide-contact.webp');">
+      <div class="slide-content">
+        <h2>Une question ou demande d'inscription? Contactez-nous!</h2>
+        <a href="contact.html" class="btn-rose">📩 Contact</a>
+      </div>
+    </div>
+  
+    <!-- Flèches -->
+    <button class="arrow left" id="prevSlide">‹</button>
+    <button class="arrow right" id="nextSlide">›</button>
+  </div>
+  
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevSlide');
+    const nextBtn = document.getElementById('nextSlide');
+    let current = 0;
+    let slideInterval;
+  
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) slide.classList.add('active');
+      });
+      current = index;
+    }
+  
+    function nextSlide() {
+      const next = (current + 1) % slides.length;
+      showSlide(next);
+    }
+  
+    function prevSlideFunc() {
+      const prev = (current - 1 + slides.length) % slides.length;
+      showSlide(prev);
+    }
+  
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      resetInterval();
+    });
+  
+    prevBtn.addEventListener('click', () => {
+      prevSlideFunc();
+      resetInterval();
+    });
+  
+    function resetInterval() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, 6000);
+    }
+  
+    slideInterval = setInterval(nextSlide, 6000);
+  </script>
+  
+
+
+<main>
+  <section class="accueil">
+    <h2>Bienvenue chez les mini-palettes roses!</h2>
+    <p>
+    </p>
+    <a href="boutique.html" class="btn-rose">Découvrir la boutique</a>
+    <br />
+  </section>
+</main>
+
+<div id="footer-container"></div>
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+
+</body>
+</html>
+
+<!-- Force rebuild: [delete later] -->

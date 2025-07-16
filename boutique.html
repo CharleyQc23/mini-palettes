@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Palettes Roses - Boutique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+#galerie-produits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.produit {
+  width: 200px;
+  border: 1px solid #eee;
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  background: #fff0f6;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+.produit:hover {
+  transform: scale(1.02);
+}
+
+.produit img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.lien-produit {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.btn-ajouter {
+  margin-top: 0.7rem;
+  padding: 0.6rem 1rem;
+  background-color: var(--rose-foncé, #e91e63);
+  border: 2px solid transparent;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn-ajouter:hover {
+  background-color: #c2185b;
+  transform: scale(1.03);
+}
+
+.btn-supprimer {
+  background-color: white;
+  border: 2px solid #c2185b;
+  color: #c2185b;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.btn-supprimer:hover {
+  background-color: #c2185b;
+  color: white;
+}
+
+  </style>
+</head>
+
+<body>
+<div class="bandeau-taxes">
+  TOUS LES PRIX INCLUENT LES TAXES
+</div>
+
+<header class="banniere">
+  <div class="entete-logo-texte">
+    <a href="index.html">
+      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+    </a>
+    <div>
+      <h1>Mini-palettes roses</h1>
+      <p>La boutique officielle des futures Palettes Roses!</p>
+    </div>
+  </div>
+    <a href="index.html" class="btn-contact">🏠 Accueil</a>
+    <a href="a-propos.html" class="btn-contact">🏒 À propos</a>
+    <a href="contact.html" class="btn-contact">📩 Nous rejoindre</a>
+</header>
+
+<button id="btn-panier" title="Voir le panier">🛒 Panier (<span id="nb-items">0</span>)</button>
+
+<div id="sidebar-panier" class="sidebar-closed">
+  <button id="btn-fermer-panier">✖</button>
+  <h2>Ton panier</h2>
+  <ul id="liste-panier"></ul>
+  <p><strong>Total : <span id="total">0.00</span> $</strong></p>
+  <button id="vider-panier">🧹 Vider le panier</button>
+  <button id="payer">Procéder au paiement</button>
+</div>
+
+<main>
+  <section id="galerie-produits" class="galerie"></section>
+</main>
+
+<script>
+  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+  function majNbItems() {
+    document.getElementById('nb-items').textContent = panier.length;
+  }
+
+  function afficherPanier() {
+    const liste = document.getElementById('liste-panier');
+    liste.innerHTML = '';
+    let total = 0;
+
+    panier.forEach((item, index) => {
+      total += item.prix;
+      const li = document.createElement('li');
+      li.innerHTML = `${item.nom} (${item.taille || "?"}, ${item.personnalisation || "aucune"}) - ${item.prix.toFixed(2)} $ <button class="btn-supprimer" data-index="${index}" title="Supprimer">🗑️</button>`;
+      liste.appendChild(li);
+    });
+
+    document.getElementById('total').textContent = total.toFixed(2);
+    majNbItems();
+
+    document.querySelectorAll('.btn-supprimer').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const i = parseInt(e.target.dataset.index);
+        panier.splice(i, 1);
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+    });
+  }
+
+  document.getElementById('btn-panier').addEventListener('click', () => {
+    document.getElementById('sidebar-panier').classList.toggle('open');
+  });
+
+  document.getElementById('btn-fermer-panier').addEventListener('click', () => {
+    document.getElementById('sidebar-panier').classList.remove('open');
+  });
+
+  document.getElementById('vider-panier').addEventListener('click', () => {
+    if (confirm("Vider tout le panier ?")) {
+      panier = [];
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    }
+  });
+
+  fetch('produits.json')
+    .then(res => res.json())
+    .then(produits => {
+      const container = document.getElementById('galerie-produits');
+      container.innerHTML = '';
+
+      for (const idProduit in produits) {
+        const p = produits[idProduit];
+        const divProduit = document.createElement('div');
+        divProduit.className = 'produit';
+        divProduit.dataset.nom = p.nom;
+        divProduit.dataset.prix = p.prix;
+        divProduit.innerHTML = `
+          <a href="produit.html?id=${idProduit}" class="lien-produit">
+            <img src="${p.image}" alt="${p.nom}" />
+            <h3>${p.nom}</h3>
+            <p>${p.prix.toFixed(2)} $</p>
+          </a>
+        `;
+        container.appendChild(divProduit);
+      }
+    });
+
+  afficherPanier();
+
+  // Paiement via Stripe Checkout
+  document.getElementById('payer').addEventListener('click', async () => {
+    if (panier.length === 0) {
+      alert("Ton panier est vide !");
+      return;
+    }
+    try {
+      const response = await fetch('https://mini-palettes-roses.onrender.com/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ panier }),
+      });
+      const data = await response.json();
+
+      if (data.id) {
+  // On sauvegarde le panier temporairement pour success.html
+  sessionStorage.setItem('dernierPanier', JSON.stringify(panier));
+
+  const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr');
+  await stripe.redirectToCheckout({ sessionId: data.id });
+} else {
+  alert('Erreur lors de la création de la session de paiement.');
+}
+    } catch (error) {
+      console.error('Erreur paiement:', error);
+      alert('Erreur lors du paiement. Regarde la console.');
+    }
+  });
+</script>
+
+<div id="footer-container"></div>
+
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+
+</body>
+</html>

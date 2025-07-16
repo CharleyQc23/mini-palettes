@@ -1,0 +1,25 @@
+Pour ajouter un produit:
+
+1. Ajouter l'image du produit dans le dossier "images" et modifier le nom du fichier de l'image en ajoutant .png
+Ex: Un kangourou noir doit se nommer: Kangourou-noir.png
+
+2. Aller dans l'onglet produits.json
+
+3. Copier ceci à la place où vous voulez ajouter le produit:     
+
+,
+"NOM PRODUIT": {
+      "nom": "NOM PRODUIT",
+      "prix": 47,
+      "image": "images/NOM_PRODUIT.png"
+    }
+
+    Notes : Changer NOM PRODUIT par le nom désiré. 
+            Changer le prix, mais SANS ajouter de signe de $. 
+            Changer le NOM_Produit.png par le nom de l'image de l'étape 1
+
+Normalement tout est beau, juste s'assurer de se trouver entre la première et dernière {}, et sans empieter sur les autres produits.
+
+Si vous rencontrez des difficultées, n'hésitez-pas à contacter Charles Guernon: (514)-706-9379 ou c.guernon@hotmail.ca
+
+test
