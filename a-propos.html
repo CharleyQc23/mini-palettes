@@ -12,11 +12,6 @@
       padding: 0;
     }
 
-    h1 {
-      font-family: 'Pacifico', cursive;
-      color: var(--rose-foncé, #e91e63);
-      margin-bottom: 0.5rem;
-    }
     .contenu {
       max-width: 800px;
       margin: 2rem auto;
@@ -66,18 +61,23 @@
 <body>
 
 <header class="banniere">
-  <div class="entete-logo-texte">
-    <a href="index.html">
-      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-    </a>
-    <div>
-      <h1>Mini-palettes roses</h1>
-      <p>Apprends-en plus sur l’univers des Palettes Roses 💕</p>
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>Apprends-en plus sur l’univers des Palettes Roses 💕</p>
+      </div>
     </div>
+
+    <nav class="menu-nav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
   </div>
-  <a href="index.html" class="btn-contact">🏠 Accueil</a>
-  <a href="boutique.html" class="btn-contact">🛍 Boutique</a>
-  <a href="contact.html" class="btn-contact">📩 Nous rejoindre</a>
 </header>
 
   <main>
