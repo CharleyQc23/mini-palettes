@@ -66,16 +66,25 @@
 <body>
 
 <header class="banniere">
-  <div class="entete-logo-texte">
-    <a href="index.html">
-      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-    </a>
-    <div>
-      <h1>Mini-palettes roses</h1>
-      <p>La boutique officielle des futures Palettes Roses!</p>
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>La boutique des futures Palettes Roses!</p>
+      </div>
     </div>
+
+    <nav class="menu-nav">
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="a-propos.html" class="nav-link">À propos</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
   </div>
 </header>
+
 
 <style>
 /* Slider */
@@ -250,6 +259,36 @@
     }
   
     slideInterval = setInterval(nextSlide, 6000);
+
+    // Variables pour le swipe tactile
+let touchStartX = 0;
+let touchEndX = 0;
+
+const sliderElement = document.querySelector('.slider');
+
+// Enregistre la position de départ du doigt
+sliderElement.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+// Enregistre la position finale du doigt et détermine la direction du swipe
+sliderElement.addEventListener('touchend', (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipeGesture();
+});
+
+function handleSwipeGesture() {
+  const swipeThreshold = 50; // Minimum en px pour considérer un vrai swipe
+
+  if (touchEndX < touchStartX - swipeThreshold) {
+    nextSlide(); // Swipe gauche → prochaine diapo
+    resetInterval();
+  } else if (touchEndX > touchStartX + swipeThreshold) {
+    prevSlideFunc(); // Swipe droite → diapo précédente
+    resetInterval();
+  }
+}
+
   </script>
   
 
