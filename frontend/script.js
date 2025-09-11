@@ -1,10 +1,12 @@
 let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
+// --- Mise à jour du nombre d'articles dans l'icône panier
 function majNbItems() {
   const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
   document.getElementById('nb-items').textContent = totalArticles;
 }
 
+// --- Affichage du panier
 function afficherPanier() {
   const liste = document.getElementById('liste-panier');
   liste.innerHTML = '';
@@ -42,7 +44,7 @@ function afficherPanier() {
       const i = parseInt(e.target.dataset.index);
       panier.splice(i, 1);
       localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier(); // Recharge après suppression
+      afficherPanier();
     });
   });
 
@@ -51,20 +53,18 @@ function afficherPanier() {
     input.addEventListener('change', e => {
       const i = parseInt(e.target.dataset.index);
       let qte = parseInt(e.target.value);
-
       if (isNaN(qte) || qte < 1) qte = 1;
       if (qte > 10) qte = 10;
-
-      input.value = qte; // Corrige si out of bounds
+      input.value = qte;
       panier[i].quantite = qte;
       panier[i].prix = panier[i].prixUnitaire * qte;
       localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier(); // Recharge après mise à jour
+      afficherPanier();
     });
   });
 }
 
-// --- Événements sidebar
+// --- Sidebar panier
 document.getElementById('btn-panier').addEventListener('click', () => {
   document.getElementById('sidebar-panier').classList.toggle('open');
 });
@@ -78,11 +78,37 @@ document.getElementById('vider-panier').addEventListener('click', () => {
     afficherPanier();
   }
 });
-document.getElementById('payer').addEventListener('click', () => {
-  window.location.href = 'confirmation.html';
+
+// --- Bouton Payer avec Stripe Checkout
+document.getElementById('payer').addEventListener('click', async () => {
+  if (panier.length === 0) {
+    alert("Ton panier est vide !");
+    return;
+  }
+
+  try {
+    // 1️⃣ Création de la session Stripe via backend
+    const response = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panier: panier })
+    });
+
+    const session = await response.json();
+
+    // 2️⃣ Initialiser Stripe avec la clé publique
+    const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr'); // remplace par ta clé publique
+
+    // 3️⃣ Redirection vers Stripe Checkout
+    const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
+    if (error) alert("Erreur lors de la redirection vers Stripe.");
+  } catch (err) {
+    console.error(err);
+    alert("Erreur serveur, impossible de créer la session de paiement.");
+  }
 });
 
-// --- Charger produit si page produit
+// --- Charger un produit si page produit
 const params = new URLSearchParams(window.location.search);
 const idProduit = params.get('id');
 
