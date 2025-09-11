@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>A propos - Mini Palettes Roses</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contenu {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .contenu h2 {
+      color: #c2185b;
+      margin-bottom: 1rem;
+    }
+
+    .contenu p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-retour {
+      margin-top: 2rem;
+      background-color: var(--gris);
+      border: none;
+      color: var(--rose-foncé);
+      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-retour:hover {
+      background-color: var(--rose);
+    }
+
+    .signature {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+      color: #c2185b;
+      margin-top: 2rem;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+<header class="banniere">
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>Apprends-en plus sur l’univers des Palettes Roses 💕</p>
+      </div>
+    </div>
+
+    <nav class="menu-nav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+  </div>
+</header>
+
+  <main>
+    <div class="contenu">
+      <h2>Notre histoire</h2>
+      <p>
+       Mini Palettes Roses est née de l’élan des Palettes Roses, un groupe de femmes sans expérience en hockey qui ont fondé leur propre ligue pour le plaisir et la camaraderie. Fortes de ce succès, elles ont lancé Mini Palettes Roses pour offrir aux jeunes filles de la région une première expérience sur glace, avec une mission simple : rendre le hockey accessible à toutes, en fournissant gratuitement l’équipement.
+      </p>
+
+      <h2>Qui sommes-nous ?</h2>
+      <p>
+        À la base des mères de familles qui ont vu leurs enfants et maris grandir dans le hockey, nous nous sommes données le défi d'enfiler nos patins à notre tour. Après les nombreuses pratiques, les tournois, un voyage de hockey en Europe et les inoubliables moments partagés ensemble, nous sommes aujourd'hui la plus grande ligue féminine des pays-d'en-haut et nous ne cessons de nous aggrandir.
+      </p>
+
+      <h2>Nos valeurs</h2>
+      <p>
+        ❤️ Le plaisir – À la base de tout ce qu'on accomplit, on se rappelle toujours d'y prendre plaisir.<br>
+        🤝 La sécurité – Nous voulons nous assurer que ceux qui participent avec nous le sont pour longtemps.<br>
+        💪 Le girl power – Un organisme fièrement fondée par des femmes pour toutes les femmes et filles de la région.
+      </p>
+
+      <p class="signature">– Les Palettes</p>
+
+            <h2>Pour nous contacter ou une demande d'inscription:</h2> 
+        <a href="contact.html" class="btn-contact">📩 Nous rejoindre</a>
+      <a href="index.html" class="btn-retour">← Retour à l’accueil</a>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+
+</body>
+</html>

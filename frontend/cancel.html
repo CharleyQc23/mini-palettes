@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paiement annulé - Mini Palettes Roses</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #fff0f6;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .contenu {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      color: #c2185b;
+    }
+    .contenu h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .contenu p {
+      font-size: 1.1rem;
+    }
+    .btn-retour {
+      margin-top: 2rem;
+      display: inline-block;
+      background-color: var(--rose-foncé, #c2185b);
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .btn-retour:hover {
+      background-color: #e91e63;
+    }
+    .loader {
+      margin: 2rem auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #c2185b;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenu">
+    <h2>❌ Paiement annulé</h2>
+    <p>Le paiement a été annulé. Aucun montant n’a été débité.</p>
+    <div class="loader"></div>
+    <p>Tu seras redirigé vers l’accueil dans <span id="compte-rebours">10</span> secondes...</p>
+    <a href="index.html" class="btn-retour">Retour maintenant</a>
+  </div>
+
+  <script>
+    // Redirection après 10 secondes
+    let secondes = 10;
+    const compteur = document.getElementById('compte-rebours');
+    const interval = setInterval(() => {
+      secondes--;
+      compteur.textContent = secondes;
+      if (secondes <= 0) {
+        clearInterval(interval);
+        window.location.href = 'index.html';
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
