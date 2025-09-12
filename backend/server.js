@@ -9,13 +9,16 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 // --- Servir le frontend (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, 'frontend')));
+// Remonte d'un niveau depuis backend pour atteindre frontend
+const frontendPath = path.join(__dirname, '../frontend');
+app.use(express.static(frontendPath));
 
 // --- Endpoint Stripe Checkout
 app.post('/create-checkout-session', async (req, res) => {
@@ -56,9 +59,9 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// --- Fallback pour toutes les autres routes
+// --- Fallback pour toutes les autres routes (React-style routing ou pages HTML)
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 // --- Port dynamique Render
