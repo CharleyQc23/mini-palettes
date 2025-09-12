@@ -1,6 +1,7 @@
+// --- PANIER
 let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-// --- Mise à jour du nombre d'articles dans l'icône panier
+// --- Mise à jour du nombre d'articles
 function majNbItems() {
   const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
   document.getElementById('nb-items').textContent = totalArticles;
@@ -26,6 +27,8 @@ function afficherPanier() {
     const li = document.createElement('li');
     li.innerHTML = `
       ${item.nom} (${item.taille}, ${item.personnalisation})<br>
+      ${item.nom_broderie ? `Nom: ${item.nom_broderie}<br>` : ''}
+      ${item.numero_broderie ? `Numéro: ${item.numero_broderie}<br>` : ''}
       <label>Quantité :
         <input type="number" min="1" max="10" value="${item.quantite}" data-index="${index}" class="quantite-input" style="width: 60px; margin: 5px 0;">
       </label><br>
@@ -38,7 +41,7 @@ function afficherPanier() {
   document.getElementById('total').textContent = total.toFixed(2);
   majNbItems();
 
-  // 🗑️ Suppression
+  // Suppression
   document.querySelectorAll('.btn-supprimer').forEach(btn => {
     btn.addEventListener('click', e => {
       const i = parseInt(e.target.dataset.index);
@@ -48,7 +51,7 @@ function afficherPanier() {
     });
   });
 
-  // 🔁 Modification de quantités
+  // Modification de quantités
   document.querySelectorAll('.quantite-input').forEach(input => {
     input.addEventListener('change', e => {
       const i = parseInt(e.target.dataset.index);
@@ -79,7 +82,7 @@ document.getElementById('vider-panier').addEventListener('click', () => {
   }
 });
 
-// --- Bouton Payer avec Stripe Checkout
+// --- Bouton Payer avec Stripe
 document.getElementById('payer').addEventListener('click', async () => {
   if (panier.length === 0) {
     alert("Ton panier est vide !");
@@ -87,7 +90,6 @@ document.getElementById('payer').addEventListener('click', async () => {
   }
 
   try {
-    // 1️⃣ Création de la session Stripe via backend
     const response = await fetch('/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,11 +97,8 @@ document.getElementById('payer').addEventListener('click', async () => {
     });
 
     const session = await response.json();
+    const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr'); // clé publique
 
-    // 2️⃣ Initialiser Stripe avec la clé publique
-    const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr'); // remplace par ta clé publique
-
-    // 3️⃣ Redirection vers Stripe Checkout
     const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
     if (error) alert("Erreur lors de la redirection vers Stripe.");
   } catch (err) {
@@ -108,7 +107,7 @@ document.getElementById('payer').addEventListener('click', async () => {
   }
 });
 
-// --- Charger un produit si page produit
+// --- FICHE PRODUIT avec personnalisation Nom/Numéro
 const params = new URLSearchParams(window.location.search);
 const idProduit = params.get('id');
 
@@ -147,6 +146,16 @@ if (idProduit) {
           <option value="Broderie NOM et NUMÉRO|10">Broderie NOM et NUMÉRO (+10.00 $)</option>
         </select><br><br>
 
+        <div id="nom-broderie-container" style="display:none;">
+          <label for="nom-broderie">Nom à broder :</label><br>
+          <input type="text" id="nom-broderie" maxlength="20" placeholder="Ex: Emma" /><br><br>
+        </div>
+
+        <div id="numero-broderie-container" style="display:none;">
+          <label for="numero-broderie">Numéro :</label><br>
+          <input type="number" id="numero-broderie" min="0" placeholder="Ex: 23" /><br><br>
+        </div>
+
         <label for="quantite">Quantité :</label><br>
         <input type="number" id="quantite" min="1" value="1" style="width: 60px;"><br><br>
 
@@ -158,15 +167,33 @@ if (idProduit) {
       const selectPerso = document.getElementById('perso');
       const inputQuantite = document.getElementById('quantite');
       const boutonAjouter = document.getElementById('ajouter-panier');
+      const nomContainer = document.getElementById('nom-broderie-container');
+      const numeroContainer = document.getElementById('numero-broderie-container');
+      const inputNom = document.getElementById('nom-broderie');
+      const inputNumero = document.getElementById('numero-broderie');
 
       function checkReady() {
         const qte = parseInt(inputQuantite.value);
-        boutonAjouter.disabled = (selectTaille.value === '' || selectPerso.value === '' || !qte || qte < 1);
+        let persoSelected = selectPerso.value !== '';
+        let tailleSelected = selectTaille.value !== '';
+        let nomOk = true, numeroOk = true;
+
+        const persoText = selectPerso.value.split('|')[0];
+
+        if (persoText.includes('NOM')) nomOk = inputNom.value.trim() !== '';
+        if (persoText.includes('NUMÉRO')) numeroOk = inputNumero.value.trim() !== '';
+
+        boutonAjouter.disabled = !(persoSelected && tailleSelected && qte >= 1 && nomOk && numeroOk);
       }
 
-      selectTaille.addEventListener('change', checkReady);
-      selectPerso.addEventListener('change', checkReady);
-      inputQuantite.addEventListener('input', checkReady);
+      selectPerso.addEventListener('change', () => {
+        const persoText = selectPerso.value.split('|')[0];
+        nomContainer.style.display = persoText.includes('NOM') ? 'block' : 'none';
+        numeroContainer.style.display = persoText.includes('NUMÉRO') ? 'block' : 'none';
+        checkReady();
+      });
+
+      [selectTaille, inputQuantite, inputNom, inputNumero].forEach(el => el.addEventListener('input', checkReady));
 
       boutonAjouter.addEventListener('click', () => {
         const taille = selectTaille.value;
@@ -181,7 +208,9 @@ if (idProduit) {
           taille: taille,
           personnalisation: persoText,
           quantite: quantite,
-          prixUnitaire: prixUnitaire
+          prixUnitaire: prixUnitaire,
+          nom_broderie: inputNom.value.trim(),
+          numero_broderie: inputNumero.value.trim()
         });
 
         localStorage.setItem('panier', JSON.stringify(panier));
@@ -200,6 +229,6 @@ if (idProduit) {
     });
 }
 
-// --- Initialisation
+// --- INITIALISATION
 afficherPanier();
 majNbItems();
