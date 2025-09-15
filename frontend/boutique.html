@@ -119,6 +119,10 @@
 <script>
   let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
+  const API_BASE_URL = window.location.origin.includes('localhost')
+  ? 'http://localhost:3000'
+  : 'https://www.minipalettes.ca';
+
   function majNbItems() {
     document.getElementById('nb-items').textContent = panier.length;
   }
@@ -196,11 +200,11 @@
       return;
     }
     try {
-      const response = await fetch('https://mini-palettes-roses.onrender.com/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ panier }),
-      });
+      const response = await fetch(`${API_BASE_URL}/create-checkout-session`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ panier }),
+});
       const data = await response.json();
 
       if (data.id) {
@@ -214,7 +218,7 @@
 }
     } catch (error) {
       console.error('Erreur paiement:', error);
-      alert('Erreur lors du paiement. Regarde la console.');
+      alert('Erreur lors du paiement. Veuillez contacter la personne en charge.');
     }
   });
 </script>
