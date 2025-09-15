@@ -66,22 +66,6 @@
       cursor: pointer;
       margin-left: 0.5rem;
     }
-    .btn-vider {
-      background-color: white;
-      border: 2px solid var(--rose-foncé);
-      color: var(--rose-foncé);
-      padding: 0.6rem 1rem;
-      border-radius: 30px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    .btn-vider:hover {
-      background-color: var(--rose-foncé);
-      color: white;
-    }
   </style>
 </head>
 
@@ -92,19 +76,23 @@
 </div>
 
 <header class="banniere">
-  <div class="entete-logo-texte">
-    <a href="index.html">
-      <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-    </a>
-    <div>
-      <h1>Mini-palettes roses</h1>
-      <p>La boutique officielle des futures Palettes Roses!</p>
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>La boutique des futures Palettes Roses!</p>
+      </div>
     </div>
+
+    <nav class="menu-nav">
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="a-propos.html" class="nav-link">À propos</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
   </div>
-  <a href="index.html" class="btn-contact">🏠 Accueil</a>
-  <a href="boutique.html" class="btn-contact">🛍 Boutique</a>
-  <a href="a-propos.html" class="btn-contact">🏒 À propos</a>
-  <a href="contact.html" class="btn-contact">📩 Nous rejoindre</a>
 </header>
 
 <button id="btn-panier" title="Voir le panier">🛒 Panier (<span id="nb-items">0</span>)</button>
@@ -114,7 +102,6 @@
   <h2>Ton panier</h2>
   <ul id="liste-panier"></ul>
   <p><strong>Total : <span id="total">0.00</span> $</strong></p>
-  <button id="vider-panier" class="btn-vider">🧹 Vider le panier</button>
   <button id="payer">Procéder au paiement</button>
 </div>
 
@@ -164,14 +151,6 @@
 
   document.getElementById('btn-fermer-panier').addEventListener('click', () => {
     document.getElementById('sidebar-panier').classList.remove('open');
-  });
-
-  document.getElementById('vider-panier').addEventListener('click', () => {
-    if (confirm("Es-tu sûr(e) de vouloir vider ton panier ?")) {
-      panier = [];
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
-    }
   });
 
   document.getElementById('payer').addEventListener('click', async () => {

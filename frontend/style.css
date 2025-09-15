@@ -209,8 +209,8 @@
   
   /* 🛒 Bouton fixe pour ouvrir le panier */
   #btn-panier {
-    position: absolute;
-    top: 2rem;
+    position: fixed;
+    top: 2.5rem;
     right: 2rem;
     background-color: var(--rose-foncé);
     color: white;
@@ -231,9 +231,9 @@
   /* 🧾 Sidebar panier */
   #sidebar-panier {
     position: fixed;
-    top: 0;
+    top: 1.5rem;
     right: 0;
-    width: 320px;
+    width: 20rem;
     height: 100%;
     background-color: var(--blanc);
     box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
@@ -251,8 +251,8 @@
   /* ❌ Bouton fermer */
   #btn-fermer-panier {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 4rem;
+    right: 1rem;
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -282,16 +282,16 @@
   
   /* 💳 Bouton Paiement */
   #payer {
-    margin-top: 1.5rem;
+    margin-top: 0.5rem;
     width: 100%;
     background-color: var(--rose-foncé);
     color: white;
     border: none;
     padding: 0.75rem;
-    border-radius: 30px;
+    border-radius: 50px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
     transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
@@ -311,23 +311,6 @@
   .btn-supprimer:hover {
     color: darkred;
   }
-  #vider-panier {
-  margin-top: 0.7rem;
-  padding: 0.6rem 1rem;
-  background-color: var(--rose-foncé, #e91e63);
-  border: 2px solid transparent;
-  color: white;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-#vider-panier:hover {
-  background-color: #c2185b;
-  transform: scale(1.03);
-}
 
 @keyframes pop {
   0% { transform: scale(1); }

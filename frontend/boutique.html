@@ -108,7 +108,6 @@
   <h2>Ton panier</h2>
   <ul id="liste-panier"></ul>
   <p><strong>Total : <span id="total">0.00</span> $</strong></p>
-  <button id="vider-panier">Vider le panier</button>
   <button id="payer">Procéder au paiement</button>
 </div>
 
@@ -135,7 +134,7 @@
     panier.forEach((item, index) => {
       total += item.prix;
       const li = document.createElement('li');
-      li.innerHTML = `${item.nom} (${item.taille || "?"}, ${item.personnalisation || "aucune"}) - ${item.prix.toFixed(2)} $ <button class="btn-supprimer" data-index="${index}" title="Supprimer">🗑️</button>`;
+      li.innerHTML = `${item.nom} (${item.taille || "?"}, ${item.personnalisation || "aucune"}) - ${item.prix.toFixed(2)} $ <button class="btn-supprimer" data-index="${index}" title="Supprimer">🗑️ Supprimer</button>`;
       liste.appendChild(li);
     });
 
@@ -158,14 +157,6 @@
 
   document.getElementById('btn-fermer-panier').addEventListener('click', () => {
     document.getElementById('sidebar-panier').classList.remove('open');
-  });
-
-  document.getElementById('vider-panier').addEventListener('click', () => {
-    if (confirm("Vider tout le panier ?")) {
-      panier = [];
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
-    }
   });
 
   fetch('produits.json')
