@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nous rejoindre | Mini Palettes Roses</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
-  <meta name="theme-color" content="#e91e63">
+  <script>
+    fetch('head.html')
+      .then(response => response.text())
+      .then(data => {
+        document.head.innerHTML = data + document.head.innerHTML;
+        document.title = "Mini Palettes Roses - Contact"; // garde ton titre spécifique
+      })
+      .catch(err => console.error('Erreur chargement head:', err));
+  </script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
