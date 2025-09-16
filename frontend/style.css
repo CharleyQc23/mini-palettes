@@ -46,6 +46,10 @@
   object-fit: contain;
 }
 
+.texte-site {
+  text-align: left;
+}
+
 .texte-site h1 {
   font-size: 1.6rem;
   margin: 0;
