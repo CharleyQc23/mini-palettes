@@ -6,79 +6,17 @@
   <title>Mini-palettes roses - Détail produit</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <script src="https://js.stripe.com/v3/"></script> <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
-
-  <style>
-    /* Ton CSS existant ici (j'ai gardé le même que dans ton code précédent) */
-    .contenu-produit {
-      max-width: 700px;
-      margin: 2rem auto;
-      background: var(--blanc);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    .contenu-produit img {
-      max-width: 100%;
-      border-radius: 15px;
-    }
-    select, button, input[type=number] {
-      margin-top: 1rem;
-      padding: 0.6rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .btn-ajouter {
-      background-color: var(--rose-foncé);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-      transition: background-color 0.3s ease;
-      margin-top: 1rem;
-    }
-    .btn-ajouter:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    .btn-retour {
-      margin-top: 2rem;
-      background-color: var(--gris);
-      border: none;
-      color: var(--rose-foncé);
-      font-weight: bold;
-      padding: 0.6rem 1.2rem;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .btn-retour:hover {
-      background-color: var(--rose);
-    }
-    .btn-supprimer {
-      background: none;
-      border: none;
-      color: red;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
-  </style>
 </head>
 
 <body>
 
-<div class="bandeau-taxes">
-  TOUS LES PRIX INCLUENT LES TAXES
-</div>
+<div class="bandeau-taxes">TOUS LES PRIX INCLUENT LES TAXES</div>
 
 <header class="banniere">
   <div class="header-container">
@@ -91,7 +29,6 @@
         <p>La boutique des futures Palettes Roses!</p>
       </div>
     </div>
-
     <nav class="menu-nav">
       <a href="boutique.html" class="nav-link">Boutique</a>
       <a href="a-propos.html" class="nav-link">À propos</a>
@@ -116,12 +53,36 @@
   </div>
 </main>
 
-<script src="https://js.stripe.com/v3/"></script>
+<div id="footer-container"></div>
+
 <script>
+  // --- PANIER
   let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
   function majNbItems() {
-    document.getElementById('nb-items').textContent = panier.length;
+    const totalArticles = panier.reduce((acc, item) => acc + (Number(item.quantite) || 0), 0);
+    document.getElementById('nb-items').textContent = totalArticles;
+  }
+
+  function animationPanier() {
+    const compteur = document.getElementById('nb-items');
+    const btnPanier = document.getElementById('btn-panier');
+    compteur.classList.add('animate');
+    btnPanier.classList.add('animate');
+    setTimeout(() => {
+      compteur.classList.remove('animate');
+      btnPanier.classList.remove('animate');
+    }, 400);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   function afficherPanier() {
@@ -129,190 +90,228 @@
     liste.innerHTML = '';
     let total = 0;
 
+    panier = panier.map(item => {
+      const quant = (item.quantite && Number(item.quantite)) ? Number(item.quantite) : 1;
+      const prixUnitaire = item.prixUnitaire !== undefined && !isNaN(Number(item.prixUnitaire))
+        ? Number(item.prixUnitaire)
+        : (item.prix !== undefined && quant ? Number(item.prix)/quant : 0);
+      return { ...item, quantite: quant, prixUnitaire, prix: prixUnitaire * quant };
+    });
+
+    if (!panier || panier.length === 0) {
+      liste.innerHTML = '<li style="text-align:center; color:#888;">Ton panier est vide 🛍️</li>';
+      document.getElementById('total').textContent = '0.00';
+      majNbItems();
+      return;
+    }
+
     panier.forEach((item, index) => {
       total += item.prix;
       const li = document.createElement('li');
-      li.innerHTML = `${item.nom} (${item.taille}, ${item.personnalisation}) - ${item.prix.toFixed(2)} $ 
-        <button class="btn-supprimer" data-index="${index}" title="Supprimer">🗑️</button>`;
+      li.className = 'ligne-panier';
+      li.innerHTML = `
+        <div class="ligne-left">
+          <div class="nom-produit"><strong>${escapeHtml(item.nom)}</strong></div>
+          <div style="font-size:0.85rem; color:#666;">
+            ${item.taille ? escapeHtml(item.taille) : ''} ${item.personnalisation ? ' • ' + escapeHtml(item.personnalisation) : ''}
+          </div>
+        </div>
+        <div class="ligne-right">
+          <div class="quantite-controls">
+            <button class="btn-moins" data-index="${index}">➖</button>
+            <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1" />
+            <button class="btn-plus" data-index="${index}">➕</button>
+          </div>
+          <div class="prix-item">${item.prix.toFixed(2)} $</div>
+          <button class="btn-supprimer" data-index="${index}">🗑️</button>
+        </div>
+      `;
       liste.appendChild(li);
     });
 
-    document.getElementById('total').textContent = total.toFixed(2);
-    majNbItems();
+    document.querySelectorAll('.btn-plus').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const i = parseInt(e.currentTarget.dataset.index, 10);
+        panier[i].quantite++;
+        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+    });
+
+    document.querySelectorAll('.btn-moins').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const i = parseInt(e.currentTarget.dataset.index, 10);
+        if (panier[i].quantite > 1) {
+          panier[i].quantite--;
+          panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
+        } else {
+          panier.splice(i, 1);
+        }
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+    });
+
+    document.querySelectorAll('.qte-input').forEach(input => {
+      input.addEventListener('change', e => {
+        const i = parseInt(e.currentTarget.dataset.index, 10);
+        let q = parseInt(e.currentTarget.value, 10);
+        if (isNaN(q) || q < 1) q = 1;
+        if (q > 99) q = 99;
+        panier[i].quantite = q;
+        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
+        localStorage.setItem('panier', JSON.stringify(panier));
+        afficherPanier();
+      });
+    });
 
     document.querySelectorAll('.btn-supprimer').forEach(btn => {
       btn.addEventListener('click', e => {
-        const i = parseInt(e.target.dataset.index);
+        const i = parseInt(e.currentTarget.dataset.index, 10);
         panier.splice(i, 1);
         localStorage.setItem('panier', JSON.stringify(panier));
         afficherPanier();
       });
     });
+
+    document.getElementById('total').textContent = total.toFixed(2);
+    majNbItems();
   }
 
+  // Sidebar
   document.getElementById('btn-panier').addEventListener('click', () => {
     document.getElementById('sidebar-panier').classList.toggle('open');
   });
-
   document.getElementById('btn-fermer-panier').addEventListener('click', () => {
     document.getElementById('sidebar-panier').classList.remove('open');
   });
 
+  // Paiement Stripe
   document.getElementById('payer').addEventListener('click', async () => {
-    if (panier.length === 0) {
-      alert("Ton panier est vide !");
-      return;
-    }
-
+    if (panier.length === 0) { alert("Ton panier est vide !"); return; }
     try {
       const response = await fetch('https://mini-palettes-roses.onrender.com/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ panier }),
       });
-
       const data = await response.json();
-
       if (data.id) {
         const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr');
         await stripe.redirectToCheckout({ sessionId: data.id });
-      } else {
-        alert('Erreur lors de la création de la session de paiement.');
-      }
-    } catch (error) {
-      console.error('Erreur paiement:', error);
-      alert('Erreur lors du paiement. Regarde la console.');
-    }
+      } else { alert('Erreur lors de la création de la session de paiement.'); }
+    } catch(e) { console.error(e); alert('Erreur lors du paiement.'); }
   });
 
+  // Champs broderie
   function afficherChampsBroderie() {
     const persoValue = document.getElementById('perso').value;
     const detailsContainer = document.getElementById('details-broderie');
-    if (!detailsContainer) return;
-
     let contenu = '';
     if (persoValue.includes('NOM')) {
-      contenu += `
-        <label for="champ-nom">Nom à broder :</label><br>
-        <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
-      `;
+      contenu += `<label for="champ-nom">Nom à broder :</label><br>
+                  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>`;
     }
     if (persoValue.includes('NUMÉRO')) {
-      contenu += `
-        <label for="champ-numero">Numéro à broder :</label><br>
-        <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>
-      `;
+      contenu += `<label for="champ-numero">Numéro à broder :</label><br>
+                  <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>`;
     }
-
     detailsContainer.innerHTML = contenu;
   }
 
-  // Charger le produit selon l'ID dans l'URL
+  // Fiche produit
   const params = new URLSearchParams(window.location.search);
   const idProduit = params.get('id');
+  if (idProduit) {
+    fetch('produits.json')
+      .then(res => res.json())
+      .then(produits => {
+        if (!produits[idProduit]) return;
+        const produit = produits[idProduit];
+        const div = document.getElementById('fiche-produit');
+        div.innerHTML = `
+          <img src="${produit.image}" alt="${escapeHtml(produit.nom)}" />
+          <h2>${escapeHtml(produit.nom)}</h2>
+          <p><strong>${produit.prix.toFixed(2)} $</strong></p>
 
-  fetch('produits.json')
-    .then(res => res.json())
-    .then(produits => {
-      if (!idProduit || !produits[idProduit]) {
-        document.getElementById('fiche-produit').innerHTML = '<p>Produit introuvable.</p>';
-        return;
-      }
+          <label for="taille">Choisis une grandeur :</label><br>
+          <select id="taille">
+            <option value="">-- Sélectionner --</option>
+            <option value="X-Small">X-Small</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+            <option value="X-Large">X-Large</option>
+          </select><br><br>
 
-      const produit = produits[idProduit];
-      const div = document.getElementById('fiche-produit');
-      div.innerHTML = `
-        <img src="${produit.image}" alt="${produit.nom}" />
-        <h2>${produit.nom}</h2>
-        <p><strong>${produit.prix.toFixed(2)} $</strong></p>
+          <label for="perso">Broderie :</label><br>
+          <select id="perso">
+            <option value="">-- Sélectionner --</option>
+            <option value="Aucune|0">Aucune 0$</option>
+            <option value="Broderie NOM|7">NOM +7 $</option>
+            <option value="Broderie NUMÉRO|5.5">NUMÉRO +5.5 $</option>
+            <option value="Broderie NOM et NUMÉRO|10">NOM et NUMÉRO +10 $</option>
+          </select><br><br>
 
-        <label for="taille">Choisis une grandeur :</label><br>
-        <select id="taille">
-          <option value="">-- Sélectionner --</option>
-          <option value="X-Small">X-Small</option>
-          <option value="Small">Small</option>
-          <option value="Medium">Medium</option>
-          <option value="Large">Large</option>
-          <option value="X-Large">X-Large</option>
-        </select><br><br>
+          <div id="details-broderie"></div>
 
-        <label for="perso">Broderie :</label><br>
-        <select id="perso">
-          <option value="">-- Sélectionner --</option>
-          <option value="Aucune|0">Aucune 0$</option>
-          <option value="Broderie NOM|7">NOM +7 $</option>
-          <option value="Broderie NUMÉRO|5.5">NUMÉRO +5.5 $</option>
-          <option value="Broderie NOM et NUMÉRO|10">NOM et NUMÉRO +10 $</option>
-        </select><br><br>
+          <label for="quantite">Quantité :</label><br>
+          <input type="number" id="quantite" name="quantite" min="1" value="1" style="width:60px; padding:0.3rem; border-radius:6px; border:1px solid #ccc;" /><br><br>
 
-        <div id="details-broderie"></div>
+          <button id="ajouter-panier" class="btn-ajouter" disabled>Ajouter au panier</button><br>
+          <button class="btn-retour" onclick="window.location.href='boutique.html'">← Retour à la boutique</button>
+        `;
 
-        <label for="quantite">Quantité :</label><br>
-        <input type="number" id="quantite" name="quantite" min="1" value="1" style="width: 60px; padding: 0.3rem; border-radius: 6px; border: 1px solid #ccc;" /><br><br>
+        const selectTaille = document.getElementById('taille');
+        const selectPerso = document.getElementById('perso');
+        const inputQuantite = document.getElementById('quantite');
+        const boutonAjouter = document.getElementById('ajouter-panier');
 
-        <button id="ajouter-panier" class="btn-ajouter" disabled>Ajouter au panier</button><br>
-        <button class="btn-retour" onclick="window.location.href='boutique.html'">← Retour à la boutique</button>
-      `;
+        function checkReady() {
+          const qte = parseInt(inputQuantite.value, 10);
+          boutonAjouter.disabled = (!selectTaille.value || !selectPerso.value || !qte || qte < 1);
+        }
 
-      const selectTaille = document.getElementById('taille');
-      const selectPerso = document.getElementById('perso');
-      const inputQuantite = document.getElementById('quantite');
-      const boutonAjouter = document.getElementById('ajouter-panier');
+        selectTaille.addEventListener('change', checkReady);
+        selectPerso.addEventListener('change', () => { afficherChampsBroderie(); checkReady(); });
+        inputQuantite.addEventListener('input', checkReady);
 
-      function checkReady() {
-        const qte = parseInt(inputQuantite.value);
-        boutonAjouter.disabled = (selectTaille.value === '' || selectPerso.value === '' || !qte || qte < 1);
-      }
-
-      selectTaille.addEventListener('change', checkReady);
-      selectPerso.addEventListener('change', () => {
-        afficherChampsBroderie();
-        checkReady();
-      });
-      inputQuantite.addEventListener('input', checkReady);
-
-      boutonAjouter.addEventListener('click', () => {
-        const taille = selectTaille.value;
-        const [persoText, persoPrix] = selectPerso.value.split('|');
-        const quantite = parseInt(inputQuantite.value);
-        const prixUnitaire = produit.prix + parseFloat(persoPrix);
-        const prixFinal = prixUnitaire * quantite;
-
-        const nomBrode = document.getElementById('champ-nom')?.value || '';
-        const numeroBrode = document.getElementById('champ-numero')?.value || '';
-
-        panier.push({
-          nom: produit.nom,
-          prix: prixFinal,
-          taille: taille,
-          personnalisation: persoText + (nomBrode ? `: ${nomBrode}` : '') + (numeroBrode ? ` #${numeroBrode}` : ''),
-          quantite: quantite,
-          prixUnitaire: prixUnitaire
+        boutonAjouter.addEventListener('click', () => {
+          const taille = selectTaille.value;
+          const [persoText, persoPrix] = selectPerso.value.split('|');
+          const quantite = parseInt(inputQuantite.value, 10);
+          const prixUnitaire = produit.prix + parseFloat(persoPrix);
+          const prixFinal = prixUnitaire * quantite;
+          const nomBrode = document.getElementById('champ-nom')?.value || '';
+          const numeroBrode = document.getElementById('champ-numero')?.value || '';
+          panier.push({
+            nom: produit.nom,
+            prix: prixFinal,
+            taille,
+            personnalisation: persoText + (nomBrode ? `: ${nomBrode}` : '') + (numeroBrode ? ` #${numeroBrode}` : ''),
+            quantite,
+            prixUnitaire
+          });
+          localStorage.setItem('panier', JSON.stringify(panier));
+          afficherPanier();
+          animationPanier();
+          alert(`Ajouté : ${produit.nom} (${taille}, ${persoText}) x${quantite} pour ${prixFinal.toFixed(2)} $`);
         });
 
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-        alert(`Ajouté : ${produit.nom} (${taille}, ${persoText}) x${quantite} pour ${prixFinal.toFixed(2)} $`);
+        checkReady();
       });
-
-      afficherPanier();
-    });
+  }
 
   afficherPanier();
   majNbItems();
-</script>
 
-<div id="details-broderie"></div>
-
-<div id="footer-container"></div>
-
-<script>
+  // Footer
   fetch('footer.html')
     .then(response => response.text())
     .then(data => {
       document.getElementById('footer-container').outerHTML = data;
     });
 </script>
-
 </body>
 </html>

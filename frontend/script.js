@@ -3,17 +3,64 @@ let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
 // --- Mise à jour du nombre d'articles
 function majNbItems() {
-  const totalArticles = panier.reduce((acc, item) => acc + item.quantite, 0);
+  // somme les quantités (sécurisé si quantite absent)
+  const totalArticles = panier.reduce((acc, item) => acc + (Number(item.quantite) || 0), 0);
   document.getElementById('nb-items').textContent = totalArticles;
 }
 
+
+function animationPanier() {
+  const compteur = document.getElementById('nb-items');
+  const btnPanier = document.getElementById('btn-panier');
+
+  // lance l'anim sur le compteur
+  compteur.classList.add('animate');
+  setTimeout(() => compteur.classList.remove('animate'), 400);
+
+  // lance aussi l'anim sur le bouton
+  btnPanier.classList.add('animate');
+  setTimeout(() => btnPanier.classList.remove('animate'), 400);
+}
+
 // --- Affichage du panier
+// helper pour échapper le HTML (sécurité)
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function afficherPanier() {
   const liste = document.getElementById('liste-panier');
   liste.innerHTML = '';
   let total = 0;
 
-  if (panier.length === 0) {
+  // normaliser le panier (dans le cas où un ancien format existe)
+  panier = panier.map(item => {
+    const quant = (item.quantite && Number(item.quantite)) ? Number(item.quantite) : 1;
+    // si on a prixUnitaire on l'utilise, sinon on tente de le calculer à partir de prix actuel
+    let prixUnitaire;
+    if (item.prixUnitaire !== undefined && !isNaN(Number(item.prixUnitaire))) {
+      prixUnitaire = Number(item.prixUnitaire);
+    } else if (item.prix !== undefined && quant) {
+      prixUnitaire = Number(item.prix) / quant;
+    } else {
+      prixUnitaire = 0;
+    }
+    const prixTotalItem = prixUnitaire * quant;
+    return {
+      ...item,
+      quantite: quant,
+      prixUnitaire: prixUnitaire,
+      prix: prixTotalItem
+    };
+  });
+
+  if (!panier || panier.length === 0) {
     liste.innerHTML = '<li style="text-align:center; color:#888;">Ton panier est vide 🛍️</li>';
     document.getElementById('total').textContent = '0.00';
     majNbItems();
@@ -21,50 +68,92 @@ function afficherPanier() {
   }
 
   panier.forEach((item, index) => {
-    const prixTotalItem = item.quantite * item.prixUnitaire;
-    total += prixTotalItem;
-
+    total += item.prix;
     const li = document.createElement('li');
+    li.className = 'ligne-panier';
     li.innerHTML = `
-      ${item.nom} (${item.taille}, ${item.personnalisation})<br>
-      ${item.nom_broderie ? `Nom: ${item.nom_broderie}<br>` : ''}
-      ${item.numero_broderie ? `Numéro: ${item.numero_broderie}<br>` : ''}
-      <label>Quantité :
-        <input type="number" min="1" max="10" value="${item.quantite}" data-index="${index}" class="quantite-input" style="width: 60px; margin: 5px 0;">
-      </label><br>
-      <strong>${prixTotalItem.toFixed(2)} $</strong>
-      <button class="btn-supprimer" data-index="${index}">🗑️</button>
+      <div class="ligne-left">
+        <div class="nom-produit"><strong>${escapeHtml(item.nom)}</strong></div>
+        <div style="font-size:0.85rem; color:#666;">
+          ${item.taille ? escapeHtml(item.taille) : ''} ${item.personnalisation ? ' • ' + escapeHtml(item.personnalisation) : ''}
+        </div>
+      </div>
+
+      <div class="ligne-right">
+        <div class="quantite-controls">
+          <button class="btn-moins" data-index="${index}" aria-label="Réduire la quantité">➖</button>
+          <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1" />
+          <button class="btn-plus" data-index="${index}" aria-label="Ajouter une quantité">➕</button>
+        </div>
+
+        <div class="prix-item">${item.prix.toFixed(2)} $</div>
+
+        <button class="btn-supprimer" data-index="${index}" aria-label="Supprimer">🗑️</button>
+      </div>
     `;
     liste.appendChild(li);
   });
 
-  document.getElementById('total').textContent = total.toFixed(2);
-  majNbItems();
+  // listeners pour + / - / saisie / suppression
 
-  // Suppression
+  // plus
+  document.querySelectorAll('.btn-plus').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const i = parseInt(e.currentTarget.dataset.index, 10);
+      if (!Number.isFinite(i)) return;
+      panier[i].quantite = (Number(panier[i].quantite) || 0) + 1;
+      panier[i].prix = panier[i].prixUnitaire * panier[i].quantite;
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+
+  // moins
+  document.querySelectorAll('.btn-moins').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const i = parseInt(e.currentTarget.dataset.index, 10);
+      if (!Number.isFinite(i)) return;
+      if ((panier[i].quantite || 0) > 1) {
+        panier[i].quantite = panier[i].quantite - 1;
+        panier[i].prix = panier[i].prixUnitaire * panier[i].quantite;
+      } else {
+        // si on arrive à 0 -> supprimer la ligne
+        panier.splice(i, 1);
+      }
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+
+  // saisie directe de la quantité
+  document.querySelectorAll('.qte-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const i = parseInt(e.currentTarget.dataset.index, 10);
+      if (!Number.isFinite(i)) return;
+      let q = parseInt(e.currentTarget.value, 10);
+      if (isNaN(q) || q < 1) q = 1;
+      // limite raisonnable
+      if (q > 99) q = 99;
+      panier[i].quantite = q;
+      panier[i].prix = panier[i].prixUnitaire * q;
+      localStorage.setItem('panier', JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+
+  // suppression
   document.querySelectorAll('.btn-supprimer').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const i = parseInt(e.target.dataset.index);
+    btn.addEventListener('click', (e) => {
+      const i = parseInt(e.currentTarget.dataset.index, 10);
+      if (!Number.isFinite(i)) return;
       panier.splice(i, 1);
       localStorage.setItem('panier', JSON.stringify(panier));
       afficherPanier();
     });
   });
 
-  // Modification de quantités
-  document.querySelectorAll('.quantite-input').forEach(input => {
-    input.addEventListener('change', e => {
-      const i = parseInt(e.target.dataset.index);
-      let qte = parseInt(e.target.value);
-      if (isNaN(qte) || qte < 1) qte = 1;
-      if (qte > 10) qte = 10;
-      input.value = qte;
-      panier[i].quantite = qte;
-      panier[i].prix = panier[i].prixUnitaire * qte;
-      localStorage.setItem('panier', JSON.stringify(panier));
-      afficherPanier();
-    });
-  });
+  document.getElementById('total').textContent = total.toFixed(2);
+  majNbItems();
 }
 
 // --- Sidebar panier
@@ -216,6 +305,7 @@ if (idProduit) {
         localStorage.setItem('panier', JSON.stringify(panier));
         afficherPanier();
         majNbItems();
+        animationPanier();
 
         boutonAjouter.textContent = '✔️ Ajouté !';
         boutonAjouter.disabled = true;
