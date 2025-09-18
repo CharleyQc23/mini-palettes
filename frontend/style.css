@@ -633,4 +633,15 @@
   background-color: #d81b60;
 }
 
+/* 🔢 Retirer les flèches des input number (tous navigateurs) */
+.qte-input::-webkit-inner-spin-button,
+.qte-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qte-input {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 
