@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inscriptions - Mini Palettes Roses</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
+  <meta name="theme-color" content="#e91e63">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contenu {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .contenu h2 {
+      color: #c2185b;
+      margin-bottom: 1rem;
+    }
+
+    .contenu p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .contenu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .contenu ul li {
+      margin: 0.5rem 0;
+    }
+
+    .btn-retour {
+      margin-top: 2rem;
+      background-color: var(--gris);
+      border: none;
+      color: var(--rose-foncé);
+      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn-retour:hover {
+      background-color: var(--rose);
+    }
+
+    .table-quand {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+}
+
+.table-quand th {
+  background-color: #f8bbd0;
+  color: #880e4f;
+  text-align: center;
+  padding: 0.8rem;
+  border-radius: 10px 10px 0 0;
+}
+
+.table-quand td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  color: #333;
+  text-align: center;
+}
+
+.table-quand tr:nth-child(even) {
+  background-color: #fff0f6;
+}
+
+  </style>
+</head>
+<body>
+
+  <header class="banniere">
+    <div class="header-container">
+      <div class="logo-texte">
+        <a href="index.html">
+          <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+        </a>
+        <div class="texte-site">
+          <h1>Mini-palettes roses</h1>
+          <p>Informations d'inscription</p>
+        </div>
+      </div>
+  
+      <nav class="menu-nav">
+        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="a-propos.html" class="nav-link">À propos</a>
+        <a href="boutique.html" class="nav-link">Boutique</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="contenu">
+      <h2>Inscriptions</h2>
+      <p>
+        Veuillez cliquer sur notre page Facebook pour accéder aux détails de la saison ou du camp d’été ainsi qu’au formulaire d’inscription.<br>
+        <a href="https://www.facebook.com/people/Ligue-de-hockey-Mini-Palettes-Roses/61565432051942/" 
+           target="_blank" rel="noopener" class="btn-contact">
+           S'inscrire via Facebook
+        </a>
+      </p>
+
+
+      <h2>Saison</h2>
+      <p>
+        La formule est simple : les joueuses se présentent selon un horaire fixe à raison d’une ou plusieurs fois par semaine. 
+        Les entraineures féminines offrent un modèle basé sur le plaisir de jouer. 
+        Chaque semaine comprend une pratique et une partie. Deux grands tournois locaux ont lieu en décembre et en mars.<br><br>
+        Les équipements complets (joueuses et gardiennes) sont prêtés afin d’offrir l’accès au sport au plus grand nombre. 
+        <br><br>
+        <strong>Les inscriptions se font à partir d’avril.</strong>
+      </p>
+
+      <h2>Camp d’été</h2>
+      <p>
+        Le camp se déroule en juillet, du lundi au vendredi, de 8h30 à 16h30. 
+        Deux heures de glace par jour sont offertes, ainsi que des activités variées : natation, yoga, karaté, bricolage, dessins, etc.<br><br>
+        Les équipements complets sont prêtés afin d’offrir l’accès au sport au plus grand nombre. 
+        <br><br>
+        <strong>Les inscriptions pour le camp d’été sont offertes à partir d’avril.</strong>
+      </p>
+
+<h2>Quand ?</h2>
+<table class="table-quand">
+  <thead>
+    <tr>
+      <th>Événement</th>
+      <th>Période</th>
+      <th>Début des inscriptions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Saison</td>
+      <td>Septembre à mars</td>
+      <td>Avril</td>
+    </tr>
+    <tr>
+      <td>Camp d’été</td>
+      <td>Mi-juillet</td>
+      <td>Avril</td>
+    </tr>
+  </tbody>
+</table>
+
+
+      <a href="index.html" class="btn-retour">← Retour à l’accueil</a>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script>
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer-container').outerHTML = data;
+      });
+  </script>
+
+</body>
+</html>
