@@ -94,11 +94,19 @@
 
 <style>
 /* Slider */
+
+header.banniere {
+  position: relative; /* garde les coins arrondis visibles */
+  z-index: 2; /* header devant le slider */
+  border-bottom-left-radius: 30px; /* exemple, garde ton arrondi existant */
+  border-bottom-right-radius: 30px;
+  overflow: hidden; /* important pour que le slider ne dépasse pas horizontalement */
+}
 .slider {
   position: relative;
-  width: 100%;
-  height: 90vh;
-  overflow: hidden;
+  top: -30px; /* remonte le slider derrière le header, ajuste selon la taille de l'arrondi */
+  z-index: 1; /* derrière le header */
+  height: 90vh; /* ou ce que tu veux */
 }
 
 .slide {
@@ -106,7 +114,8 @@
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: center;
+  background-position: center top; /* center top = focus sur le haut de l'image */
+  background-repeat: no-repeat;
   opacity: 0;
   transform: translateX(100%);
   transition: opacity 1s ease, transform 1s ease;
@@ -200,21 +209,21 @@
   </style>
   
   <div class="slider">
+        <div class="slide" style="background-image: url('images/slide-apropos.webp');">
+      <div class="slide-content">
+        <h2>Notre mission pour les joueuses</h2>
+        <a href="a-propos.html" class="btn-rose">À propos</a>
+      </div>
+    </div>
     <div class="slide active" style="background-image: url('images/slide-boutique.webp');">
       <div class="slide-content">
         <h2>Découvrez nos produits personnalisés</h2>
         <a href="boutique.html" class="btn-rose">Boutique</a>
       </div>
     </div>
-    <div class="slide" style="background-image: url('images/slide-apropos.webp');">
-      <div class="slide-content">
-        <h2>Notre mission pour les joueuses</h2>
-        <a href="a-propos.html" class="btn-rose">À propos</a>
-      </div>
-    </div>
     <div class="slide" style="background-image: url('images/slide-contact.webp');">
       <div class="slide-content">
-        <h2>Inscription ou question? Contactez-nous!</h2>
+        <h2>Une question? Contactez-nous!</h2>
         <a href="contact.html" class="btn-rose">Contact</a>
       </div>
     </div>
