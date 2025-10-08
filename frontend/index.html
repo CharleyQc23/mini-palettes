@@ -23,6 +23,20 @@
       animation: fadeIn 1s ease forwards;
     }
 
+    /* Animation d'apparition */
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Quand une slide devient active */
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+  animation: slideFadeIn 1s ease;
+}
+
     /* ----------------- Accueil ----------------- */
     .accueil {
       padding: 3rem 1rem;
@@ -208,6 +222,20 @@
     .btn-cookie.refuse { background-color: #bbb; }
     .btn-cookie.refuse:hover { background-color: #999; }
 
+    html, body {
+  overflow-x: hidden;
+}
+@media (max-width: 768px) {
+  .slider {
+    height: 50vh; /* ou 50vh selon le rendu souhaité */
+  }
+
+  .slide-content {
+    padding: 1rem 1.2rem; /* adapte le padding si nécessaire */
+  }
+}
+
+
   </style>
 </head>
 
@@ -309,8 +337,8 @@
     nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
     prevBtn.addEventListener('click', () => { prevSlideFunc(); resetInterval(); });
 
-    function resetInterval() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 6000); }
-    slideInterval = setInterval(nextSlide, 6000);
+    function resetInterval() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 8000); }
+    slideInterval = setInterval(nextSlide, 8000); // temps entre les slides = 8 secondes (8000 ms)
 
     // Swipe tactile
     let touchStartX = 0, touchEndX = 0;
