@@ -78,8 +78,29 @@
   color: white;
 }
 
+    @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
   </style>
 </head>
+
+<!-- 📝 Bandeau Cookies -->
+<div id="cookie-banner" class="cookie-banner">
+  <p>
+    Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
+    <a href="politique.html" class="cookie-link">En savoir plus</a>
+  </p>
+  <div class="cookie-buttons">
+    <button id="accept-cookies" class="btn-cookie">Accepter</button>
+    <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
+  </div>
+</div>
+<script src="cookies.js"></script>
 
 <body>
 <div class="bandeau-taxes">
@@ -117,7 +138,7 @@
   <button id="payer">Procéder au paiement</button>
 </div>
 
-<main>
+<main  class="fade-in">
   <section id="galerie-produits" class="galerie"></section>
 </main>
 

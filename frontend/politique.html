@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Politique de confidentialité - Mini Palettes Roses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
+  <meta name="theme-color" content="#e91e63">
+  <style>
+    .contenu {
+      max-width: 800px;
+      margin: 2rem auto;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease forwards;
+    }
+    .contenu h2 {
+      color: #c2185b;
+      margin-bottom: 1rem;
+    }
+    .contenu p, .contenu ul {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    ul {
+      list-style: disc inside;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="banniere">
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>Le hockey pour le plaisir, entre filles</p>
+      </div>
+    </div>
+
+    <nav class="menu-nav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="a-propos.html" class="nav-link">À propos</a>
+      <a href="inscription.html" class="nav-link">Inscription</a>
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="contenu">
+    <h2>Politique de confidentialité</h2>
+    <p>
+      La présente politique explique comment Mini Palettes Roses recueille, utilise et protège vos renseignements personnels, conformément à la Loi 25 (Québec).
+    </p>
+
+    <h2>1. Renseignements recueillis</h2>
+    <p>Nous recueillons uniquement les informations nécessaires, notamment :</p>
+    <ul>
+      <li>Nom et prénom</li>
+      <li>Adresse courriel</li>
+      <li>Message transmis via nos formulaires</li>
+      <li>Données de navigation (cookies essentiels et, si accepté, outils analytiques)</li>
+    </ul>
+
+    <h2>2. Utilisation des renseignements</h2>
+    <p>Vos informations sont utilisées afin de :</p>
+    <ul>
+      <li>Répondre à vos questions ou demandes d’inscription</li>
+      <li>Gérer vos achats et commandes (Stripe pour les paiements)</li>
+      <li>Améliorer votre expérience de navigation</li>
+    </ul>
+
+    <h2>3. Partage avec des tiers</h2>
+    <p>
+      Nous ne partageons vos renseignements qu’avec des fournisseurs de services nécessaires : 
+      <strong>FormSubmit</strong> (formulaires), <strong>Stripe</strong> (paiements sécurisés), et notre hébergeur (<strong>Render</strong>, <strong>GoDaddy</strong>).
+    </p>
+
+    <h2>4. Consentement</h2>
+    <p>
+      En soumettant un formulaire ou en acceptant les cookies, vous consentez à l’utilisation de vos informations conformément à cette politique.
+    </p>
+
+    <h2>5. Vos droits</h2>
+    <p>Conformément à la Loi 25, vous disposez des droits suivants :</p>
+    <ul>
+      <li>Accéder à vos renseignements personnels</li>
+      <li>Demander la rectification ou la suppression de vos données</li>
+      <li>Retirer votre consentement en tout temps</li>
+    </ul>
+
+    <h2>6. Responsable de la protection des renseignements personnels</h2>
+    <p>
+      Responsable : <strong>Lisa Hays</strong><br>
+      Courriel : <a href="mailto:lhays@haysconseil.com">lhays@haysconseil.com</a>
+    </p>
+
+    <h2>7. Conservation des données</h2>
+    <p>
+      Les renseignements sont conservés uniquement le temps nécessaire pour atteindre les finalités prévues et conformément aux exigences légales.
+    </p>
+
+    <h2>8. Cookies</h2>
+    <p>
+      Nous utilisons des cookies essentiels au fonctionnement du site. Les cookies analytiques ou publicitaires sont activés uniquement avec votre consentement explicite. 
+      Vous pouvez gérer vos préférences via notre <a href="javascript:void(0)" onclick="localStorage.removeItem('cookiesChoice');location.reload();">bandeau cookies</a>.
+    </p>
+  </div>
+</main>
+
+<div id="footer-container"></div>
+<script>
+  fetch('footer.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('footer-container').outerHTML = data;
+    });
+</script>
+
+</body>
+</html>

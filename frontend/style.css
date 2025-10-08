@@ -644,4 +644,61 @@
   -moz-appearance: textfield; /* Firefox */
 }
 
+/* 🍪 Bandeau Cookies */
+.cookie-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  background-color: var(--rose-clair, #fce4ec);
+  color: #333;
+  padding: 1rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  z-index: 9999; /* toujours au-dessus */
+}
 
+/* Les boutons à l'intérieur du bandeau */
+#cookie-banner .cookie-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Liens et boutons */
+.cookie-link {
+  color: var(--rose-foncé, #e91e63);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.btn-cookie {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 25px;
+  background-color: var(--rose-foncé, #e91e63);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-cookie:hover {
+  background-color: #c2185b;
+  transform: scale(1.05);
+}
+
+.btn-cookie.refuse {
+  background-color: #bbb;
+}
+
+.btn-cookie.refuse:hover {
+  background-color: #999;
+}

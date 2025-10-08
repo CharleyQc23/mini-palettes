@@ -11,7 +11,19 @@
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
-<style>
+
+  <style>
+    /* ----------------- Fade-in ----------------- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body.fade-in > *:not(#cookie-banner) {
+      animation: fadeIn 1s ease forwards;
+    }
+
+    /* ----------------- Accueil ----------------- */
     .accueil {
       padding: 3rem 1rem;
       text-align: center;
@@ -58,170 +70,182 @@
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
     }
 
-    nav {
-      margin-top: 1rem;
-    }
-
     nav a {
       margin-left: 0.5rem;
     }
+
+    /* ----------------- Header / Slider ----------------- */
+    header.banniere {
+      position: relative;
+      z-index: 2;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      overflow: hidden;
+    }
+
+    .slider {
+      position: relative;
+      top: -30px;
+      z-index: 1;
+      height: 90vh;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 1s ease, transform 1s ease;
+      z-index: 0;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255,255,255,0.8);
+      padding: 2rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .slide-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #c2185b;
+    }
+
+    .slide-content a {
+      text-decoration: none;
+    }
+
+    /* ----------------- Flèches ----------------- */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 3rem;
+      color: #c2185b;
+      padding: 0;
+      cursor: pointer;
+      z-index: 2;
+      transition: transform 0.2s ease;
+    }
+
+    .arrow:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .arrow.left { left: 20px; }
+    .arrow.right { right: 20px; }
+
+    @media (max-width: 768px) {
+      .arrow { display: none; }
+      .slide-content { width: 90%; padding: 1.5rem; }
+      .slide-content h2 { font-size: 1.5rem; }
+    }
+
+    /* ----------------- Bandeau Cookies ----------------- */
+    #cookie-banner {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background-color: var(--rose-clair, #fce4ec);
+      color: #333;
+      padding: 1rem 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.95rem;
+      z-index: 9999;
+      animation: none !important;
+    }
+
+    #cookie-banner .cookie-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .cookie-link {
+      color: var(--rose-foncé, #e91e63);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .btn-cookie {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 25px;
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-cookie:hover { background-color: #c2185b; transform: scale(1.05); }
+    .btn-cookie.refuse { background-color: #bbb; }
+    .btn-cookie.refuse:hover { background-color: #999; }
+
   </style>
 </head>
 
-<body>
+<body class="fade-in">
 
-<header class="banniere">
-  <div class="header-container">
-    <div class="logo-texte">
-      <a href="index.html">
-        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-      </a>
-      <div class="texte-site">
-        <h1>Mini-palettes roses</h1>
-        <p>Le hockey pour le plaisir, entre filles</p>
+  <!-- Header / Slider -->
+  <header class="banniere">
+    <div class="header-container">
+      <div class="logo-texte">
+        <a href="index.html"><img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site"></a>
+        <div class="texte-site">
+          <h1>Mini-palettes roses</h1>
+          <p>Le hockey pour le plaisir, entre filles</p>
+        </div>
       </div>
+      <nav class="menu-nav">
+        <a href="a-propos.html" class="nav-link">À propos</a>
+        <a href="inscription.html" class="nav-link">Inscription</a>
+        <a href="boutique.html" class="nav-link">Boutique</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <nav class="menu-nav">
-      <a href="a-propos.html" class="nav-link">À propos</a>
-      <a href="inscription.html" class="nav-link">Inscription</a>
-      <a href="boutique.html" class="nav-link">Boutique</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
-  </div>
-</header>
-
-
-<style>
-/* Slider */
-
-header.banniere {
-  position: relative; /* garde les coins arrondis visibles */
-  z-index: 2; /* header devant le slider */
-  border-bottom-left-radius: 30px; /* exemple, garde ton arrondi existant */
-  border-bottom-right-radius: 30px;
-  overflow: hidden; /* important pour que le slider ne dépasse pas horizontalement */
-}
-.slider {
-  position: relative;
-  top: -30px; /* remonte le slider derrière le header, ajuste selon la taille de l'arrondi */
-  z-index: 1; /* derrière le header */
-  height: 90vh; /* ou ce que tu veux */
-}
-
-.slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center top; /* center = focus au centre de l'image */
-  background-repeat: no-repeat;
-  opacity: 0;
-  transform: translateX(100%);
-  transition: opacity 1s ease, transform 1s ease;
-  z-index: 0;
-}
-
-.slide.active {
-  opacity: 1;
-  transform: translateX(0);
-  z-index: 1;
-}
-
-.slide-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.slide-content h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #c2185b;
-}
-
-.slide-content a {
-  text-decoration: none;
-}
-
-/* Bouton rose réutilisé */
-.btn-rose {
-  padding: 0.8rem 1.6rem;
-  background-color: var(--rose-foncé, #e91e63);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  display: inline-block;
-}
-.btn-rose:hover {
-  background-color: #c2185b;
-  transform: scale(1.05);
-}
-
-/* Flèches */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 3rem;
-  color: #c2185b;
-  padding: 0;
-  cursor: pointer;
-  z-index: 2;
-  transition: transform 0.2s ease;
-}
-.arrow:hover {
-  transform: translateY(-50%) scale(1.1);
-}
-.arrow.left {
-  left: 20px;
-}
-.arrow.right {
-  right: 20px;
-}
-
-/* Masquer les flèches sur mobile */
-@media (max-width: 768px) {
-  .arrow {
-    display: none;
-  }
-
-  .slide-content {
-    width: 90%;
-    padding: 1.5rem;
-  }
-
-  .slide-content h2 {
-    font-size: 1.5rem;
-  }
-}
-  </style>
-  
   <div class="slider">
-        <div class="slide" style="background-image: url('images/slide-apropos.webp');">
+    <div class="slide active" style="background-image: url('images/slide-apropos.webp');">
       <div class="slide-content">
         <h2>Notre mission pour les joueuses</h2>
         <a href="a-propos.html" class="btn-rose">À propos</a>
       </div>
     </div>
-            <div class="slide" style="background-image: url('images/slide-inscription.webp');">
+<div class="slide" style="background-image: url('images/slide-inscription.webp');">
       <div class="slide-content">
         <h2>Vous aimeriez vous inscrire?</h2>
         <a href="inscription.html" class="btn-rose">Inscription</a>
       </div>
     </div>
-    <div class="slide active" style="background-image: url('images/slide-boutique.webp');">
+    <div class="slide" style="background-image: url('images/slide-boutique.webp');">
       <div class="slide-content">
         <h2>Découvrez nos produits personnalisés</h2>
         <a href="boutique.html" class="btn-rose">Boutique</a>
@@ -233,107 +257,78 @@ header.banniere {
         <a href="contact.html" class="btn-rose">Contact</a>
       </div>
     </div>
-  
-    <!-- Flèches -->
+
     <button class="arrow left" id="prevSlide">‹</button>
     <button class="arrow right" id="nextSlide">›</button>
   </div>
-  
+
+  <!-- Main -->
+  <main>
+    <section class="accueil">
+      <h2>Bienvenue chez les mini-palettes roses!</h2>
+      <p>Le plaisir du hockey entre filles, dès le premier coup de patin.</p>
+      <a href="inscription.html" class="btn-rose">S'inscrire dès maintenant!</a>
+    </section>
+  </main>
+
+  <!-- Bandeau Cookies -->
+  <div id="cookie-banner">
+    <p>
+      Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
+      <a href="politique.html" class="cookie-link">En savoir plus</a>
+    </p>
+    <div class="cookie-buttons">
+      <button id="accept-cookies" class="btn-cookie">Accepter</button>
+      <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="cookies.js"></script>
+  <script src="script.js"></script>
+
   <script>
+    // Slider
     const slides = document.querySelectorAll('.slide');
     const prevBtn = document.getElementById('prevSlide');
     const nextBtn = document.getElementById('nextSlide');
     let current = 0;
     let slideInterval;
-  
+
     function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        if (i === index) slide.classList.add('active');
-      });
+      slides.forEach((slide, i) => slide.classList.remove('active'));
+      slides[index].classList.add('active');
       current = index;
     }
-  
-    function nextSlide() {
-      const next = (current + 1) % slides.length;
-      showSlide(next);
-    }
-  
-    function prevSlideFunc() {
-      const prev = (current - 1 + slides.length) % slides.length;
-      showSlide(prev);
-    }
-  
-    nextBtn.addEventListener('click', () => {
-      nextSlide();
-      resetInterval();
-    });
-  
-    prevBtn.addEventListener('click', () => {
-      prevSlideFunc();
-      resetInterval();
-    });
-  
-    function resetInterval() {
-      clearInterval(slideInterval);
-      slideInterval = setInterval(nextSlide, 6000);
-    }
-  
+
+    function nextSlide() { showSlide((current + 1) % slides.length); }
+    function prevSlideFunc() { showSlide((current - 1 + slides.length) % slides.length); }
+
+    nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+    prevBtn.addEventListener('click', () => { prevSlideFunc(); resetInterval(); });
+
+    function resetInterval() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 6000); }
     slideInterval = setInterval(nextSlide, 6000);
 
-    // Variables pour le swipe tactile
-let touchStartX = 0;
-let touchEndX = 0;
-
-const sliderElement = document.querySelector('.slider');
-
-// Enregistre la position de départ du doigt
-sliderElement.addEventListener('touchstart', (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-// Enregistre la position finale du doigt et détermine la direction du swipe
-sliderElement.addEventListener('touchend', (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipeGesture();
-});
-
-function handleSwipeGesture() {
-  const swipeThreshold = 50; // Minimum en px pour considérer un vrai swipe
-
-  if (touchEndX < touchStartX - swipeThreshold) {
-    nextSlide(); // Swipe gauche → prochaine diapo
-    resetInterval();
-  } else if (touchEndX > touchStartX + swipeThreshold) {
-    prevSlideFunc(); // Swipe droite → diapo précédente
-    resetInterval();
-  }
-}
-
-  </script>
-  
-
-
-<main>
-  <section class="accueil">
-    <h2>Bienvenue chez les mini-palettes roses!</h2>
-    <p>
-    </p>
-    <a href="boutique.html" class="btn-rose">Découvrir la boutique</a>
-    <br />
-  </section>
-</main>
-
-<div id="footer-container"></div>
-<script>
-  fetch('footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer-container').outerHTML = data;
+    // Swipe tactile
+    let touchStartX = 0, touchEndX = 0;
+    const sliderElement = document.querySelector('.slider');
+    sliderElement.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+    sliderElement.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) nextSlide();
+      else if (touchEndX > touchStartX + swipeThreshold) prevSlideFunc();
+      resetInterval();
     });
-</script>
 
-  <script src="script.js"></script>
+    // Footer
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => document.getElementById('footer-container').outerHTML = data);
+  </script>
 
 </body>
 </html>

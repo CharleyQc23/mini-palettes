@@ -55,11 +55,44 @@
     .btn-envoyer:hover {
       background-color: #e91e63;
     }
+.ligne-consentement {
+  display: flex;
+  align-items: center;       /* centre verticalement */
+  gap: 1rem;                 /* espace entre checkbox et bouton */
+  margin-top: 1.5rem;
+  flex-wrap: wrap;           /* pour mobile, passe à la ligne si nécessaire */
+}
+
+.ligne-consentement .consentement {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.ligne-consentement input[type="checkbox"] {
+  width: 20px;      /* taille plus grande */
+  height: 20px;     /* taille plus grande */
+  margin-right: 0.5rem;
+}
+
+
   </style>
 </head>
 
-<body>
+<!-- 📝 Bandeau Cookies -->
+<div id="cookie-banner" class="cookie-banner">
+  <p>
+    Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
+    <a href="politique.html" class="cookie-link">En savoir plus</a>
+  </p>
+  <div class="cookie-buttons">
+    <button id="accept-cookies" class="btn-cookie">Accepter</button>
+    <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
+  </div>
+</div>
+<script src="cookies.js"></script>
 
+<body>
 <header class="banniere">
   <div class="header-container">
     <div class="logo-texte">
@@ -104,7 +137,15 @@
   <label for="message">Message :</label>
   <textarea id="message" name="Message" rows="5" required></textarea>
 
+    <!-- ✅ Ajout consentement explicite -->
+  <div class="ligne-consentement">
+    <label class="consentement">
+      <input type="checkbox" id="consentement" name="Consentement" value="J’accepte" required>
+      J’accepte que ces informations soient utilisées pour me recontacter.
+    </label>
+
   <button type="submit" class="btn-envoyer">Envoyer</button>
+    </div>
 </form>
 
   </section>
