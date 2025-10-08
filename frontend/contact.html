@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nous rejoindre | Mini Palettes Roses</title>
+  <title>Nous rejoindre - Mini Palettes Roses</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -11,28 +11,12 @@
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
+
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 2rem;
-      background-color: #fff8fb;
-      color: #333;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    h1 {
-      font-family: 'Pacifico', cursive;
-      color: var(--rose-foncé, #e91e63);
-      margin-bottom: 0.5rem;
-    }
-
+    /* Formulaire Nous rejoindre */
     .form-contact {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 2rem auto;
       background: white;
       border-radius: 20px;
       padding: 2rem;
@@ -53,12 +37,13 @@
       border: 1px solid #ccc;
       margin-top: 0.3rem;
       font-size: 1rem;
+      box-sizing: border-box;
     }
 
     .btn-envoyer {
       margin-top: 1.5rem;
       padding: 0.6rem 1.5rem;
-      background-color: var(--rose-foncé, #e91e63);
+      background-color: #c2185b; /* rose foncé */
       color: white;
       border: none;
       border-radius: 30px;
@@ -68,49 +53,69 @@
     }
 
     .btn-envoyer:hover {
-      background-color: #c2185b;
-    }
-
-    .btn-retour {
-      display: inline-block;
-      margin-top: 2rem;
-      color: var(--rose-foncé, #e91e63);
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .btn-retour:hover {
-      text-decoration: underline;
+      background-color: #e91e63;
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Nous rejoindre</h1>
-  <p>Tu aimerais t'inscrire ou tu as simplement une question ? Écris-nous 💌</p>
+<header class="banniere">
+  <div class="header-container">
+    <div class="logo-texte">
+      <a href="index.html">
+        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
+      </a>
+      <div class="texte-site">
+        <h1>Mini-palettes roses</h1>
+        <p>Le hockey pour le plaisir, entre filles</p>
+      </div>
+    </div>
+
+    <nav class="menu-nav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="a-propos.html" class="nav-link">À propos</a>
+      <a href="boutique.html" class="nav-link">Boutique</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+  </div>
 </header>
 
-<form id="contactForm" class="form-contact" action="https://formsubmit.co/c.guernon@hotmail.ca" method="POST">
+<main>
+  <section class="accueil">
+    <div class="texte-centré">
+      <h2>Nous rejoindre</h2>
+      <p>Tu as une question ? Écris-nous 💌</p>
+    </div>
+
+<form class="form-contact" action="https://formsubmit.co/c.guernon@hotmail.ca" method="POST">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="merci.html">
+
+    <!-- deuxième destinataire -->
+  <input type="hidden" name="_cc" value="minipalettesroses@gmail.com">
+
   <label for="nom">Nom :</label>
-  <input type="text" id="nom" name="Nom" required />
+  <input type="text" id="nom" name="Nom" required>
 
   <label for="email">Courriel pour vous recontacter :</label>
-  <input type="email" id="email" name="Courriel" required />
+  <input type="email" id="email" name="Courriel" required>
 
   <label for="message">Message :</label>
   <textarea id="message" name="Message" rows="5" required></textarea>
 
-  <!-- Champs cachés -->
-  <input type="hidden" name="_captcha" value="false">
-
   <button type="submit" class="btn-envoyer">Envoyer</button>
 </form>
 
-<div style="text-align: center;">
-  <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
-</div>
+  </section>
+</main>
+
+<style>
+  .texte-centré {
+    text-align: center;
+  }
+</style>
+
 
 <div id="footer-container"></div>
 <script>
@@ -121,16 +126,15 @@
     });
 </script>
 
-<script>
-  // Redirection vers merci.html après POST
-  const form = document.getElementById('contactForm');
+<script> // Redirection vers merci.html après POST
+  const form = document.querySelector('.form-contact');
   form.addEventListener('submit', function(e) {
-    e.preventDefault(); // Empêche le rechargement
+    e.preventDefault();
     fetch(form.action, {
       method: 'POST',
       body: new FormData(form),
     }).then(() => {
-      window.location.href = 'merci.html'; // Redirection locale ou production
+      window.location.href = 'merci.html';
     }).catch(err => {
       alert('Une erreur est survenue, réessayez.');
       console.error(err);

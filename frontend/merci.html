@@ -11,37 +11,51 @@
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
+  
   <style>
+    /* Structure générale */
     body {
       font-family: Arial, sans-serif;
       background-color: #fff8fb;
       color: #333;
-      text-align: center;
-      padding: 3rem 1rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    main {
+      flex: 1; /* prend tout l'espace restant */
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 100vh;
-      animation: fadeIn 1s ease forwards;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1rem;
     }
 
+    /* Animations */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-family: 'Pacifico', cursive;
-      color: var(--rose-foncé, #e91e63);
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      animation: bounce 1s ease forwards;
     }
 
     @keyframes bounce {
       0% { transform: translateY(-30px); }
       50% { transform: translateY(10px); }
       100% { transform: translateY(0); }
+    }
+
+    @keyframes fadeInText {
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: #e91e63;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      animation: bounce 1s ease forwards;
     }
 
     p {
@@ -52,19 +66,19 @@
       animation-delay: 0.5s;
     }
 
-    @keyframes fadeInText {
-      to { opacity: 1; }
-    }
-
+    /* Bouton retour */
     .btn-retour {
-      display: inline-block;
-      padding: 0.8rem 1.6rem;
-      background-color: var(--rose-foncé, #e91e63);
+      display: block;
+      margin: 1.5rem auto 0;
+      padding: 0.6rem 1.2rem;
+      max-width: 200px;
+      background-color: #e91e63;
       color: white;
       border: none;
       border-radius: 30px;
       font-weight: bold;
       text-decoration: none;
+      text-align: center;
       transition: background-color 0.3s ease, transform 0.2s ease;
       opacity: 0;
       animation: fadeInText 1s ease forwards;
@@ -75,15 +89,23 @@
       background-color: #c2185b;
       transform: scale(1.05);
     }
+
+    /* Footer */
+    #footer-container {
+      width: 100%;
+    }
   </style>
 </head>
+
 <body>
 
-  <h1>Merci pour votre message 💌</h1>
-  <p>Nous vous répondrons dès que possible.</p>
-  <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+  <main>
+    <h1>Merci pour votre message 💌</h1>
+    <p>Nous vous répondrons dès que possible.</p>
+    <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+  </main>
 
-  <div id="footer-container" style="margin-top: 3rem;"></div>
+  <div id="footer-container"></div>
   <script>
     fetch('footer.html')
       .then(response => response.text())
