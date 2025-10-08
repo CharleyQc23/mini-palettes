@@ -2,7 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Merci !</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Merci ! | Mini Palettes Roses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
@@ -11,14 +14,83 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #fff8fb;
+      color: #333;
       text-align: center;
-      padding: 3rem;
+      padding: 3rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--rose-foncé, #e91e63);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      animation: bounce 1s ease forwards;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(-30px); }
+      50% { transform: translateY(10px); }
+      100% { transform: translateY(0); }
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeInText 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeInText {
+      to { opacity: 1; }
+    }
+
+    .btn-retour {
+      display: inline-block;
+      padding: 0.8rem 1.6rem;
+      background-color: var(--rose-foncé, #e91e63);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      opacity: 0;
+      animation: fadeInText 1s ease forwards;
+      animation-delay: 1s;
+    }
+
+    .btn-retour:hover {
+      background-color: #c2185b;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
+
   <h1>Merci pour votre message 💌</h1>
   <p>Nous vous répondrons dès que possible.</p>
-  <a href="index.html">← Retour à l'accueil</a>
+  <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+
+  <div id="footer-container" style="margin-top: 3rem;"></div>
+  <script>
+    fetch('footer.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer-container').outerHTML = data;
+      });
+  </script>
+
 </body>
 </html>

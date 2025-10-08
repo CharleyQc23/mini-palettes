@@ -85,15 +85,14 @@
   </style>
 </head>
 
-
 <body>
 
-  <header>
-    <h1>Nous rejoindre</h1>
-    <p>Tu aimerais t'inscrire ou tu as simplement une question ? Écris-nous 💌</p>
-  </header>
+<header>
+  <h1>Nous rejoindre</h1>
+  <p>Tu aimerais t'inscrire ou tu as simplement une question ? Écris-nous 💌</p>
+</header>
 
-<form class="form-contact" action="https://formsubmit.co/c.guernon@hotmail.ca" method="POST"> <!-- Remplacer c.guernon@hotmail.ca par le bon email de réception -->
+<form id="contactForm" class="form-contact" action="https://formsubmit.co/c.guernon@hotmail.ca" method="POST">
   <label for="nom">Nom :</label>
   <input type="text" id="nom" name="Nom" required />
 
@@ -104,18 +103,16 @@
   <textarea id="message" name="Message" rows="5" required></textarea>
 
   <!-- Champs cachés -->
-  <input type="hidden" name="_next" value="merci.html">
   <input type="hidden" name="_captcha" value="false">
 
   <button type="submit" class="btn-envoyer">Envoyer</button>
 </form>
 
-  <div style="text-align: center;">
-    <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
-  </div>
+<div style="text-align: center;">
+  <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+</div>
 
 <div id="footer-container"></div>
-
 <script>
   fetch('footer.html')
     .then(response => response.text())
@@ -124,7 +121,22 @@
     });
 </script>
 
-<input type="hidden" name="_next" value="merci.html">
+<script>
+  // Redirection vers merci.html après POST
+  const form = document.getElementById('contactForm');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); // Empêche le rechargement
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+    }).then(() => {
+      window.location.href = 'merci.html'; // Redirection locale ou production
+    }).catch(err => {
+      alert('Une erreur est survenue, réessayez.');
+      console.error(err);
+    });
+  });
+</script>
 
 </body>
 </html>
