@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-<<<<<<< Updated upstream
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +11,23 @@
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
+  <!-- 🔍 Référencement SEO -->
+  <meta name="description" content="Mini Palettes Roses — ligue de hockey récréatif pour filles. Découvrez nos activités, inscrivez-vous et explorez notre boutique personnalisée.">
+  <meta name="keywords" content="hockey féminin, mini palettes roses, ligue hockey filles, sport Québec, hockey loisir, inscription hockey, boutique sportive">
+  <meta name="author" content="Mini Palettes Roses">
+
+  <!-- 🌐 Open Graph (Facebook, Instagram, Messenger) -->
+  <meta property="og:title" content="Mini Palettes Roses — Le hockey pour le plaisir, entre filles">
+  <meta property="og:description" content="Participez à notre ligue de hockey récréatif entre filles et découvrez nos produits personnalisés.">
+  <meta property="og:image" content="https://tonsite.ca/images/slide-apropos.webp"> <!-- 🔁 Mets ici l'URL complète de ton image -->
+  <meta property="og:url" content="https://tonsite.ca">
+  <meta property="og:type" content="website">
+
+  <!-- 🐦 Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mini Palettes Roses — Le hockey pour le plaisir, entre filles">
+  <meta name="twitter:description" content="Ligue de hockey récréatif pour filles — inscription, boutique, contact.">
+  <meta name="twitter:image" content="https://tonsite.ca/images/slide-apropos.webp">
 
   <style>
     /* ----------------- Fade-in ----------------- */
@@ -88,92 +104,6 @@
     nav a {
       margin-left: 0.5rem;
     }
-=======
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-    <!-- Titre et description pour Google -->
-    <title>Mini Palettes Roses | Vêtements personnalisés faits avec amour</title>
-    <meta name="description" content="Mini Palettes Roses propose des vêtements personnalisés, brodés à votre goût, dans des tons doux de rose et blanc. Créations locales, paiement sécurisé et livraison rapide.">
-  
-    <!-- Open Graph pour Facebook, Messenger, etc. -->
-    <meta property="og:title" content="Mini Palettes Roses - Vêtements personnalisés faits avec amour">
-    <meta property="og:description" content="Découvrez notre collection rose et blanche — des vêtements uniques, brodés selon vos envies.">
-    <meta property="og:image" content="https://tonsite.com/images/apercu.jpg">
-    <meta property="og:url" content="https://tonsite.com">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="fr_CA">
-  
-    <!-- Favicon & icônes -->
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
-    <meta name="theme-color" content="#e91e63">
-  
-    <!-- Police et CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-  
-    <!-- Style local -->
-    <style>
-      .accueil {
-        padding: 3rem 1rem;
-        text-align: center;
-        background: #fff0f6;
-      }
-  
-      .accueil h2 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        color: #c2185b;
-      }
-  
-      .accueil p {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-  
-      .btn-rose {
-        padding: 0.8rem 1.6rem;
-        background-color: var(--rose-foncé, #e91e63);
-        color: white;
-        border: none;
-        border-radius: 30px;
-        font-size: 1rem;
-        font-weight: bold;
-        text-decoration: none;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        display: inline-block;
-      }
-  
-      .btn-rose:hover {
-        background-color: #c2185b;
-        transform: scale(1.05);
-      }
-  
-      .image-accueil {
-        width: 100%;
-        max-width: 500px;
-        border-radius: 20px;
-        margin-top: 2rem;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-      }
-  
-      nav {
-        margin-top: 1rem;
-      }
-  
-      nav a {
-        margin-left: 0.5rem;
-      }
-    </style>
-  </head>  
->>>>>>> Stashed changes
 
     /* ----------------- Header / Slider ----------------- */
     header.banniere {
@@ -312,92 +242,6 @@
     html, body {
   overflow-x: hidden;
 }
-<<<<<<< Updated upstream
-=======
-
-.slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transform: translateX(100%);
-  transition: opacity 1s ease, transform 3s ease;
-  z-index: 0;
-}
-
-.slide.active {
-  opacity: 1;
-  transform: translateX(0);
-  z-index: 1;
-}
-
-.slide-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 2rem;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.slide-content h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #c2185b;
-}
-
-.slide-content a {
-  text-decoration: none;
-}
-
-/* Bouton rose réutilisé */
-.btn-rose {
-  padding: 0.8rem 1.6rem;
-  background-color: var(--rose-foncé, #e91e63);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  display: inline-block;
-}
-.btn-rose:hover {
-  background-color: #c2185b;
-  transform: scale(1.05);
-}
-
-/* Flèches */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 3rem;
-  color: #c2185b;
-  padding: 0;
-  cursor: pointer;
-  z-index: 2;
-  transition: transform 0.2s ease;
-}
-.arrow:hover {
-  transform: translateY(-50%) scale(1.1);
-}
-.arrow.left {
-  left: 20px;
-}
-.arrow.right {
-  right: 20px;
-}
-
-/* Masquer les flèches sur mobile */
->>>>>>> Stashed changes
 @media (max-width: 768px) {
   .slider {
     height: 50vh; /* ou 50vh selon le rendu souhaité */
