@@ -302,7 +302,7 @@
       });
       const data = await response.json();
       if (data.id) {
-        const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr');
+        const stripe = Stripe('pk_test_51RlJVvRajgyqcAklwomlIeHZmbovio5dknAXCQ2mCK7lzDjT8117DNBaFRRbu9S7xtruMHxerqNviVuYvJHZafx100ORhbe9DB');
         await stripe.redirectToCheckout({ sessionId: data.id });
       } else {
         alert('Erreur lors de la création de la session de paiement.');
