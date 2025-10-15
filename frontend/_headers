@@ -1,0 +1,11 @@
+# Servir sitemap.xml avec le bon type MIME
+/sitemap.xml
+  Content-Type: application/xml
+
+# Servir robots.txt avec le bon type MIME
+/robots.txt
+  Content-Type: text/plain
+
+# Servir tous les fichiers HTML avec le type MIME correct
+/*.html
+  Content-Type: text/html
