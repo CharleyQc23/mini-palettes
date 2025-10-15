@@ -12,21 +12,17 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
 // --- Middleware
-app.use(cors());             // Autorise toutes les origines pour dev / test
+app.use(cors());          // Autorise toutes les origines
 app.use(express.json());
 
-// Gérer préflight CORS pour toutes les routes
-app.options('*', cors());
-
 // --- Servir le frontend
-const frontendPath = path.join(__dirname, '../frontend'); // ajuste selon ton projet
+const frontendPath = path.join(__dirname, '../frontend'); // remonte d'un niveau depuis backend
 app.use(express.static(frontendPath));
 
 // --- Endpoint Stripe Checkout
 app.post('/create-checkout-session', async (req, res) => {
   try {
     const panier = req.body.panier || [];
-
     if (!Array.isArray(panier) || panier.length === 0) {
       return res.status(400).json({ error: 'Panier vide ou invalide.' });
     }
@@ -50,8 +46,8 @@ app.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: `https://${req.get('host')}/succes.html`,
-      cancel_url: `https://${req.get('host')}/cancel.html`,
+      success_url: `${req.protocol}://${req.get('host')}/succes.html`,
+      cancel_url: `${req.protocol}://${req.get('host')}/cancel.html`,
     });
 
     res.json({ id: session.id });
@@ -66,8 +62,6 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-// --- Port dynamique Render
+// --- Port
 const PORT = process.env.PORT || 4242;
-app.listen(PORT, () => {
-  console.log(`Serveur en écoute sur le port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Serveur en écoute sur le port ${PORT}`));
