@@ -1,4 +1,4 @@
-// --- server.js (version optimisée avec ajout auto des produits sur Stripe) ---
+// --- server.js (version finale avec export CSV protégé) ---
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -22,11 +22,13 @@ app.use(express.static(frontendPath));
 // --- Cache produits pour éviter les appels répétitifs à Stripe
 let cacheProduits = [];
 
+// --- Mot de passe pour sécuriser l’export CSV
+const EXPORT_PASSWORD = process.env.EXPORT_PASSWORD || 'Mini-MDP';
+
 // --- Fonction utilitaire : trouve ou crée un produit et son prix
 async function getOrCreateStripePrice(item) {
   const nomProduit = item.nom.trim();
   const montantCents = Math.round(item.prixUnitaire * 100);
-  const description = `Taille: ${item.taille || 'N/A'} | ${item.personnalisation || 'Aucune personnalisation'}`;
 
   // Vérifie si le produit existe déjà dans le cache
   let produit = cacheProduits.find(p => p.name === nomProduit);
@@ -83,11 +85,23 @@ app.post('/create-checkout-session', async (req, res) => {
       });
     }
 
-    // Crée la session Stripe Checkout
+    // Préparer les metadata pour chaque item
+    const metadata = {};
+    panier.forEach((item, i) => {
+      const n = i + 1; // index 1-based
+      metadata[`item_${n}_nom`] = item.nom;
+      metadata[`item_${n}_taille`] = item.taille || '';
+      metadata[`item_${n}_quantite`] = item.quantite || 1;
+      metadata[`item_${n}_nom_personnalise`] = item.nomBrode || '';
+      metadata[`item_${n}_numero`] = item.numeroBrode || '';
+    });
+
+    // Créer la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
       line_items,
+      metadata,
       success_url: `${req.protocol}://${req.get('host')}/confirmation.html`,
       cancel_url: `${req.protocol}://${req.get('host')}/panier.html`,
     });
@@ -99,10 +113,112 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// --- Fallback vers index.html
+// --- Endpoint pour exporter les commandes CSV (protégé par mot de passe)
+app.get('/export-commandes', async (req, res) => {
+  try {
+    const password = req.query.password;
+    if (password !== EXPORT_PASSWORD) {
+      return res.status(401).send('❌ Mot de passe invalide');
+    }
+
+    let allSessions = [];
+    let starting_after = null;
+
+    // Récupérer toutes les sessions Checkout
+    while (true) {
+      const sessions = await stripe.checkout.sessions.list({
+        limit: 100,
+        starting_after,
+        expand: ['data.customer_details'],
+      });
+
+      allSessions = allSessions.concat(sessions.data);
+
+      if (!sessions.has_more) break;
+      starting_after = sessions.data[sessions.data.length - 1].id;
+    }
+
+    // Préparer CSV clients
+    const clientHeader = ['Nom client','Email client','Produit','Taille','Quantité','Nom personnalisé','Numéro'];
+    const clientRows = [clientHeader.join(',')];
+
+    // Préparer CSV fournisseur
+    const fournisseurSummary = {};
+    const fournisseurHeader = ['Produit','Taille','Quantité Totale','Détails Personnalisés'];
+    const fournisseurRows = [fournisseurHeader.join(',')];
+
+    // Parcours des sessions
+    for (const session of allSessions) {
+      const customerName = session.customer_details?.name || '';
+      const customerEmail = session.customer_details?.email || '';
+      const metadata = session.metadata || {};
+
+      const itemIndices = Object.keys(metadata)
+        .map(k => k.match(/^item_(\d+)_nom$/))
+        .filter(Boolean)
+        .map(m => m[1])
+        .sort((a, b) => a - b);
+
+      itemIndices.forEach(i => {
+        const nom = metadata[`item_${i}_nom`] || '';
+        const taille = metadata[`item_${i}_taille`] || '';
+        const quantite = parseInt(metadata[`item_${i}_quantite`] || 0, 10);
+        const nomPerso = metadata[`item_${i}_nom_personnalise`] || '';
+        const numero = metadata[`item_${i}_numero`] || '';
+
+        // CSV clients
+        clientRows.push([
+          `"${customerName}"`,
+          `"${customerEmail}"`,
+          `"${nom}"`,
+          `"${taille}"`,
+          quantite,
+          `"${nomPerso}"`,
+          `"${numero}"`
+        ].join(','));
+
+        // CSV fournisseur
+        const key = `${nom}|${taille}`;
+        if (!fournisseurSummary[key]) {
+          fournisseurSummary[key] = { total: 0, details: [] };
+        }
+        fournisseurSummary[key].total += quantite;
+        if (nomPerso || numero) {
+          fournisseurSummary[key].details.push(`"${nomPerso}" #${numero} x${quantite}`);
+        }
+      });
+    }
+
+    // Remplir CSV fournisseur
+    Object.entries(fournisseurSummary).forEach(([key, value]) => {
+      const [nom, taille] = key.split('|');
+      const details = value.details.join('; ');
+      fournisseurRows.push([nom, taille, value.total, `"${details}"`].join(','));
+    });
+
+    // Type de CSV à envoyer : clients ou fournisseur
+    const type = req.query.type || 'clients';
+    if (type === 'fournisseur') {
+      res.setHeader('Content-disposition', `attachment; filename=commandes_fournisseur.csv`);
+      res.setHeader('Content-Type', 'text/csv');
+      res.send(fournisseurRows.join('\n'));
+    } else {
+      res.setHeader('Content-disposition', `attachment; filename=commandes_clients.csv`);
+      res.setHeader('Content-Type', 'text/csv');
+      res.send(clientRows.join('\n'));
+    }
+
+  } catch (err) {
+    console.error('❌ Erreur export commandes via endpoint:', err);
+    res.status(500).send('Erreur serveur lors de l’export des commandes');
+  }
+});
+
+// --- Fallback vers index.html pour toutes les autres routes
 app.get('/*', (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
+// --- Lancement serveur
 const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => console.log(`🚀 Serveur en écoute sur le port ${PORT}`));
