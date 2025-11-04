@@ -260,16 +260,12 @@
             <option value="X-Large">X-Large</option>
           </select><br><br>
 
-          <label for="perso">Broderie :</label><br>
-          <select id="perso">
-            <option value="">-- Sélectionner --</option>
-            <option value="Aucune|0">Aucune 0$</option>
-            <option value="Broderie NOM|7">NOM +7 $</option>
-            <option value="Broderie NUMÉRO|5.5">NUMÉRO +5.5 $</option>
-            <option value="Broderie NOM et NUMÉRO|10">NOM et NUMÉRO +10 $</option>
-          </select><br><br>
+<div class="options-broderie">
+  <p><strong>Personnalisation (incluse) :</strong></p>
+  <label><input type="checkbox" id="chkAucune"> Aucune personnalisation</label><br><br>
+  <div id="details-broderie"></div>
+</div>
 
-          <div id="details-broderie"></div>
 
           <label for="quantite">Quantité :</label><br>
           <input type="number" id="quantite" name="quantite" min="1" value="1" style="width:60px; padding:0.3rem; border-radius:6px; border:1px solid #ccc;" /><br><br>
@@ -282,37 +278,73 @@
         const selectPerso = document.getElementById('perso');
         const inputQuantite = document.getElementById('quantite');
         const boutonAjouter = document.getElementById('ajouter-panier');
+        const chkAucune = document.getElementById('chkAucune');
+const details = document.getElementById('details-broderie');
 
-        function checkReady() {
-          const qte = parseInt(inputQuantite.value, 10);
-          boutonAjouter.disabled = (!selectTaille.value || !selectPerso.value || !qte || qte < 1);
-        }
+function afficherChampsBroderie() {
+  if (chkAucune.checked) {
+    details.innerHTML = ''; // cache les champs si "aucune personnalisation" est cochée
+    return;
+  }
+
+  // affiche par défaut les deux champs
+  details.innerHTML = `
+    <label for="champ-nom">Nom à broder :</label><br>
+    <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
+    <label for="champ-numero">Numéro à broder :</label><br>
+    <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>
+  `;
+}
+
+// affichage initial au chargement
+afficherChampsBroderie();
+
+// mise à jour quand l'utilisateur coche/décoche
+chkAucune.addEventListener('change', afficherChampsBroderie);
+
+function checkReady() {
+  const qte = parseInt(inputQuantite.value, 10);
+  boutonAjouter.disabled = (!selectTaille.value || !qte || qte < 1);
+}
 
         selectTaille.addEventListener('change', checkReady);
-        selectPerso.addEventListener('change', () => { afficherChampsBroderie(); checkReady(); });
         inputQuantite.addEventListener('input', checkReady);
 
         boutonAjouter.addEventListener('click', () => {
           const taille = selectTaille.value;
-          const [persoText, persoPrix] = selectPerso.value.split('|');
           const quantite = parseInt(inputQuantite.value, 10);
-          const prixUnitaire = produit.prix + parseFloat(persoPrix);
-          const prixFinal = prixUnitaire * quantite;
-          const nomBrode = document.getElementById('champ-nom')?.value || '';
-          const numeroBrode = document.getElementById('champ-numero')?.value || '';
-          panier.push({
-            nom: produit.nom,
-            prix: prixFinal,
-            taille,
-            personnalisation: persoText + (nomBrode ? `: ${nomBrode}` : '') + (numeroBrode ? ` #${numeroBrode}` : ''),
-            quantite,
-            prixUnitaire
-          });
-          localStorage.setItem('panier', JSON.stringify(panier));
-          afficherPanier();
-          animationPanier();
-          alert(`Ajouté : ${produit.nom} (${taille}, ${persoText}) x${quantite} pour ${prixFinal.toFixed(2)} $`);
-        });
+          const personnalisation = [];
+
+if (chkAucune.checked) {
+  personnalisation.push("Aucune personnalisation");
+} else {
+  const nomBrode = document.getElementById('champ-nom')?.value || '';
+  const numeroBrode = document.getElementById('champ-numero')?.value || '';
+  if (nomBrode) personnalisation.push(`Nom : ${nomBrode}`);
+  if (numeroBrode) personnalisation.push(`# : ${numeroBrode}`);
+}
+          const prixUnitaire = produit.prix;
+const prixFinal = prixUnitaire * quantite;
+
+// Création de l'objet produit à ajouter au panier
+const item = {
+  id: idProduit,
+  nom: produit.nom,
+  taille: taille,
+  prixUnitaire: prixUnitaire,
+  prix: prixFinal,
+  quantite: quantite,
+  personnalisation: personnalisation.join(", ")
+};
+
+// Ajout au panier
+panier.push(item);
+localStorage.setItem('panier', JSON.stringify(panier));
+
+animationPanier();
+majNbItems();
+alert("Produit ajouté au panier !");
+});
 
         checkReady();
       });
