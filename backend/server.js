@@ -124,6 +124,9 @@ app.get('/export-commandes', async (req, res) => {
     let allSessions = [];
     let starting_after = null;
 
+    console.log('🔹 Début récupération sessions Stripe...');
+
+    // --- Récupérer toutes les sessions Checkout
     while (true) {
       const sessions = await stripe.checkout.sessions.list({
         limit: 100,
@@ -132,24 +135,27 @@ app.get('/export-commandes', async (req, res) => {
       });
 
       allSessions = allSessions.concat(sessions.data);
+      console.log(`➡️ Récupérées ${sessions.data.length} sessions (total: ${allSessions.length})`);
 
       if (!sessions.has_more) break;
       starting_after = sessions.data[sessions.data.length - 1].id;
     }
 
-    // --- CSV clients
+    console.log(`✅ Total sessions récupérées: ${allSessions.length}`);
+
+    // --- Préparer CSV clients
     const clientHeader = ['Nom client','Email client','Produit','Taille','Quantité','Nom personnalisé','Numéro'];
     const clientRows = [clientHeader.join(',')];
 
-    // --- CSV fournisseur
+    // --- Préparer CSV fournisseur
     const fournisseurSummary = {};
     const fournisseurHeader = ['Produit','Taille','Quantité Totale','Détails Personnalisés'];
     const fournisseurRows = [fournisseurHeader.join(',')];
 
-    // Parcours des sessions
+    // --- Parcours des sessions
     for (const session of allSessions) {
-      const customerName = session.customer_details?.name || '';
-      const customerEmail = session.customer_details?.email || '';
+      const customerName = session.customer_details?.name || 'Inconnu';
+      const customerEmail = session.customer_details?.email || 'Inconnu';
       const metadata = session.metadata || {};
 
       const itemIndices = Object.keys(metadata)
@@ -165,7 +171,7 @@ app.get('/export-commandes', async (req, res) => {
         const nomPerso = metadata[`item_${i}_nom_personnalise`] || '';
         const numero = metadata[`item_${i}_numero`] || '';
 
-        // CSV clients
+        // --- CSV clients
         clientRows.push([
           `"${customerName}"`,
           `"${customerEmail}"`,
@@ -176,7 +182,7 @@ app.get('/export-commandes', async (req, res) => {
           `"${numero}"`
         ].join(','));
 
-        // CSV fournisseur
+        // --- CSV fournisseur
         const key = `${nom}|${taille}`;
         if (!fournisseurSummary[key]) {
           fournisseurSummary[key] = { total: 0, details: [] };
@@ -188,14 +194,14 @@ app.get('/export-commandes', async (req, res) => {
       });
     }
 
-    // Remplir CSV fournisseur
+    // --- Remplir CSV fournisseur
     Object.entries(fournisseurSummary).forEach(([key, value]) => {
       const [nom, taille] = key.split('|');
       const details = value.details.join('; ');
       fournisseurRows.push([nom, taille, value.total, `"${details}"`].join(','));
     });
 
-    // Type de CSV à envoyer : clients ou fournisseur
+    // --- Type de CSV à envoyer : clients ou fournisseur
     const type = req.query.type || 'clients';
     if (type === 'fournisseur') {
       res.setHeader('Content-disposition', `attachment; filename=commandes_fournisseur.csv`);
@@ -207,9 +213,10 @@ app.get('/export-commandes', async (req, res) => {
       res.send(clientRows.join('\n'));
     }
 
+    console.log(`✅ Export CSV "${type}" généré avec succès`);
   } catch (err) {
     console.error('❌ Erreur export commandes via endpoint:', err);
-    res.status(500).send('Erreur serveur lors de l’export des commandes');
+    res.status(500).send(`Erreur serveur lors de l’export des commandes: ${err.message}`);
   }
 });
 

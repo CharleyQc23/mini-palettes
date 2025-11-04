@@ -52,8 +52,8 @@ Pour récupérer un fichier CSV contenant toutes les commandes, produits, quanti
 node server.js
 
 
-https://ton-domaine.com/export-commandes?type=clients&password=Mini-MDP
-https://ton-domaine.com/export-commandes?type=fournisseur&password=Mini-MDP
+https://www.minipalettes.ca/export-commandes?type=clients&password=Mini-MDP
+https://www.minipalettes.ca/export-commandes?type=fournisseur&password=Mini-MDP
 
 Support :
 Charles Guernon
