@@ -11,19 +11,20 @@ async function exportOrdersSummaryCSV() {
   try {
     let allSessions = [];
     let starting_after = null;
-
-    // --- Récupérer toutes les sessions Checkout
+    
     while (true) {
-      const sessions = await stripe.checkout.sessions.list({
-        limit: 100,
-        starting_after,
-      });
-
+      const params = { limit: 100 };
+      if (starting_after) {
+        params.starting_after = starting_after;
+      }
+    
+      const sessions = await stripe.checkout.sessions.list(params);
+    
       allSessions = allSessions.concat(sessions.data);
-
+    
       if (!sessions.has_more) break;
       starting_after = sessions.data[sessions.data.length - 1].id;
-    }
+    }    
 
     console.log(`✅ ${allSessions.length} sessions récupérées`);
 
