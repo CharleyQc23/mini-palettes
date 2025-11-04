@@ -222,8 +222,16 @@ app.get('/export-commandes', async (req, res) => {
 });
 
 // --- Fallback vers index.html pour toutes les autres routes
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+const { fileURLToPath } = require('url');
+const fs = require('fs');
+
+app.use((req, res, next) => {
+  const indexPath = path.join(frontendPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('index.html introuvable');
+  }
 });
 
 // --- Lancement serveur
