@@ -1,4 +1,6 @@
-// --- server.js (version finale avec export CSV protégé) ---
+// --- server.js (final avec dotenv et export CSV protégé) ---
+require('dotenv').config(); // Charge les variables d'environnement depuis .env
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -75,7 +77,6 @@ app.post('/create-checkout-session', async (req, res) => {
       return res.status(400).json({ error: 'Panier vide ou invalide.' });
     }
 
-    // Crée les line_items dynamiquement
     const line_items = [];
     for (const item of panier) {
       const priceId = await getOrCreateStripePrice(item);
@@ -88,7 +89,7 @@ app.post('/create-checkout-session', async (req, res) => {
     // Préparer les metadata pour chaque item
     const metadata = {};
     panier.forEach((item, i) => {
-      const n = i + 1; // index 1-based
+      const n = i + 1;
       metadata[`item_${n}_nom`] = item.nom;
       metadata[`item_${n}_taille`] = item.taille || '';
       metadata[`item_${n}_quantite`] = item.quantite || 1;
@@ -96,7 +97,6 @@ app.post('/create-checkout-session', async (req, res) => {
       metadata[`item_${n}_numero`] = item.numeroBrode || '';
     });
 
-    // Créer la session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -124,7 +124,6 @@ app.get('/export-commandes', async (req, res) => {
     let allSessions = [];
     let starting_after = null;
 
-    // Récupérer toutes les sessions Checkout
     while (true) {
       const sessions = await stripe.checkout.sessions.list({
         limit: 100,
@@ -138,11 +137,11 @@ app.get('/export-commandes', async (req, res) => {
       starting_after = sessions.data[sessions.data.length - 1].id;
     }
 
-    // Préparer CSV clients
+    // --- CSV clients
     const clientHeader = ['Nom client','Email client','Produit','Taille','Quantité','Nom personnalisé','Numéro'];
     const clientRows = [clientHeader.join(',')];
 
-    // Préparer CSV fournisseur
+    // --- CSV fournisseur
     const fournisseurSummary = {};
     const fournisseurHeader = ['Produit','Taille','Quantité Totale','Détails Personnalisés'];
     const fournisseurRows = [fournisseurHeader.join(',')];
