@@ -14,9 +14,9 @@ async function exportOrdersSummaryCSV() {
     
     while (true) {
       const params = { limit: 100 };
-      if (starting_after) {
-        params.starting_after = starting_after;
-      }
+if (starting_after && starting_after.length > 0) {
+  params.starting_after = starting_after;
+}
     
       const sessions = await stripe.checkout.sessions.list(params);
     

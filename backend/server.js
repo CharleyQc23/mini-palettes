@@ -128,11 +128,12 @@ app.get('/export-commandes', async (req, res) => {
 
     // --- Récupérer toutes les sessions Checkout
     while (true) {
-      const sessions = await stripe.checkout.sessions.list({
-        limit: 100,
-        starting_after,
-        expand: ['data.customer_details'],
-      });
+      const params = { limit: 100, expand: ['data.customer_details'] };
+      if (starting_after && starting_after.length > 0) {
+        params.starting_after = starting_after;
+      }
+      
+      const sessions = await stripe.checkout.sessions.list(params);      
 
       allSessions = allSessions.concat(sessions.data);
       console.log(`➡️ Récupérées ${sessions.data.length} sessions (total: ${allSessions.length})`);
