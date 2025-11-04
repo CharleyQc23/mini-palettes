@@ -1,9 +1,10 @@
-// --- server.js (final avec dotenv et export CSV protégé) ---
+// --- server.js (final avec dotenv et export CSV protégé UTF-8) ---
 require('dotenv').config(); // Charge les variables d'environnement depuis .env
 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ La variable d'environnement STRIPE_SECRET_KEY n'est pas définie !");
@@ -32,15 +33,12 @@ async function getOrCreateStripePrice(item) {
   const nomProduit = item.nom.trim();
   const montantCents = Math.round(item.prixUnitaire * 100);
 
-  // Vérifie si le produit existe déjà dans le cache
   let produit = cacheProduits.find(p => p.name === nomProduit);
 
-  // Si pas trouvé, le chercher sur Stripe
   if (!produit) {
     const produitsStripe = await stripe.products.list({ active: true, limit: 100 });
     produit = produitsStripe.data.find(p => p.name === nomProduit);
 
-    // S'il n'existe toujours pas, on le crée
     if (!produit) {
       produit = await stripe.products.create({
         name: nomProduit,
@@ -49,15 +47,12 @@ async function getOrCreateStripePrice(item) {
       });
     }
 
-    // Met à jour le cache local
     cacheProduits.push(produit);
   }
 
-  // Cherche un prix correspondant sur Stripe
   const prices = await stripe.prices.list({ product: produit.id, limit: 100 });
   let price = prices.data.find(p => p.unit_amount === montantCents && p.currency === 'cad');
 
-  // Si aucun prix exact trouvé, on le crée
   if (!price) {
     price = await stripe.prices.create({
       product: produit.id,
@@ -86,7 +81,6 @@ app.post('/create-checkout-session', async (req, res) => {
       });
     }
 
-    // Préparer les metadata pour chaque item
     const metadata = {};
     panier.forEach((item, i) => {
       const n = i + 1;
@@ -113,7 +107,13 @@ app.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-// --- Endpoint pour exporter les commandes CSV (protégé par mot de passe)
+// --- Fonction utilitaire pour échapper les champs CSV
+const escapeCSV = (text) => {
+  if (!text) return '';
+  return `"${text.replace(/"/g, '""')}"`; // double guillemets pour CSV
+};
+
+// --- Endpoint pour exporter les commandes CSV
 app.get('/export-commandes', async (req, res) => {
   try {
     const password = req.query.password;
@@ -126,16 +126,13 @@ app.get('/export-commandes', async (req, res) => {
 
     console.log('🔹 Début récupération sessions Stripe...');
 
-    // --- Récupérer toutes les sessions Checkout
     while (true) {
       const params = { limit: 100, expand: ['data.customer_details'] };
-      if (starting_after && starting_after.length > 0) {
-        params.starting_after = starting_after;
-      }
-      
-      const sessions = await stripe.checkout.sessions.list(params);      
+      if (starting_after) params.starting_after = starting_after;
 
+      const sessions = await stripe.checkout.sessions.list(params);
       allSessions = allSessions.concat(sessions.data);
+
       console.log(`➡️ Récupérées ${sessions.data.length} sessions (total: ${allSessions.length})`);
 
       if (!sessions.has_more) break;
@@ -144,16 +141,13 @@ app.get('/export-commandes', async (req, res) => {
 
     console.log(`✅ Total sessions récupérées: ${allSessions.length}`);
 
-    // --- Préparer CSV clients
     const clientHeader = ['Nom client','Email client','Produit','Taille','Quantité','Nom personnalisé','Numéro'];
     const clientRows = [clientHeader.join(',')];
 
-    // --- Préparer CSV fournisseur
     const fournisseurSummary = {};
     const fournisseurHeader = ['Produit','Taille','Quantité Totale','Détails Personnalisés'];
     const fournisseurRows = [fournisseurHeader.join(',')];
 
-    // --- Parcours des sessions
     for (const session of allSessions) {
       const customerName = session.customer_details?.name || 'Inconnu';
       const customerEmail = session.customer_details?.email || 'Inconnu';
@@ -173,15 +167,7 @@ app.get('/export-commandes', async (req, res) => {
         const numero = metadata[`item_${i}_numero`] || '';
 
         // --- CSV clients
-        clientRows.push([
-          `"${customerName}"`,
-          `"${customerEmail}"`,
-          `"${nom}"`,
-          `"${taille}"`,
-          quantite,
-          `"${nomPerso}"`,
-          `"${numero}"`
-        ].join(','));
+        clientRows.push([customerName, customerEmail, nom, taille, quantite, nomPerso, numero].join(','));
 
         // --- CSV fournisseur
         const key = `${nom}|${taille}`;
@@ -190,29 +176,26 @@ app.get('/export-commandes', async (req, res) => {
         }
         fournisseurSummary[key].total += quantite;
         if (nomPerso || numero) {
-          fournisseurSummary[key].details.push(`"${nomPerso}" #${numero} x${quantite}`);
+          fournisseurSummary[key].details.push(`${nomPerso} #${numero} x${quantite}`);
         }
       });
     }
 
-    // --- Remplir CSV fournisseur
     Object.entries(fournisseurSummary).forEach(([key, value]) => {
       const [nom, taille] = key.split('|');
       const details = value.details.join('; ');
-      fournisseurRows.push([nom, taille, value.total, `"${details}"`].join(','));
+      fournisseurRows.push([nom, taille, value.total, details].join(','));
     });
 
-    // --- Type de CSV à envoyer : clients ou fournisseur
+    // --- Type de CSV à envoyer
     const type = req.query.type || 'clients';
-    if (type === 'fournisseur') {
-      res.setHeader('Content-disposition', `attachment; filename=commandes_fournisseur.csv`);
-      res.setHeader('Content-Type', 'text/csv');
-      res.send(fournisseurRows.join('\n'));
-    } else {
-      res.setHeader('Content-disposition', `attachment; filename=commandes_clients.csv`);
-      res.setHeader('Content-Type', 'text/csv');
-      res.send(clientRows.join('\n'));
-    }
+    const csvContent = type === 'fournisseur' ? fournisseurRows : clientRows;
+
+    res.setHeader('Content-disposition', `attachment; filename=commandes_${type}.csv`);
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+
+    // --- Ajout BOM pour Excel
+    res.send('\uFEFF' + csvContent.map(row => row.split(',').map(escapeCSV).join(',')).join('\n'));
 
     console.log(`✅ Export CSV "${type}" généré avec succès`);
   } catch (err) {
@@ -222,10 +205,7 @@ app.get('/export-commandes', async (req, res) => {
 });
 
 // --- Fallback vers index.html pour toutes les autres routes
-const { fileURLToPath } = require('url');
-const fs = require('fs');
-
-app.use((req, res, next) => {
+app.use((req, res) => {
   const indexPath = path.join(frontendPath, 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
