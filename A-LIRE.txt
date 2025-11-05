@@ -25,32 +25,11 @@ Notes :
 
 ---
 
-## 2. Paiement et commandes
-
-Le système Stripe Checkout gère automatiquement :  
-- Création de produit si inexistant  
-- Création du prix correspondant  
-- Ajout des informations de personnalisation (nom brodé, numéro, taille)  
-
-Les informations sont stockées dans Stripe, y compris le nom de la personne sur la carte de crédit.
-
-### 2.1 Créer une session de paiement
-
-Depuis la page du panier, cliquez sur le bouton "Procéder au paiement".  
-Les données du panier sont envoyées au serveur, et Stripe Checkout s’occupe du reste.
-
----
-
-## 3. Exporter les commandes
-
-### 3.1 Export CSV résumé (automatique)
+## Exporter les commandes
 
 Pour récupérer un fichier CSV contenant toutes les commandes, produits, quantités, détails personnalisés et noms des clients :  
 
-- Lancer le serveur Node.js (si ce n’est pas déjà fait) :  
-```bash
-node server.js
-
+Lancez les sites web suivant sur votre navigateur
 
 https://www.minipalettes.ca/export-commandes?type=clients&password=Mini-MDP
 https://www.minipalettes.ca/export-commandes?type=fournisseur&password=Mini-MDP

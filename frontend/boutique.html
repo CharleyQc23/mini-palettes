@@ -240,5 +240,78 @@ majNbItems();
 <script>
 fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('footer-container').outerHTML=data;});
 </script>
+
+<!-- Pop-up de pause de vente -->
+<div id="pause-vente-overlay" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 9998;
+">
+</div>
+
+<div id="pause-vente-popup" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: #fff0f6;
+  border: 3px solid #f8bbd0;
+  border-radius: 25px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  z-index: 9999;
+  width: min(90%, 400px);
+  animation: popIn 0.5s ease forwards;
+">
+  <h2 style=" color: #c2185b; font-size: 2rem;">Vente temporairement fermée 💕</h2>
+  <p style="font-family: sans-serif; color: #555; margin-top: 1rem;">
+    La boutique est fermée jusqu'à la prochaine vente.<br>
+    Merci de revenir plus tard !
+  </p>
+  <button onclick="window.location.href='index.html'" style="
+    margin-top: 1.5rem;
+    background-color: #c2185b;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  " onmouseover="this.style.backgroundColor='#ad1457'" onmouseout="this.style.backgroundColor='#c2185b'">
+    Retour au menu principal
+  </button>
+</div>
+
+<style>
+@keyframes popIn {
+  from { transform: translate(-50%, -40%) scale(0.9); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+  // ---- CONFIG ----
+  const venteEnPause = true; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
+
+  if (venteEnPause) {
+    // Affiche le pop-up et l’arrière-plan semi-transparent
+    document.getElementById('pause-vente-overlay').style.display = 'block';
+    document.getElementById('pause-vente-popup').style.display = 'block';
+
+    // Empêche toute interaction avec la page derrière
+    document.body.style.overflow = 'hidden';
+    document.querySelector('main').style.pointerEvents = 'none';
+    document.querySelector('header').style.pointerEvents = 'none';
+    document.querySelector('#btn-panier').style.pointerEvents = 'none';
+  }
+</script>
+
 </body>
 </html>
