@@ -1,12 +1,12 @@
 // --- server.js ---
-const path = require('path');       // <-- importer path en premier
-require('dotenv').config({ path: path.join(__dirname, '.env') }); // ensuite on l'utilise
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 
-// Vérifie que la clé Stripe est bien définie
+// Vérifie la clé Stripe
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ La variable d'environnement STRIPE_SECRET_KEY n'est pas définie !");
   process.exit(1);
@@ -23,15 +23,17 @@ app.use(express.json());
 const frontendPath = path.join(__dirname, '..', 'frontend');
 app.use(express.static(frontendPath));
 
-app.use((req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
-
 // --- Cache produits pour éviter les appels répétitifs à Stripe
 let cacheProduits = [];
 
 // --- Mot de passe pour sécuriser l’export CSV
 const EXPORT_PASSWORD = process.env.EXPORT_PASSWORD || 'Mini-MDP';
+
+// --- Fonction utilitaire pour échapper les champs CSV
+const escapeCSV = (text) => {
+  if (!text) return '';
+  return `"${String(text).replace(/"/g, '""')}"`;
+};
 
 // --- Fonction utilitaire : trouve ou crée un produit et son prix
 async function getOrCreateStripePrice(item) {
@@ -66,65 +68,44 @@ async function getOrCreateStripePrice(item) {
     });
   }
 
-  return price.id;
+  return price.id; // retourne directement l'ID
 }
 
 // --- Endpoint Stripe Checkout
 app.post('/create-checkout-session', async (req, res) => {
   try {
-    const panier = req.body.panier;
-    if (!Array.isArray(panier) || panier.length === 0) {
-      return res.status(400).json({ error: 'Panier vide ou invalide.' });
-    }
+    const { panier } = req.body;
+    if (!panier || panier.length === 0) return res.status(400).json({ error: 'Panier vide' });
 
-    const line_items = [];
-    for (const item of panier) {
+    // Préparer les lignes pour Stripe
+    const line_items = await Promise.all(panier.map(async item => {
       const priceId = await getOrCreateStripePrice(item);
-      line_items.push({
+      return {
         price: priceId,
-        quantity: item.quantite || 1,
-      });
-    }
-
-    const metadata = {};
-    panier.forEach((item, i) => {
-      const n = i + 1;
-      metadata[`item_${n}_nom`] = item.nom;
-      metadata[`item_${n}_taille`] = item.taille || '';
-      metadata[`item_${n}_quantite`] = item.quantite || 1;
-      metadata[`item_${n}_nom_personnalise`] = item.nomBrode || '';
-      metadata[`item_${n}_numero`] = item.numeroBrode || '';
-    });
+        quantity: item.quantite,
+      };
+    }));
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      mode: 'payment',
       line_items,
-      metadata,
-      success_url: `${req.protocol}://${req.get('host')}/confirmation.html`,
-      cancel_url: `${req.protocol}://${req.get('host')}/panier.html`,
+      mode: 'payment',
+      success_url: 'https://www.minipalettes.ca/confirmation.html',
+      cancel_url: 'https://www.minipalettes.ca/panier.html',
     });
 
     res.json({ id: session.id });
   } catch (err) {
     console.error('❌ Erreur création session Stripe:', err);
-    res.status(500).json({ error: 'Erreur serveur Stripe' });
+    res.status(500).json({ error: 'Erreur serveur lors de la création de la session' });
   }
 });
-
-// --- Fonction utilitaire pour échapper les champs CSV
-const escapeCSV = (text) => {
-  if (!text) return '';
-  return `"${text.replace(/"/g, '""')}"`; // double guillemets pour CSV
-};
 
 // --- Endpoint pour exporter les commandes CSV
 app.get('/export-commandes', async (req, res) => {
   try {
     const password = req.query.password;
-    if (password !== EXPORT_PASSWORD) {
-      return res.status(401).send('❌ Mot de passe invalide');
-    }
+    if (password !== EXPORT_PASSWORD) return res.status(401).send('❌ Mot de passe invalide');
 
     let allSessions = [];
     let starting_after = null;
@@ -146,12 +127,13 @@ app.get('/export-commandes', async (req, res) => {
 
     console.log(`✅ Total sessions récupérées: ${allSessions.length}`);
 
+    // --- Préparer CSV
     const clientHeader = ['Nom client','Email client','Produit','Taille','Quantité','Nom personnalisé','Numéro'];
-    const clientRows = [clientHeader.join(',')];
-
-    const fournisseurSummary = {};
     const fournisseurHeader = ['Produit','Taille','Quantité Totale','Détails Personnalisés'];
-    const fournisseurRows = [fournisseurHeader.join(',')];
+
+    const clientRows = [clientHeader.map(escapeCSV).join(',')];
+    const fournisseurRows = [fournisseurHeader.map(escapeCSV).join(',')];
+    const fournisseurSummary = {};
 
     for (const session of allSessions) {
       const customerName = session.customer_details?.name || 'Inconnu';
@@ -171,45 +153,43 @@ app.get('/export-commandes', async (req, res) => {
         const nomPerso = metadata[`item_${i}_nom_personnalise`] || '';
         const numero = metadata[`item_${i}_numero`] || '';
 
-        // --- CSV clients
-        clientRows.push([customerName, customerEmail, nom, taille, quantite, nomPerso, numero].join(','));
+        // CSV clients
+        clientRows.push([
+          customerName, customerEmail, nom, taille, quantite, nomPerso, numero
+        ].map(escapeCSV).join(','));
 
-        // --- CSV fournisseur
+        // CSV fournisseur
         const key = `${nom}|${taille}`;
-        if (!fournisseurSummary[key]) {
-          fournisseurSummary[key] = { total: 0, details: [] };
-        }
+        if (!fournisseurSummary[key]) fournisseurSummary[key] = { total: 0, details: [] };
         fournisseurSummary[key].total += quantite;
-        if (nomPerso || numero) {
-          fournisseurSummary[key].details.push(`${nomPerso} #${numero} x${quantite}`);
-        }
+        if (nomPerso || numero) fournisseurSummary[key].details.push(`${nomPerso} #${numero} x${quantite}`);
       });
     }
 
     Object.entries(fournisseurSummary).forEach(([key, value]) => {
       const [nom, taille] = key.split('|');
       const details = value.details.join('; ');
-      fournisseurRows.push([nom, taille, value.total, details].join(','));
+      fournisseurRows.push([nom, taille, value.total, details].map(escapeCSV).join(','));
     });
 
-    // --- Type de CSV à envoyer
+    // Choisir le type
     const type = req.query.type || 'clients';
     const csvContent = type === 'fournisseur' ? fournisseurRows : clientRows;
 
     res.setHeader('Content-disposition', `attachment; filename=commandes_${type}.csv`);
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
 
-    // --- Ajout BOM pour Excel
-    res.send('\uFEFF' + csvContent.map(row => row.split(',').map(escapeCSV).join(',')).join('\n'));
+    // Ajout BOM pour Excel
+    res.send('\uFEFF' + csvContent.join('\n'));
 
     console.log(`✅ Export CSV "${type}" généré avec succès`);
   } catch (err) {
-    console.error('❌ Erreur export commandes via endpoint:', err);
+    console.error('❌ Erreur export commandes:', err);
     res.status(500).send(`Erreur serveur lors de l’export des commandes: ${err.message}`);
   }
 });
 
-// --- Fallback vers index.html pour toutes les autres routes
+// --- Fallback vers index.html pour toutes les autres routes (après API)
 app.use((req, res) => {
   const indexPath = path.join(frontendPath, 'index.html');
   if (fs.existsSync(indexPath)) {

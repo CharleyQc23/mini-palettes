@@ -7,17 +7,6 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CharleyQc23/mini-palettes.git"
-  },
-  "keywords": ["ecommerce", "stripe", "express", "shop", "mini-palettes-roses"],
-  "author": "Charles Guernon",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CharleyQc23/mini-palettes/issues"
-  },
-  "homepage": "https://github.com/CharleyQc23/mini-palettes#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
