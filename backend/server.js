@@ -19,8 +19,12 @@ app.use(cors());
 app.use(express.json());
 
 // --- Servir le frontend
-const frontendPath = path.join(__dirname, 'frontend');
+const frontendPath = path.join(__dirname, '..', 'frontend');
 app.use(express.static(frontendPath));
+
+app.use((req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 // --- Cache produits pour éviter les appels répétitifs à Stripe
 let cacheProduits = [];
