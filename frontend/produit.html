@@ -287,7 +287,6 @@ details.innerHTML = `
   <input type="text" id="champ-numero" placeholder="ex: 21" maxlength="2" pattern="\\d{1,2}" title="Entrez un nombre de 1 ou 2 chiffres" /><br><br>
 `;
 
-
 function checkReady() {
   const qte = parseInt(inputQuantite.value, 10);
   boutonAjouter.disabled = (!selectTaille.value || !qte || qte < 1);
@@ -301,14 +300,11 @@ function checkReady() {
           const quantite = parseInt(inputQuantite.value, 10);
           const personnalisation = [];
 
-if (chkAucune.checked) {
-  personnalisation.push("Aucune personnalisation");
-} else {
-  const nomBrode = document.getElementById('champ-nom')?.value || '';
-  const numeroBrode = document.getElementById('champ-numero')?.value || '';
-  if (nomBrode) personnalisation.push(`Nom : ${nomBrode}`);
-  if (numeroBrode) personnalisation.push(`# : ${numeroBrode}`);
-}
+          const nomBrode = document.getElementById('champ-nom')?.value || '';
+const numeroBrode = document.getElementById('champ-numero')?.value || '';
+if (nomBrode) personnalisation.push(`Nom : ${nomBrode}`);
+if (numeroBrode) personnalisation.push(`# : ${numeroBrode}`);
+
           const prixUnitaire = produit.prix;
 const prixFinal = prixUnitaire * quantite;
 
