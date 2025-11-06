@@ -1,11 +1,12 @@
-// --- server.js (final avec dotenv et export CSV protégé UTF-8) ---
-require('dotenv').config(); // Charge les variables d'environnement depuis .env
+// --- server.js ---
+const path = require('path');       // <-- importer path en premier
+require('dotenv').config({ path: path.join(__dirname, '.env') }); // ensuite on l'utilise
 
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const fs = require('fs');
 
+// Vérifie que la clé Stripe est bien définie
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ La variable d'environnement STRIPE_SECRET_KEY n'est pas définie !");
   process.exit(1);

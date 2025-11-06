@@ -204,20 +204,40 @@
 
   // Paiement Stripe
   document.getElementById('payer').addEventListener('click', async () => {
-    if (panier.length === 0) { alert("Ton panier est vide !"); return; }
-    try {
-      const response = await fetch('https://www.minipalettes.ca/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ panier }),
-      });
-      const data = await response.json();
-      if (data.id) {
-        const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
-        await stripe.redirectToCheckout({ sessionId: data.id });
-      } else { alert('Erreur lors de la création de la session de paiement.'); }
-    } catch(e) { console.error(e); alert('Erreur lors du paiement.'); }
-  });
+  if (panier.length === 0) { 
+    alert("Ton panier est vide !"); 
+    return; 
+  }
+
+  // Préparer le panier pour Stripe : uniquement nom, prix, quantité, personnalisation
+  const panierStripe = panier.map(item => ({
+    nom: item.nom + (item.taille ? ` - ${item.taille}` : '') + (item.personnalisation ? ` (${item.personnalisation})` : ''),
+    prixUnitaire: Math.round(item.prixUnitaire * 100), // Stripe attend des centimes
+    quantite: item.quantite
+  }));
+
+  try {
+    const response = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panier: panierStripe })
+    });
+
+    const data = await response.json();
+    console.log('Session Stripe reçue :', data);
+
+    if (data.id) {
+      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+      await stripe.redirectToCheckout({ sessionId: data.id });
+    } else {
+      alert('Erreur lors de la création de la session de paiement.');
+    }
+  } catch(e) {
+    console.error('Erreur Stripe :', e);
+    alert('Erreur lors du paiement.');
+  }
+});
+
 
   // Champs broderie
   function afficherChampsBroderie() {
@@ -324,6 +344,8 @@ localStorage.setItem('panier', JSON.stringify(panier));
 
 animationPanier();
 majNbItems();
+afficherPanier();
+document.getElementById('sidebar-panier').classList.add('open');
 alert("Produit ajouté au panier !");
 });
 
