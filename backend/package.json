@@ -20,9 +20,9 @@
   "homepage": "https://github.com/CharleyQc23/mini-palettes#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^17.2.0",
-    "express": "^4.18.2",
-    "stripe": "^18.3.0"
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "stripe": "^19.2.0"
   },
   "engines": {
     "node": ">=18.0.0"
