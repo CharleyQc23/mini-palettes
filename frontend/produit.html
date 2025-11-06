@@ -277,29 +277,16 @@
         const selectPerso = document.getElementById('perso');
         const inputQuantite = document.getElementById('quantite');
         const boutonAjouter = document.getElementById('ajouter-panier');
-        const chkAucune = document.getElementById('chkAucune');
-const details = document.getElementById('details-broderie');
+        const details = document.getElementById('details-broderie');
 
-function afficherChampsBroderie() {
-  if (chkAucune.checked) {
-    details.innerHTML = ''; // cache les champs si "aucune personnalisation" est cochée
-    return;
-  }
+// afficher directement les champs de broderie avec une limite de 2 caractères pour le numéro
+details.innerHTML = `
+  <label for="champ-nom">Nom à broder :</label><br>
+  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
+  <label for="champ-numero">Numéro à broder :</label><br>
+  <input type="text" id="champ-numero" placeholder="ex: 21" maxlength="2" pattern="\\d{1,2}" title="Entrez un nombre de 1 ou 2 chiffres" /><br><br>
+`;
 
-  // affiche par défaut les deux champs
-  details.innerHTML = `
-    <label for="champ-nom">Nom à broder :</label><br>
-    <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
-    <label for="champ-numero">Numéro à broder :</label><br>
-    <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>
-  `;
-}
-
-// affichage initial au chargement
-afficherChampsBroderie();
-
-// mise à jour quand l'utilisateur coche/décoche
-chkAucune.addEventListener('change', afficherChampsBroderie);
 
 function checkReady() {
   const qte = parseInt(inputQuantite.value, 10);
