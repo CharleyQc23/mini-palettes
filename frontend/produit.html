@@ -225,11 +225,11 @@
     const detailsContainer = document.getElementById('details-broderie');
     let contenu = '';
     if (persoValue.includes('NOM')) {
-      contenu += `<label for="champ-nom">Nom à broder :</label><br>
+      contenu += `<label for="champ-nom">Nom ou prénom à indiquer :</label><br>
                   <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>`;
     }
     if (persoValue.includes('NUMÉRO')) {
-      contenu += `<label for="champ-numero">Numéro à broder :</label><br>
+      contenu += `<label for="champ-numero">Numéro à indiquer :</label><br>
                   <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>`;
     }
     detailsContainer.innerHTML = contenu;
@@ -262,7 +262,6 @@
 
 <div class="options-broderie">
   <p><strong>Personnalisation (incluse) :</strong></p>
-  <label><input type="checkbox" id="chkAucune"> Aucune personnalisation</label><br><br>
   <div id="details-broderie"></div>
 </div>
 
