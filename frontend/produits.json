@@ -39,6 +39,12 @@
       "nom": "T-shirt manches longues",
       "prix": 35,
       "image": "images/t-shirt-manches-longues.png"
+    },
+
+    "TEST": {
+      "nom": "TEST LISA",
+      "prix": 1,
+      "image": "images/t-shirt-manches-longues.png"
     }
 
   }

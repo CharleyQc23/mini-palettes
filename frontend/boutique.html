@@ -204,7 +204,7 @@ document.getElementById('payer').addEventListener('click', async ()=>{
     });
     const data = await response.json();
     if(data.id){
-      const stripe = Stripe('pk_test_51RlJVvRajgyqcAklwomlIeHZmbovio5dknAXCQ2mCK7lzDjT8117DNBaFRRbu9S7xtruMHxerqNviVuYvJHZafx100ORhbe9DB');
+      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
       await stripe.redirectToCheckout({sessionId:data.id});
     } else { alert('Erreur lors de la création de la session de paiement.'); }
   } catch(err){ console.error(err); alert('Erreur lors du paiement.'); }
@@ -298,7 +298,7 @@ fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('
 
 <script>
   // ---- CONFIG ----
-  const venteEnPause = true; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
+  const venteEnPause = false; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
 
   if (venteEnPause) {
     // Affiche le pop-up et l’arrière-plan semi-transparent

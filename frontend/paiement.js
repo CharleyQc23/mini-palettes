@@ -1,5 +1,5 @@
 // --- paiement.js ---
-const stripe = Stripe("pk_test_51RlJVvRajgyqcAklwomlIeHZmbovio5dknAXCQ2mCK7lzDjT8117DNBaFRRbu9S7xtruMHxerqNviVuYvJHZafx100ORhbe9DB");
+const stripe = Stripe("pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v");
 
 // --- Détection de l'environnement
 const BACKEND_URL = window.location.hostname === "localhost"
