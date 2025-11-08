@@ -194,20 +194,67 @@ function afficherPanier() {
 document.getElementById('btn-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.toggle('open');});
 document.getElementById('btn-fermer-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.remove('open');});
 
-document.getElementById('payer').addEventListener('click', async ()=>{
-  if(!panier.length){ alert('Ton panier est vide !'); return; }
-  try{
-    const response = await fetch('https://www.minipalettes.ca/create-checkout-session',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({panier})
+document.getElementById('payer').addEventListener('click', async () => {
+  if (!panier.length) {
+    alert('Ton panier est vide !');
+    return;
+  }
+
+  // --- Nettoyage & validation du panier ---
+  const panierValide = [];
+  panier.forEach((item, idx) => {
+    if (!item.nom || typeof item.nom !== 'string') return;
+    let quant = Number(item.quantite);
+    if (!Number.isInteger(quant) || quant < 1) quant = 1;
+    if (quant > 99) quant = 99;
+    let prixUnit = Number(item.prixUnitaire);
+    if (isNaN(prixUnit) || prixUnit <= 0) return;
+    panierValide.push({
+      ...item,
+      quantite: quant,
+      prixUnitaire: prixUnit,
+      prix: quant * prixUnit
     });
+  });
+
+  if (!panierValide.length) {
+    alert('Aucun article valide à payer !');
+    return;
+  }
+
+  try {
+    // Envoi du panier nettoyé au serveur
+    const response = await fetch('http://localhost:4242/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panier: panierValide })
+    });
+
     const data = await response.json();
-    if(data.id){
-      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
-      await stripe.redirectToCheckout({sessionId:data.id});
-    } else { alert('Erreur lors de la création de la session de paiement.'); }
-  } catch(err){ console.error(err); alert('Erreur lors du paiement.'); }
+
+    if (data.error) {
+      console.error('Erreur Stripe côté serveur:', data.error);
+      alert('Erreur côté serveur : ' + data.error);
+      return;
+    }
+
+    if (!data.id) {
+      console.error('Aucun ID de session reçu', data);
+      alert('Erreur : aucun ID de session reçu du serveur');
+      return;
+    }
+
+    const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+    const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+    if (error) {
+      console.error('Erreur Stripe redirectToCheckout:', error);
+      alert('Erreur Stripe lors de la redirection : ' + error.message);
+    }
+
+  } catch (err) {
+    console.error('Erreur lors du fetch ou création session:', err);
+    alert('Erreur lors de la création de la session : ' + err.message);
+  }
 });
 
 // Affichage produits dans la galerie

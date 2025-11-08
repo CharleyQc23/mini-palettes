@@ -72,32 +72,56 @@ async function getOrCreateStripePrice(item) {
 }
 
 // --- Endpoint Stripe Checkout
-app.post('/create-checkout-session', async (req, res) => {
+// --- Endpoint Stripe Checkout simplifié et debug ---
+app.post("/create-checkout-session", async (req, res) => {
   try {
-    const { panier } = req.body;
-    if (!panier || panier.length === 0) return res.status(400).json({ error: 'Panier vide' });
+    const panier = req.body.panier;
+    console.log("📦 Panier reçu :", JSON.stringify(panier, null, 2));
 
-    // Préparer les lignes pour Stripe
-    const line_items = await Promise.all(panier.map(async item => {
-      const priceId = await getOrCreateStripePrice(item);
+    if (!panier || !Array.isArray(panier) || panier.length === 0) {
+      return res.status(400).json({ error: "Panier vide ou invalide" });
+    }
+
+    const line_items = panier.map((item, idx) => {
+      if (!item.nom || typeof item.nom !== "string") {
+        throw new Error(`Item #${idx} invalide : nom manquant ou non-string => ${JSON.stringify(item)}`);
+      }
+      if (typeof item.prixUnitaire !== "number" || isNaN(item.prixUnitaire)) {
+        throw new Error(`Item #${idx} invalide : prixUnitaire invalide => ${JSON.stringify(item)}`);
+      }
+      if (typeof item.quantite !== "number" || !Number.isInteger(item.quantite) || item.quantite <= 0) {
+        throw new Error(`Item #${idx} invalide : quantite invalide => ${JSON.stringify(item)}`);
+      }
+
       return {
-        price: priceId,
+        price_data: {
+          currency: 'cad',
+          product_data: { name: item.nom },
+          unit_amount: Math.round(item.prixUnitaire * 100),
+        },
         quantity: item.quantite,
       };
-    }));
+    });
+
+    console.log("➡️ Line items prêts :", line_items);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: 'https://www.minipalettes.ca/confirmation.html',
-      cancel_url: 'https://www.minipalettes.ca/panier.html',
+      success_url: 'http://localhost:4242/success.html',
+      cancel_url: 'http://localhost:4242/boutique.html',
     });
 
+    console.log("✅ Session Stripe créée :", session.id);
     res.json({ id: session.id });
   } catch (err) {
-    console.error('❌ Erreur création session Stripe:', err);
-    res.status(500).json({ error: 'Erreur serveur lors de la création de la session' });
+    console.error("❌ Erreur création session :", err);
+    if (err.raw) {
+      // Pour Stripe, err.raw contient souvent le détail exact
+      console.error("💡 Détails Stripe :", err.raw);
+    }
+    res.status(500).json({ error: err.message });    
   }
 });
 

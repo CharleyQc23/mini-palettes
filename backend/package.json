@@ -1,7 +1,7 @@
 {
-  "name": "mini-palettes-roses",
+  "name": "mini-palettes-backend",
   "version": "1.0.0",
-  "description": "Site web e-commerce pour Mini Palettes Roses avec paiement Stripe",
+  "description": "Backend pour Mini Palettes Roses avec paiement Stripe",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
