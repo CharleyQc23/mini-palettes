@@ -315,10 +315,9 @@ fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('
   width: min(90%, 400px);
   animation: popIn 0.5s ease forwards;
 ">
-  <h2 style=" color: #c2185b; font-size: 2rem;">Vente temporairement fermée 💕</h2>
+  <h2 style=" color: #c2185b; font-size: 2rem;">Boutique à venir bientôt 💕</h2>
   <p style="font-family: sans-serif; color: #555; margin-top: 1rem;">
-    La boutique est fermée jusqu'à la prochaine vente.<br>
-    Merci de revenir plus tard !
+    La boutique est présentement en construction !<br>
   </p>
   <button onclick="window.location.href='index.html'" style="
     margin-top: 1.5rem;
@@ -345,7 +344,7 @@ fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('
 
 <script>
   // ---- CONFIG ----
-  const venteEnPause = false; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
+  const venteEnPause = true; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
 
   if (venteEnPause) {
     // Affiche le pop-up et l’arrière-plan semi-transparent
