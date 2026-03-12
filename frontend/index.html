@@ -23,19 +23,17 @@
       animation: fadeIn 1s ease forwards;
     }
 
-    /* Animation d'apparition */
-@keyframes slideFadeIn {
-  from { opacity: 0; transform: scale(1.05); }
-  to   { opacity: 1; transform: scale(1); }
-}
+    @keyframes slideFadeIn {
+      from { opacity: 0; transform: scale(1.05); }
+      to   { opacity: 1; transform: scale(1); }
+    }
 
-/* Quand une slide devient active */
-.slide.active {
-  opacity: 1;
-  transform: translateX(0);
-  z-index: 1;
-  animation: slideFadeIn 1s ease;
-}
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      z-index: 1;
+      animation: slideFadeIn 1s ease;
+    }
 
     /* ----------------- Accueil ----------------- */
     .accueil {
@@ -223,18 +221,140 @@
     .btn-cookie.refuse:hover { background-color: #999; }
 
     html, body {
-  overflow-x: hidden;
-}
-@media (max-width: 768px) {
-  .slider {
-    height: 50vh; /* ou 50vh selon le rendu souhaité */
-  }
+      overflow-x: hidden;
+    }
 
-  .slide-content {
-    padding: 1rem 1.2rem; /* adapte le padding si nécessaire */
-  }
-}
+    @media (max-width: 768px) {
+      .slider {
+        height: 50vh;
+      }
+      .slide-content {
+        padding: 1rem 1.2rem;
+      }
+    }
 
+    /* ----------------- Événements ----------------- */
+    .evenements {
+      padding: 3rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .evenements h2 {
+      font-size: 2rem;
+      color: #c2185b;
+      margin-bottom: 2rem;
+    }
+
+    .evenements-liste {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .evenement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      background: white;
+      border-left: 6px solid #e91e63;
+      border-radius: 16px;
+      padding: 1.4rem 1.8rem;
+      text-align: left;
+      transition: box-shadow 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .evenement-item:hover {
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.2);
+    }
+
+    .evenement-special {
+      border-left: 6px solid #e91e63;
+      background: white;
+      border-top: 1px solid #f8bbd0;
+      border-right: 1px solid #f8bbd0;
+      border-bottom: 1px solid #f8bbd0;
+    }
+
+    .evenement-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 52px;
+      color: #e91e63;
+    }
+
+    .evenement-date .jour {
+      font-size: 2rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .evenement-date .mois {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .evenement-info h3 {
+      margin: 0 0 0.3rem;
+      color: #333;
+      font-size: 1.1rem;
+    }
+
+    .evenement-info p {
+      margin: 0 0 0.4rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .evenement-lieu {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    .evenement-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin: 0.8rem 0;
+      font-size: 0.92rem;
+      color: #555;
+    }
+
+    .billets-details {
+      margin-top: 0.8rem;
+      background: white;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      border: 1px solid #f8bbd0;
+    }
+
+    .billets-details summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: #c2185b;
+      list-style: none;
+    }
+
+    .billets-details summary::-webkit-details-marker { display: none; }
+
+    .billets-details ul {
+      margin: 0.6rem 0 0 1rem;
+      padding: 0;
+      color: #444;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 480px) {
+      .evenement-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
 
   </style>
 </head>
@@ -267,7 +387,7 @@
         <a href="a-propos.html" class="btn-rose">À propos</a>
       </div>
     </div>
-<div class="slide" style="background-image: url('images/slide-inscription.webp');">
+    <div class="slide" style="background-image: url('images/slide-inscription.webp');">
       <div class="slide-content">
         <h2>Vous aimeriez vous inscrire?</h2>
         <a href="inscription.html" class="btn-rose">Inscription</a>
@@ -297,6 +417,54 @@
       <p>Le plaisir du hockey entre filles, dès le premier coup de patin.</p>
       <a href="inscription.html" class="btn-rose">S'inscrire dès maintenant!</a>
     </section>
+
+<!-- Section Prochains événements -->
+<section class="evenements">
+  <h2>Prochains événements</h2>
+
+  <div class="evenements-liste">
+
+    <div class="evenement-item evenement-special">
+      <div class="evenement-date">
+        <span class="jour">20</span>
+        <span class="mois">mars</span>
+      </div>
+      <div class="evenement-info">
+        <h3>Partie bénéfice Uluit vs Palettes Roses</h3>
+
+
+
+        <p>
+          Grâce à Karine Bernard, infirmière clinicienne opérant au Nord du Québec,
+          nous réunissons deux cultures le temps d'une partie amicale de hockey féminin adulte!
+        </p>
+        <p>
+          <strong>Les fonds amassés serviront à l'achat d'équipements pour les Mini-Palettes
+          et une association de Uluit.</strong>
+        </p>
+
+        <div class="evenement-meta">
+          <span>📍 Aréna Damien-Hétu, Sainte-Agathe-des-Monts</span>
+          <span>🕐 18h15</span>
+          <span>🎟️ 10&nbsp;$ par personne — <strong>Gratuit pour les moins de 18 ans</strong></span>
+        </div>
+
+        <details class="billets-details">
+          <summary>📅 Horaire de vente des billets</summary>
+          <ul>
+            <li><strong>Aréna Damien-Hétu&nbsp;:</strong> dimanche, 10h&nbsp;– 10h30</li>
+            <li><strong>Centre sportif PDH&nbsp;:</strong> lundi et mercredi, 17h30&nbsp;– 18h00 et 20h&nbsp;– 20h30</li>
+          </ul>
+        </details>
+        <img src="images/Evenement_Uluit.jpg" alt="Partie bénéfice Uluit vs Palettes Roses"
+             style="width:100%; max-width:560px; border-radius:12px; margin:0.8rem 0 1rem; display:block;">
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
   </main>
 
   <!-- Bandeau Cookies -->
@@ -338,7 +506,7 @@
     prevBtn.addEventListener('click', () => { prevSlideFunc(); resetInterval(); });
 
     function resetInterval() { clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 8000); }
-    slideInterval = setInterval(nextSlide, 8000); // temps entre les slides = 8 secondes (8000 ms)
+    slideInterval = setInterval(nextSlide, 8000);
 
     // Swipe tactile
     let touchStartX = 0, touchEndX = 0;
