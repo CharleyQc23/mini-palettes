@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nous rejoindre - Mini Palettes Roses</title>
+  <title>Nous rejoindre — Mini Palettes Roses | Contact</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -12,8 +12,21 @@
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
 
+  <!-- 🔍 SEO -->
+  <meta name="description" content="Contactez les Mini Palettes Roses — ligue de hockey récréatif pour filles au Québec. Une question sur les mini palettes ou mini-palettes ? Écrivez-nous !">
+  <meta name="keywords" content="mini palettes roses, mini palettes, contact hockey filles Québec, mini-palettes, rejoindre ligue hockey féminin">
+  <meta name="author" content="Mini Palettes Roses">
+  <link rel="canonical" href="https://www.minipalettes.ca/contact.html">
+
+  <!-- 🌐 Open Graph -->
+  <meta property="og:title" content="Nous rejoindre — Mini Palettes Roses">
+  <meta property="og:description" content="Vous avez une question sur les Mini Palettes Roses ? Contactez-nous via notre formulaire.">
+  <meta property="og:image" content="https://www.minipalettes.ca/images/slide-contact.webp">
+  <meta property="og:url" content="https://www.minipalettes.ca/contact.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mini Palettes Roses">
+
   <style>
-    /* Formulaire Nous rejoindre */
     .form-contact {
       max-width: 600px;
       margin: 2rem auto;
@@ -43,7 +56,7 @@
     .btn-envoyer {
       margin-top: 1.5rem;
       padding: 0.6rem 1.5rem;
-      background-color: #c2185b; /* rose foncé */
+      background-color: #c2185b;
       color: white;
       border: none;
       border-radius: 30px;
@@ -57,10 +70,10 @@
     }
 .ligne-consentement {
   display: flex;
-  align-items: center;       /* centre verticalement */
-  gap: 1rem;                 /* espace entre checkbox et bouton */
+  align-items: center;
+  gap: 1rem;
   margin-top: 1.5rem;
-  flex-wrap: wrap;           /* pour mobile, passe à la ligne si nécessaire */
+  flex-wrap: wrap;
 }
 
 .ligne-consentement .consentement {
@@ -70,11 +83,10 @@
 }
 
 .ligne-consentement input[type="checkbox"] {
-  width: 20px;      /* taille plus grande */
-  height: 20px;     /* taille plus grande */
+  width: 20px;
+  height: 20px;
   margin-right: 0.5rem;
 }
-
 
   </style>
 </head>
@@ -118,14 +130,12 @@
   <section class="accueil">
     <div class="texte-centré">
       <h2>Nous rejoindre</h2>
-      <p>Tu as une question ? Écris-nous 💌</p>
+      <p>Tu as une question ? Écris-nous 💌</p>
     </div>
 
 <form class="form-contact" action="https://formsubmit.co/c.guernon@hotmail.ca" method="POST">
   <input type="hidden" name="_captcha" value="false">
   <input type="hidden" name="_next" value="merci.html">
-
-    <!-- deuxième destinataire -->
   <input type="hidden" name="_cc" value="minipalettesroses@gmail.com">
 
   <label for="nom">Nom :</label>
@@ -137,11 +147,10 @@
   <label for="message">Message :</label>
   <textarea id="message" name="Message" rows="5" required></textarea>
 
-    <!-- ✅ Ajout consentement explicite -->
   <div class="ligne-consentement">
     <label class="consentement">
-      <input type="checkbox" id="consentement" name="Consentement" value="J’accepte" required>
-      J’accepte que ces informations soient utilisées pour me recontacter.
+      <input type="checkbox" id="consentement" name="Consentement" value="J'accepte" required>
+      J'accepte que ces informations soient utilisées pour me recontacter.
     </label>
 
   <button type="submit" class="btn-envoyer">Envoyer</button>
@@ -167,7 +176,7 @@
     });
 </script>
 
-<script> // Redirection vers merci.html après POST
+<script>
   const form = document.querySelector('.form-contact');
   form.addEventListener('submit', function(e) {
     e.preventDefault();

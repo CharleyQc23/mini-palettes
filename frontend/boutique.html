@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mini Palettes Roses - Boutique</title>
+  <title>Boutique — Mini Palettes Roses | Vêtements hockey filles personnalisés</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://js.stripe.com/v3/"></script>
@@ -12,6 +12,21 @@
   <link rel="icon" type="image/png" sizes="512x512" href="images/favicon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
+
+  <!-- 🔍 SEO -->
+  <meta name="description" content="Boutique Mini Palettes Roses — vêtements et accessoires personnalisés pour les joueuses de hockey. Mini palettes, mini-palettes : kangourous, t-shirts, tuques brodés.">
+  <meta name="keywords" content="mini palettes roses, mini palettes, mini-palettes, boutique hockey filles, vêtements hockey personnalisés, broderie hockey Québec">
+  <meta name="author" content="Mini Palettes Roses">
+  <link rel="canonical" href="https://www.minipalettes.ca/boutique.html">
+
+  <!-- 🌐 Open Graph -->
+  <meta property="og:title" content="Boutique — Mini Palettes Roses">
+  <meta property="og:description" content="Vêtements et accessoires personnalisés Mini Palettes Roses pour les futures joueuses de hockey. Broderie incluse, taxes incluses.">
+  <meta property="og:image" content="https://www.minipalettes.ca/images/slide-boutique.webp">
+  <meta property="og:url" content="https://www.minipalettes.ca/boutique.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mini Palettes Roses">
+
   <style>
     /* Styles galerie et produits */
     #galerie-produits {
@@ -200,7 +215,6 @@ document.getElementById('payer').addEventListener('click', async () => {
     return;
   }
 
-  // --- Nettoyage & validation du panier ---
   const panierValide = [];
   panier.forEach((item, idx) => {
     if (!item.nom || typeof item.nom !== 'string') return;
@@ -223,8 +237,7 @@ document.getElementById('payer').addEventListener('click', async () => {
   }
 
   try {
-    // Envoi du panier nettoyé au serveur
-    const response = await fetch('http://localhost:4242/create-checkout-session', {
+    const response = await fetch('/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ panier: panierValide })
@@ -257,7 +270,6 @@ document.getElementById('payer').addEventListener('click', async () => {
   }
 });
 
-// Affichage produits dans la galerie
 function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 fetch('produits.json')
@@ -343,15 +355,11 @@ fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('
 </style>
 
 <script>
-  // ---- CONFIG ----
-  const venteEnPause = true; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
+  const venteEnPause = true;
 
   if (venteEnPause) {
-    // Affiche le pop-up et l’arrière-plan semi-transparent
     document.getElementById('pause-vente-overlay').style.display = 'block';
     document.getElementById('pause-vente-popup').style.display = 'block';
-
-    // Empêche toute interaction avec la page derrière
     document.body.style.overflow = 'hidden';
     document.querySelector('main').style.pointerEvents = 'none';
     document.querySelector('header').style.pointerEvents = 'none';
