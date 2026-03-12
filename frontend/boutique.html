@@ -13,83 +13,45 @@
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-192.png">
   <meta name="theme-color" content="#e91e63">
   <style>
-#galerie-produits {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.produit {
-  width: 200px;
-  border: 1px solid #eee;
-  border-radius: 15px;
-  padding: 1rem;
-  text-align: center;
-  background: #fff0f6;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
-}
-.produit:hover {
-  transform: scale(1.02);
-}
-
-.produit img {
-  width: 100%;
-  border-radius: 12px;
-}
-
-.lien-produit {
-  color: inherit;
-  text-decoration: none;
-  display: block;
-}
-
-.btn-ajouter {
-  margin-top: 0.7rem;
-  padding: 0.6rem 1rem;
-  background-color: var(--rose-foncé, #e91e63);
-  border: 2px solid transparent;
-  color: white;
-  border-radius: 30px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.btn-ajouter:hover {
-  background-color: #c2185b;
-  transform: scale(1.03);
-}
-
-.btn-supprimer {
-  background-color: white;
-  border: 2px solid #c2185b;
-  color: #c2185b;
-  font-size: 0.85rem;
-  font-weight: bold;
-  padding: 0.3rem 0.7rem;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-.btn-supprimer:hover {
-  background-color: #c2185b;
-  color: white;
-}
-
-    @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 1s ease forwards;
-}
+    /* Styles galerie et produits */
+    #galerie-produits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .produit {
+      width: 200px;
+      border: 1px solid #eee;
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      background: #fff0f6;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .produit:hover { transform: scale(1.02); }
+    .produit img { width: 100%; border-radius: 12px; }
+    .lien-produit { color: inherit; text-decoration: none; display: block; }
+    .btn-supprimer {
+      background-color: white;
+      border: 2px solid #c2185b;
+      color: #c2185b;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .btn-supprimer:hover { background-color: #c2185b; color: white; }
+    .fade-in { animation: fadeIn 1s ease forwards; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
   </style>
 </head>
 
-<!-- 📝 Bandeau Cookies -->
+<body>
+<!-- Bandeau cookies -->
 <div id="cookie-banner" class="cookie-banner">
   <p>
     Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
@@ -102,23 +64,17 @@
 </div>
 <script src="cookies.js"></script>
 
-<body>
-<div class="bandeau-taxes">
-  TOUS LES PRIX INCLUENT LES TAXES
-</div>
+<div class="bandeau-taxes">TOUS LES PRIX INCLUENT LES TAXES</div>
 
 <header class="banniere">
   <div class="header-container">
     <div class="logo-texte">
-      <a href="index.html">
-        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-      </a>
+      <a href="index.html"><img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site"></a>
       <div class="texte-site">
         <h1>Mini-palettes roses</h1>
         <p>La boutique des futures Palettes Roses!</p>
       </div>
     </div>
-
     <nav class="menu-nav">
       <a href="index.html" class="nav-link">Accueil</a>
       <a href="a-propos.html" class="nav-link">À propos</a>
@@ -138,326 +94,269 @@
   <button id="payer">Procéder au paiement</button>
 </div>
 
-<main  class="fade-in">
+<main class="fade-in">
   <section id="galerie-produits" class="galerie"></section>
 </main>
 
 <script>
-  // --- PANIER
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+let panier = JSON.parse(localStorage.getItem('panier')) || [];
 
-  // --- Mise à jour du nombre d'articles (toutes quantités)
-  function majNbItems() {
-    const totalArticles = panier.reduce((acc, item) => acc + (Number(item.quantite) || 0), 0);
-    document.getElementById('nb-items').textContent = totalArticles;
-  }
+function majNbItems() {
+  const totalArticles = panier.reduce((acc,item)=>acc+(Number(item.quantite)||0),0);
+  document.getElementById('nb-items').textContent = totalArticles;
+}
 
-  // --- Animation compteur et bouton
-  function animationPanier() {
-    const compteur = document.getElementById('nb-items');
-    const btnPanier = document.getElementById('btn-panier');
-    compteur.classList.add('animate');
-    btnPanier.classList.add('animate');
-    setTimeout(() => {
-      compteur.classList.remove('animate');
-      btnPanier.classList.remove('animate');
-    }, 400);
-  }
+function afficherPanier() {
+  const liste = document.getElementById('liste-panier');
+  liste.innerHTML = '';
+  let total = 0;
+  panier = panier.map(item=>{
+    const quant = Number(item.quantite)||1;
+    const prixUnitaire = (item.prixUnitaire!==undefined)?Number(item.prixUnitaire):Number(item.prix)/quant;
+    return {...item, quantite:quant, prixUnitaire:prixUnitaire, prix:prixUnitaire*quant};
+  });
 
-  // --- Échapper le HTML pour sécurité
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  // --- Afficher le panier
-  function afficherPanier() {
-    const liste = document.getElementById('liste-panier');
-    liste.innerHTML = '';
-    let total = 0;
-
-    // Normaliser panier
-    panier = panier.map(item => {
-      const quant = (item.quantite && Number(item.quantite)) ? Number(item.quantite) : 1;
-      let prixUnitaire = (item.prixUnitaire !== undefined && !isNaN(Number(item.prixUnitaire)))
-        ? Number(item.prixUnitaire)
-        : (item.prix !== undefined && quant ? Number(item.prix)/quant : 0);
-      return { ...item, quantite: quant, prixUnitaire: prixUnitaire, prix: prixUnitaire * quant };
-    });
-
-    if (!panier || panier.length === 0) {
-      liste.innerHTML = '<li style="text-align:center; color:#888;">Ton panier est vide 🛍️</li>';
-      document.getElementById('total').textContent = '0.00';
-      majNbItems();
-      return;
-    }
-
-    panier.forEach((item, index) => {
-      total += item.prix;
-      const li = document.createElement('li');
-      li.className = 'ligne-panier';
-      li.innerHTML = `
-        <div class="ligne-left">
-          <div class="nom-produit"><strong>${escapeHtml(item.nom)}</strong></div>
-          <div style="font-size:0.85rem; color:#666;">
-            ${item.taille ? escapeHtml(item.taille) : ''} ${item.personnalisation ? ' • ' + escapeHtml(item.personnalisation) : ''}
-          </div>
-        </div>
-
-        <div class="ligne-right">
-          <div class="quantite-controls">
-            <button class="btn-moins" data-index="${index}" aria-label="Réduire la quantité">➖</button>
-            <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1" />
-            <button class="btn-plus" data-index="${index}" aria-label="Ajouter une quantité">➕</button>
-          </div>
-
-          <div class="prix-item">${item.prix.toFixed(2)} $</div>
-
-          <button class="btn-supprimer" data-index="${index}" aria-label="Supprimer">🗑️</button>
-        </div>
-      `;
-      liste.appendChild(li);
-    });
-
-    // --- Boutons + / - / input / supprimer
-    document.querySelectorAll('.btn-plus').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        if (!Number.isFinite(i)) return;
-        panier[i].quantite++;
-        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.btn-moins').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        if (!Number.isFinite(i)) return;
-        if (panier[i].quantite > 1) {
-          panier[i].quantite--;
-          panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        } else {
-          panier.splice(i, 1);
-        }
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.qte-input').forEach(input => {
-      input.addEventListener('change', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        if (!Number.isFinite(i)) return;
-        let q = parseInt(e.currentTarget.value, 10);
-        if (isNaN(q) || q < 1) q = 1;
-        if (q > 99) q = 99;
-        panier[i].quantite = q;
-        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.btn-supprimer').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        if (!Number.isFinite(i)) return;
-        panier.splice(i, 1);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.getElementById('total').textContent = total.toFixed(2);
+  if (!panier.length) {
+    liste.innerHTML='<li style="text-align:center;color:#888;">Ton panier est vide 🛍️</li>';
+    document.getElementById('total').textContent='0.00';
     majNbItems();
+    return;
   }
 
-  // --- Sidebar panier
-  document.getElementById('btn-panier').addEventListener('click', () => {
-    document.getElementById('sidebar-panier').classList.toggle('open');
-  });
-  document.getElementById('btn-fermer-panier').addEventListener('click', () => {
-    document.getElementById('sidebar-panier').classList.remove('open');
+  panier.forEach((item,index)=>{
+    total+=item.prix;
+    const li=document.createElement('li');
+    li.className='ligne-panier';
+    li.innerHTML=`
+      <div class="ligne-left">
+        <div class="nom-produit"><strong>${item.nom}</strong></div>
+        <div style="font-size:0.85rem;color:#666;">
+          ${item.taille||''} ${item.personnalisation? '• '+item.personnalisation : ''}
+        </div>
+      </div>
+      <div class="ligne-right">
+        <div class="quantite-controls">
+          <button class="btn-moins" data-index="${index}">➖</button>
+          <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1"/>
+          <button class="btn-plus" data-index="${index}">➕</button>
+        </div>
+        <div class="prix-item">${item.prix.toFixed(2)} $</div>
+        <button class="btn-supprimer" data-index="${index}">🗑️</button>
+      </div>
+    `;
+    liste.appendChild(li);
   });
 
-  // --- Paiement Stripe
-  document.getElementById('payer').addEventListener('click', async () => {
-    if (panier.length === 0) {
-      alert("Ton panier est vide !");
+  // Boutons
+  document.querySelectorAll('.btn-plus').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const i=Number(e.currentTarget.dataset.index);
+      if(!Number.isFinite(i)) return;
+      panier[i].quantite++; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire;
+      localStorage.setItem('panier',JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+  document.querySelectorAll('.btn-moins').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const i=Number(e.currentTarget.dataset.index);
+      if(!Number.isFinite(i)) return;
+      if(panier[i].quantite>1){ panier[i].quantite--; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire; }
+      else { panier.splice(i,1); }
+      localStorage.setItem('panier',JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+  document.querySelectorAll('.qte-input').forEach(input=>{
+    input.addEventListener('change',e=>{
+      const i=Number(e.currentTarget.dataset.index);
+      if(!Number.isFinite(i)) return;
+      let q=Number(e.currentTarget.value); if(isNaN(q)||q<1) q=1; if(q>99) q=99;
+      panier[i].quantite=q; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire;
+      localStorage.setItem('panier',JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+  document.querySelectorAll('.btn-supprimer').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      const i=Number(e.currentTarget.dataset.index);
+      if(!Number.isFinite(i)) return;
+      panier.splice(i,1);
+      localStorage.setItem('panier',JSON.stringify(panier));
+      afficherPanier();
+    });
+  });
+
+  document.getElementById('total').textContent=total.toFixed(2);
+  majNbItems();
+}
+
+document.getElementById('btn-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.toggle('open');});
+document.getElementById('btn-fermer-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.remove('open');});
+
+document.getElementById('payer').addEventListener('click', async () => {
+  if (!panier.length) {
+    alert('Ton panier est vide !');
+    return;
+  }
+
+  // --- Nettoyage & validation du panier ---
+  const panierValide = [];
+  panier.forEach((item, idx) => {
+    if (!item.nom || typeof item.nom !== 'string') return;
+    let quant = Number(item.quantite);
+    if (!Number.isInteger(quant) || quant < 1) quant = 1;
+    if (quant > 99) quant = 99;
+    let prixUnit = Number(item.prixUnitaire);
+    if (isNaN(prixUnit) || prixUnit <= 0) return;
+    panierValide.push({
+      ...item,
+      quantite: quant,
+      prixUnitaire: prixUnit,
+      prix: quant * prixUnit
+    });
+  });
+
+  if (!panierValide.length) {
+    alert('Aucun article valide à payer !');
+    return;
+  }
+
+  try {
+    // Envoi du panier nettoyé au serveur
+    const response = await fetch('http://localhost:4242/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panier: panierValide })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      console.error('Erreur Stripe côté serveur:', data.error);
+      alert('Erreur côté serveur : ' + data.error);
       return;
     }
 
-    try {
-      const response = await fetch('https://mini-palettes-roses.onrender.com/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ panier }),
-      });
-      const data = await response.json();
-      if (data.id) {
-        const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr');
-        await stripe.redirectToCheckout({ sessionId: data.id });
-      } else {
-        alert('Erreur lors de la création de la session de paiement.');
-      }
-    } catch (error) {
-      console.error('Erreur paiement:', error);
-      alert('Erreur lors du paiement. Regarde la console.');
+    if (!data.id) {
+      console.error('Aucun ID de session reçu', data);
+      alert('Erreur : aucun ID de session reçu du serveur');
+      return;
     }
-  });
 
-  // --- Affichage des champs broderie selon la sélection
-  function afficherChampsBroderie() {
-    const persoValue = document.getElementById('perso').value;
-    const detailsContainer = document.getElementById('details-broderie');
-    if (!detailsContainer) return;
-    let contenu = '';
-    if (persoValue.includes('NOM')) {
-      contenu += `<label for="champ-nom">Nom à broder :</label><br>
-                  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>`;
+    const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+    const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+    if (error) {
+      console.error('Erreur Stripe redirectToCheckout:', error);
+      alert('Erreur Stripe lors de la redirection : ' + error.message);
     }
-    if (persoValue.includes('NUMÉRO')) {
-      contenu += `<label for="champ-numero">Numéro à broder :</label><br>
-                  <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>`;
-    }
-    detailsContainer.innerHTML = contenu;
+
+  } catch (err) {
+    console.error('Erreur lors du fetch ou création session:', err);
+    alert('Erreur lors de la création de la session : ' + err.message);
   }
+});
 
-  // --- Chargement fiche produit
-  const params = new URLSearchParams(window.location.search);
-  const idProduit = params.get('id');
+// Affichage produits dans la galerie
+function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  if (idProduit) {
-    fetch('produits.json')
-      .then(res => res.json())
-      .then(produits => {
-        if (!produits[idProduit]) return;
-
-        const produit = produits[idProduit];
-        const div = document.getElementById('fiche-produit');
-        div.innerHTML = `
-          <img src="${produit.image}" alt="${escapeHtml(produit.nom)}" />
-          <h2>${escapeHtml(produit.nom)}</h2>
-          <p><strong>${produit.prix.toFixed(2)} $</strong></p>
-
-          <label for="taille">Choisis une grandeur :</label><br>
-          <select id="taille">
-            <option value="">-- Sélectionner --</option>
-            <option value="X-Small">X-Small</option>
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-            <option value="X-Large">X-Large</option>
-          </select><br><br>
-
-          <label for="perso">Broderie :</label><br>
-          <select id="perso">
-            <option value="">-- Sélectionner --</option>
-            <option value="Aucune|0">Aucune 0$</option>
-            <option value="Broderie NOM|7">NOM +7 $</option>
-            <option value="Broderie NUMÉRO|5.5">NUMÉRO +5.5 $</option>
-            <option value="Broderie NOM et NUMÉRO|10">NOM et NUMÉRO +10 $</option>
-          </select><br><br>
-
-          <div id="details-broderie"></div>
-
-          <label for="quantite">Quantité :</label><br>
-          <input type="number" id="quantite" name="quantite" min="1" value="1" style="width:60px; padding:0.3rem; border-radius:6px; border:1px solid #ccc;" /><br><br>
-
-          <button id="ajouter-panier" class="btn-ajouter" disabled>Ajouter au panier</button><br>
-          <button class="btn-retour" onclick="window.location.href='boutique.html'">← Retour à la boutique</button>
-        `;
-
-        const selectTaille = document.getElementById('taille');
-        const selectPerso = document.getElementById('perso');
-        const inputQuantite = document.getElementById('quantite');
-        const boutonAjouter = document.getElementById('ajouter-panier');
-
-        function checkReady() {
-          const qte = parseInt(inputQuantite.value, 10);
-          boutonAjouter.disabled = (!selectTaille.value || !selectPerso.value || !qte || qte < 1);
-        }
-
-        selectTaille.addEventListener('change', checkReady);
-        selectPerso.addEventListener('change', () => {
-          afficherChampsBroderie();
-          checkReady();
-        });
-        inputQuantite.addEventListener('input', checkReady);
-
-        boutonAjouter.addEventListener('click', () => {
-          const taille = selectTaille.value;
-          const [persoText, persoPrix] = selectPerso.value.split('|');
-          const quantite = parseInt(inputQuantite.value, 10);
-          const prixUnitaire = produit.prix + parseFloat(persoPrix);
-          const prixFinal = prixUnitaire * quantite;
-
-          const nomBrode = document.getElementById('champ-nom')?.value || '';
-          const numeroBrode = document.getElementById('champ-numero')?.value || '';
-
-          panier.push({
-            nom: produit.nom,
-            prix: prixFinal,
-            taille: taille,
-            personnalisation: persoText + (nomBrode ? `: ${nomBrode}` : '') + (numeroBrode ? ` #${numeroBrode}` : ''),
-            quantite: quantite,
-            prixUnitaire: prixUnitaire
-          });
-
-          localStorage.setItem('panier', JSON.stringify(panier));
-          afficherPanier();
-          animationPanier();
-          alert(`Ajouté : ${produit.nom} (${taille}, ${persoText}) x${quantite} pour ${prixFinal.toFixed(2)} $`);
-        });
-
-        checkReady();
-      });
-  }
-
-  afficherPanier();
-  majNbItems();
-
-  // --- Affichage des produits dans la galerie
 fetch('produits.json')
-  .then(res => res.json())
-  .then(produits => {
-    const galerie = document.getElementById('galerie-produits');
-    galerie.innerHTML = '';
-
-    Object.keys(produits).forEach(id => {
-      const p = produits[id];
-      const div = document.createElement('div');
-      div.className = 'produit';
-      div.innerHTML = `
+  .then(res=>res.json())
+  .then(produits=>{
+    const galerie=document.getElementById('galerie-produits'); galerie.innerHTML='';
+    Object.keys(produits).forEach(id=>{
+      const p=produits[id];
+      const div=document.createElement('div');
+      div.className='produit';
+      div.innerHTML=`
         <a href="produit.html?id=${id}" class="lien-produit">
           <img src="${p.image}" alt="${escapeHtml(p.nom)}" />
           <h3>${escapeHtml(p.nom)}</h3>
           <p><strong>${p.prix.toFixed(2)} $</strong></p>
-        </a>
-      `;
+        </a>`;
       galerie.appendChild(div);
     });
   })
-  .catch(err => console.error('Erreur chargement produits.json :', err));
+  .catch(err=>console.error('Erreur chargement produits.json :',err));
 
+afficherPanier();
+majNbItems();
 </script>
 
-
 <div id="footer-container"></div>
+<script>
+fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('footer-container').outerHTML=data;});
+</script>
+
+<!-- Pop-up de pause de vente -->
+<div id="pause-vente-overlay" style="
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 9998;
+">
+</div>
+
+<div id="pause-vente-popup" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: #fff0f6;
+  border: 3px solid #f8bbd0;
+  border-radius: 25px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  z-index: 9999;
+  width: min(90%, 400px);
+  animation: popIn 0.5s ease forwards;
+">
+  <h2 style=" color: #c2185b; font-size: 2rem;">Boutique à venir bientôt 💕</h2>
+  <p style="font-family: sans-serif; color: #555; margin-top: 1rem;">
+    La boutique est présentement en construction !<br>
+  </p>
+  <button onclick="window.location.href='index.html'" style="
+    margin-top: 1.5rem;
+    background-color: #c2185b;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  " onmouseover="this.style.backgroundColor='#ad1457'" onmouseout="this.style.backgroundColor='#c2185b'">
+    Retour au menu principal
+  </button>
+</div>
+
+<style>
+@keyframes popIn {
+  from { transform: translate(-50%, -40%) scale(0.9); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+</style>
 
 <script>
-  fetch('footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer-container').outerHTML = data;
-    });
+  // ---- CONFIG ----
+  const venteEnPause = true; // 🟣 METTRE false QUAND LA VENTE EST OUVERTE ::: METTRE true QUAND LA VENTE EST FERMÉE
+
+  if (venteEnPause) {
+    // Affiche le pop-up et l’arrière-plan semi-transparent
+    document.getElementById('pause-vente-overlay').style.display = 'block';
+    document.getElementById('pause-vente-popup').style.display = 'block';
+
+    // Empêche toute interaction avec la page derrière
+    document.body.style.overflow = 'hidden';
+    document.querySelector('main').style.pointerEvents = 'none';
+    document.querySelector('header').style.pointerEvents = 'none';
+    document.querySelector('#btn-panier').style.pointerEvents = 'none';
+  }
 </script>
 
 </body>

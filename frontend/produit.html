@@ -204,20 +204,40 @@
 
   // Paiement Stripe
   document.getElementById('payer').addEventListener('click', async () => {
-    if (panier.length === 0) { alert("Ton panier est vide !"); return; }
-    try {
-      const response = await fetch('https://mini-palettes-roses.onrender.com/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ panier }),
-      });
-      const data = await response.json();
-      if (data.id) {
-        const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr');
-        await stripe.redirectToCheckout({ sessionId: data.id });
-      } else { alert('Erreur lors de la création de la session de paiement.'); }
-    } catch(e) { console.error(e); alert('Erreur lors du paiement.'); }
-  });
+  if (panier.length === 0) { 
+    alert("Ton panier est vide !"); 
+    return; 
+  }
+
+  // Préparer le panier pour Stripe : uniquement nom, prix, quantité, personnalisation
+  const panierStripe = panier.map(item => ({
+    nom: item.nom + (item.taille ? ` - ${item.taille}` : '') + (item.personnalisation ? ` (${item.personnalisation})` : ''),
+    prixUnitaire: Math.round(item.prixUnitaire * 100), // Stripe attend des centimes
+    quantite: item.quantite
+  }));
+
+  try {
+    const response = await fetch('/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panier: panierStripe })
+    });
+
+    const data = await response.json();
+    console.log('Session Stripe reçue :', data);
+
+    if (data.id) {
+      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+      await stripe.redirectToCheckout({ sessionId: data.id });
+    } else {
+      alert('Erreur lors de la création de la session de paiement.');
+    }
+  } catch(e) {
+    console.error('Erreur Stripe :', e);
+    alert('Erreur lors du paiement.');
+  }
+});
+
 
   // Champs broderie
   function afficherChampsBroderie() {
@@ -225,11 +245,11 @@
     const detailsContainer = document.getElementById('details-broderie');
     let contenu = '';
     if (persoValue.includes('NOM')) {
-      contenu += `<label for="champ-nom">Nom à broder :</label><br>
+      contenu += `<label for="champ-nom">Nom ou prénom à indiquer :</label><br>
                   <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>`;
     }
     if (persoValue.includes('NUMÉRO')) {
-      contenu += `<label for="champ-numero">Numéro à broder :</label><br>
+      contenu += `<label for="champ-numero">Numéro à indiquer :</label><br>
                   <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>`;
     }
     detailsContainer.innerHTML = contenu;
@@ -260,16 +280,10 @@
             <option value="X-Large">X-Large</option>
           </select><br><br>
 
-          <label for="perso">Broderie :</label><br>
-          <select id="perso">
-            <option value="">-- Sélectionner --</option>
-            <option value="Aucune|0">Aucune 0$</option>
-            <option value="Broderie NOM|7">NOM +7 $</option>
-            <option value="Broderie NUMÉRO|5.5">NUMÉRO +5.5 $</option>
-            <option value="Broderie NOM et NUMÉRO|10">NOM et NUMÉRO +10 $</option>
-          </select><br><br>
-
-          <div id="details-broderie"></div>
+<div class="options-broderie">
+  <p><strong>Personnalisation (incluse) :</strong></p>
+  <div id="details-broderie"></div>
+</div>
 
           <label for="quantite">Quantité :</label><br>
           <input type="number" id="quantite" name="quantite" min="1" value="1" style="width:60px; padding:0.3rem; border-radius:6px; border:1px solid #ccc;" /><br><br>
@@ -282,37 +296,58 @@
         const selectPerso = document.getElementById('perso');
         const inputQuantite = document.getElementById('quantite');
         const boutonAjouter = document.getElementById('ajouter-panier');
+        const details = document.getElementById('details-broderie');
 
-        function checkReady() {
-          const qte = parseInt(inputQuantite.value, 10);
-          boutonAjouter.disabled = (!selectTaille.value || !selectPerso.value || !qte || qte < 1);
-        }
+// afficher directement les champs de broderie avec une limite de 2 caractères pour le numéro
+details.innerHTML = `
+  <label for="champ-nom">Nom à broder :</label><br>
+  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
+  <label for="champ-numero">Numéro à broder :</label><br>
+  <input type="text" id="champ-numero" placeholder="ex: 21" maxlength="2" pattern="\\d{1,2}" title="Entrez un nombre de 1 ou 2 chiffres" /><br><br>
+`;
+
+function checkReady() {
+  const qte = parseInt(inputQuantite.value, 10);
+  boutonAjouter.disabled = (!selectTaille.value || !qte || qte < 1);
+}
 
         selectTaille.addEventListener('change', checkReady);
-        selectPerso.addEventListener('change', () => { afficherChampsBroderie(); checkReady(); });
         inputQuantite.addEventListener('input', checkReady);
 
         boutonAjouter.addEventListener('click', () => {
           const taille = selectTaille.value;
-          const [persoText, persoPrix] = selectPerso.value.split('|');
           const quantite = parseInt(inputQuantite.value, 10);
-          const prixUnitaire = produit.prix + parseFloat(persoPrix);
-          const prixFinal = prixUnitaire * quantite;
+          const personnalisation = [];
+
           const nomBrode = document.getElementById('champ-nom')?.value || '';
-          const numeroBrode = document.getElementById('champ-numero')?.value || '';
-          panier.push({
-            nom: produit.nom,
-            prix: prixFinal,
-            taille,
-            personnalisation: persoText + (nomBrode ? `: ${nomBrode}` : '') + (numeroBrode ? ` #${numeroBrode}` : ''),
-            quantite,
-            prixUnitaire
-          });
-          localStorage.setItem('panier', JSON.stringify(panier));
-          afficherPanier();
-          animationPanier();
-          alert(`Ajouté : ${produit.nom} (${taille}, ${persoText}) x${quantite} pour ${prixFinal.toFixed(2)} $`);
-        });
+const numeroBrode = document.getElementById('champ-numero')?.value || '';
+if (nomBrode) personnalisation.push(`Nom : ${nomBrode}`);
+if (numeroBrode) personnalisation.push(`# : ${numeroBrode}`);
+
+          const prixUnitaire = produit.prix;
+const prixFinal = prixUnitaire * quantite;
+
+// Création de l'objet produit à ajouter au panier
+const item = {
+  id: idProduit,
+  nom: produit.nom,
+  taille: taille,
+  prixUnitaire: prixUnitaire,
+  prix: prixFinal,
+  quantite: quantite,
+  personnalisation: personnalisation.join(", ")
+};
+
+// Ajout au panier
+panier.push(item);
+localStorage.setItem('panier', JSON.stringify(panier));
+
+animationPanier();
+majNbItems();
+afficherPanier();
+document.getElementById('sidebar-panier').classList.add('open');
+alert("Produit ajouté au panier !");
+});
 
         checkReady();
       });

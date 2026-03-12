@@ -186,7 +186,7 @@ document.getElementById('payer').addEventListener('click', async () => {
     });
 
     const session = await response.json();
-    const stripe = Stripe('pk_test_51RjVtFPtAYsb0tTKFaXBb3U96XQePm5nInGkVMaubkiqz9tWXLyv2qqQLfLsFQRxUwH2jHzZBp9ZLhA9TR2k1N0a007kRZOPEr'); // clé publique
+    const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v'); // clé publique
 
     const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
     if (error) alert("Erreur lors de la redirection vers Stripe.");

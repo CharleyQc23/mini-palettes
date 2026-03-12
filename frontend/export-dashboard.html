@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini-dashboard Export Commandes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff0f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #d63384;
+    }
+    button {
+      background-color: #d63384;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #a0285f;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Exporter les commandes Stripe</h1>
+  <button id="exportBtn">Télécharger CSV</button>
+  <div id="status"></div>
+
+  <script>
+    const exportBtn = document.getElementById('exportBtn');
+    const status = document.getElementById('status');
+
+    exportBtn.addEventListener('click', () => {
+      status.textContent = '🔹 Préparation du fichier CSV...';
+      
+      // Lance le téléchargement
+      const url = 'https://www.minipalettes.ca/export-commandes?type=clients&password=Mini-MDP';
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = ''; // navigateur choisira le nom du fichier renvoyé par le serveur
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      status.textContent = '✅ Le téléchargement a commencé !';
+    });
+  </script>
+</body>
+</html>
