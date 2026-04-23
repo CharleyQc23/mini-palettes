@@ -164,12 +164,14 @@
   }
   
   .produit {
-    background-color: var(--white);
-    border-radius: 20px;
+    width: 200px;
+    background-color: var(--primary-light);
+    border: 1px solid #eee;
+    border-radius: 15px;
     padding: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
     position: relative;
   }
   
@@ -840,6 +842,43 @@
 /* 🎨 Centrage de texte */
 .texte-centré {
   text-align: center;
+}
+
+
+/* 🛍️ Galerie boutique */
+#galerie-produits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.lien-produit {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* Animation popup boutique en pause */
+@keyframes popIn {
+  from { transform: translate(-50%, -40%) scale(0.9); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+}
+
+/* ⏳ Loader spinner (cancel.html) */
+.loader {
+  margin: 2rem auto;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid var(--primary-dark);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 #nav-container { min-height: 80px; }
