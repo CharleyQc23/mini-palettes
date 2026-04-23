@@ -25,95 +25,11 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mini Palettes Roses">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fff0f6;
-      margin: 0;
-      padding: 0;
-    }
-
-    .contenu {
-      max-width: 800px;
-      margin: 2rem auto;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .contenu h2 {
-      color: #c2185b;
-      margin-bottom: 1rem;
-    }
-
-    .contenu p {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: #333;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-retour {
-      margin-top: 2rem;
-      background-color: var(--gris);
-      border: none;
-      color: var(--rose-foncé);
-      font-weight: bold;
-      padding: 0.6rem 1.2rem;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
-    
-    .btn-retour:hover {
-      background-color: var(--rose);
-    }
-
-    .signature {
-      font-family: 'Pacifico', cursive;
-      font-size: 5rem;
-      color: #c2185b;
-      margin-top: 2rem;
-      text-align: right;
-    }
-
-    @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeIn 1s ease forwards;
-}
-
-  </style>
 </head>
 
-<body>
+<body data-subtitle="Apprenez-en plus sur l'univers des Palettes Roses 💕">
 
-  <header class="banniere">
-    <div class="header-container">
-      <div class="logo-texte">
-        <a href="index.html">
-          <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-        </a>
-        <div class="texte-site">
-          <h1>Mini-palettes roses</h1>
-          <p>Apprenez-en plus sur l'univers des Palettes Roses 💕</p>
-        </div>
-      </div>
-
-      <nav class="menu-nav">
-        <a href="index.html" class="nav-link">Accueil</a>
-        <a href="inscription.html" class="nav-link">Inscription</a>
-        <a href="boutique.html" class="nav-link">Boutique</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <div id="nav-container"></div>
 
   <main class="fade-in">
     <div class="contenu">
@@ -158,28 +74,9 @@
     </div>
   </main>
 
-  <!-- 🍪 Bandeau Cookies -->
-  <div id="cookie-banner" class="cookie-banner">
-    <p>
-      Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
-      <a href="politique.html" class="cookie-link">En savoir plus</a>
-    </p>
-    <div class="cookie-buttons">
-      <button id="accept-cookies" class="btn-cookie">Accepter</button>
-      <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
-    </div>
-  </div>
-
-  <script src="cookies.js"></script>
-
   <div id="footer-container"></div>
-  <script>
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('footer-container').outerHTML = data;
-      });
-  </script>
+  <script src="cookies.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>

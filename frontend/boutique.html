@@ -65,39 +65,10 @@
   </style>
 </head>
 
-<body>
-<!-- Bandeau cookies -->
-<div id="cookie-banner" class="cookie-banner">
-  <p>
-    Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
-    <a href="politique.html" class="cookie-link">En savoir plus</a>
-  </p>
-  <div class="cookie-buttons">
-    <button id="accept-cookies" class="btn-cookie">Accepter</button>
-    <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
-  </div>
-</div>
-<script src="cookies.js"></script>
-
+<body data-subtitle="La boutique des futures Palettes Roses !">
 <div class="bandeau-taxes">TOUS LES PRIX INCLUENT LES TAXES</div>
 
-<header class="banniere">
-  <div class="header-container">
-    <div class="logo-texte">
-      <a href="index.html"><img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site"></a>
-      <div class="texte-site">
-        <h1>Mini-palettes roses</h1>
-        <p>La boutique des futures Palettes Roses!</p>
-      </div>
-    </div>
-    <nav class="menu-nav">
-      <a href="index.html" class="nav-link">Accueil</a>
-      <a href="a-propos.html" class="nav-link">À propos</a>
-      <a href="inscription.html" class="nav-link">Inscription</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
-  </div>
-</header>
+<div id="nav-container"></div>
 
 <button id="btn-panier" title="Voir le panier">🛒  (<span id="nb-items">0</span>)</button>
 
@@ -114,163 +85,8 @@
 </main>
 
 <script>
-let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-function majNbItems() {
-  const totalArticles = panier.reduce((acc,item)=>acc+(Number(item.quantite)||0),0);
-  document.getElementById('nb-items').textContent = totalArticles;
-}
-
-function afficherPanier() {
-  const liste = document.getElementById('liste-panier');
-  liste.innerHTML = '';
-  let total = 0;
-  panier = panier.map(item=>{
-    const quant = Number(item.quantite)||1;
-    const prixUnitaire = (item.prixUnitaire!==undefined)?Number(item.prixUnitaire):Number(item.prix)/quant;
-    return {...item, quantite:quant, prixUnitaire:prixUnitaire, prix:prixUnitaire*quant};
-  });
-
-  if (!panier.length) {
-    liste.innerHTML='<li style="text-align:center;color:#888;">Ton panier est vide 🛍️</li>';
-    document.getElementById('total').textContent='0.00';
-    majNbItems();
-    return;
-  }
-
-  panier.forEach((item,index)=>{
-    total+=item.prix;
-    const li=document.createElement('li');
-    li.className='ligne-panier';
-    li.innerHTML=`
-      <div class="ligne-left">
-        <div class="nom-produit"><strong>${item.nom}</strong></div>
-        <div style="font-size:0.85rem;color:#666;">
-          ${item.taille||''} ${item.personnalisation? '• '+item.personnalisation : ''}
-        </div>
-      </div>
-      <div class="ligne-right">
-        <div class="quantite-controls">
-          <button class="btn-moins" data-index="${index}">➖</button>
-          <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1"/>
-          <button class="btn-plus" data-index="${index}">➕</button>
-        </div>
-        <div class="prix-item">${item.prix.toFixed(2)} $</div>
-        <button class="btn-supprimer" data-index="${index}">🗑️</button>
-      </div>
-    `;
-    liste.appendChild(li);
-  });
-
-  // Boutons
-  document.querySelectorAll('.btn-plus').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      const i=Number(e.currentTarget.dataset.index);
-      if(!Number.isFinite(i)) return;
-      panier[i].quantite++; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire;
-      localStorage.setItem('panier',JSON.stringify(panier));
-      afficherPanier();
-    });
-  });
-  document.querySelectorAll('.btn-moins').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      const i=Number(e.currentTarget.dataset.index);
-      if(!Number.isFinite(i)) return;
-      if(panier[i].quantite>1){ panier[i].quantite--; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire; }
-      else { panier.splice(i,1); }
-      localStorage.setItem('panier',JSON.stringify(panier));
-      afficherPanier();
-    });
-  });
-  document.querySelectorAll('.qte-input').forEach(input=>{
-    input.addEventListener('change',e=>{
-      const i=Number(e.currentTarget.dataset.index);
-      if(!Number.isFinite(i)) return;
-      let q=Number(e.currentTarget.value); if(isNaN(q)||q<1) q=1; if(q>99) q=99;
-      panier[i].quantite=q; panier[i].prix=panier[i].quantite*panier[i].prixUnitaire;
-      localStorage.setItem('panier',JSON.stringify(panier));
-      afficherPanier();
-    });
-  });
-  document.querySelectorAll('.btn-supprimer').forEach(btn=>{
-    btn.addEventListener('click',e=>{
-      const i=Number(e.currentTarget.dataset.index);
-      if(!Number.isFinite(i)) return;
-      panier.splice(i,1);
-      localStorage.setItem('panier',JSON.stringify(panier));
-      afficherPanier();
-    });
-  });
-
-  document.getElementById('total').textContent=total.toFixed(2);
-  majNbItems();
-}
-
-document.getElementById('btn-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.toggle('open');});
-document.getElementById('btn-fermer-panier').addEventListener('click',()=>{document.getElementById('sidebar-panier').classList.remove('open');});
-
-document.getElementById('payer').addEventListener('click', async () => {
-  if (!panier.length) {
-    alert('Ton panier est vide !');
-    return;
-  }
-
-  const panierValide = [];
-  panier.forEach((item, idx) => {
-    if (!item.nom || typeof item.nom !== 'string') return;
-    let quant = Number(item.quantite);
-    if (!Number.isInteger(quant) || quant < 1) quant = 1;
-    if (quant > 99) quant = 99;
-    let prixUnit = Number(item.prixUnitaire);
-    if (isNaN(prixUnit) || prixUnit <= 0) return;
-    panierValide.push({
-      ...item,
-      quantite: quant,
-      prixUnitaire: prixUnit,
-      prix: quant * prixUnit
-    });
-  });
-
-  if (!panierValide.length) {
-    alert('Aucun article valide à payer !');
-    return;
-  }
-
-  try {
-    const response = await fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ panier: panierValide })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-      console.error('Erreur Stripe côté serveur:', data.error);
-      alert('Erreur côté serveur : ' + data.error);
-      return;
-    }
-
-    if (!data.id) {
-      console.error('Aucun ID de session reçu', data);
-      alert('Erreur : aucun ID de session reçu du serveur');
-      return;
-    }
-
-    const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
-    const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-    if (error) {
-      console.error('Erreur Stripe redirectToCheckout:', error);
-      alert('Erreur Stripe lors de la redirection : ' + error.message);
-    }
-
-  } catch (err) {
-    console.error('Erreur lors du fetch ou création session:', err);
-    alert('Erreur lors de la création de la session : ' + err.message);
-  }
-});
-
-function escapeHtml(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// Chargement de la galerie produits
+function escapeHtmlLocal(str){ if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 fetch('produits.json')
   .then(res=>res.json())
@@ -282,23 +98,58 @@ fetch('produits.json')
       div.className='produit';
       div.innerHTML=`
         <a href="produit.html?id=${id}" class="lien-produit">
-          <img src="${p.image}" alt="${escapeHtml(p.nom)}" />
-          <h3>${escapeHtml(p.nom)}</h3>
+          <img src="${p.image}" alt="${escapeHtmlLocal(p.nom)}" />
+          <h3>${escapeHtmlLocal(p.nom)}</h3>
           <p><strong>${p.prix.toFixed(2)} $</strong></p>
         </a>`;
       galerie.appendChild(div);
     });
   })
-  .catch(err=>console.error('Erreur chargement produits.json :',err));
+  .catch(err=>console.error('Erreur chargement produits.json :', err));
 
-afficherPanier();
-majNbItems();
+// Payer (version boutique avec validation)
+document.addEventListener('DOMContentLoaded', () => {
+  const btnPayer = document.getElementById('payer');
+  if (!btnPayer) return;
+  btnPayer.addEventListener('click', async () => {
+    if (!panier.length) { alert('Ton panier est vide !'); return; }
+
+    const panierValide = panier.filter(item =>
+      item.nom && typeof item.nom === 'string' &&
+      Number.isInteger(Number(item.quantite)) && Number(item.quantite) >= 1 &&
+      !isNaN(Number(item.prixUnitaire)) && Number(item.prixUnitaire) > 0
+    ).map(item => ({
+      ...item,
+      quantite: Math.min(Math.max(Number(item.quantite), 1), 99),
+      prixUnitaire: Number(item.prixUnitaire),
+      prix: Math.min(Math.max(Number(item.quantite), 1), 99) * Number(item.prixUnitaire)
+    }));
+
+    if (!panierValide.length) { alert('Aucun article valide à payer !'); return; }
+
+    try {
+      const response = await fetch('/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ panier: panierValide })
+      });
+      const data = await response.json();
+      if (data.error) { alert('Erreur serveur : ' + data.error); return; }
+      if (!data.id) { alert('Erreur : aucun ID de session reçu'); return; }
+      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+      if (error) alert('Erreur Stripe : ' + error.message);
+    } catch (err) {
+      alert('Erreur lors de la création de la session : ' + err.message);
+    }
+  });
+});
 </script>
 
 <div id="footer-container"></div>
-<script>
-fetch('footer.html').then(res=>res.text()).then(data=>{document.getElementById('footer-container').outerHTML=data;});
-</script>
+
+<script src="cookies.js"></script>
+<script src="script.js"></script>
 
 <!-- Pop-up de pause de vente -->
 <div id="pause-vente-overlay" style="

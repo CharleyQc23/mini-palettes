@@ -1,22 +1,28 @@
 :root {
-    --rose-clair: #fce4ec;
-    --rose: #f8bbd0;
-    --rose-foncé: #ec407a;
-    --blanc: #ffffff;
-    --gris: #f5f5f5;
-  }
+  --primary: #e91e63;
+  --primary-dark: #c2185b;
+  --primary-darker: #ad1457;
+  --primary-light: #fce4ec;
+  --secondary: #f8bbd0;
+  --white: #ffffff;
+  --gray: #f5f5f5;
+  --border-radius: 20px;
+  --border-radius-sm: 10px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
   
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--rose-clair);
-    color: var(--rose-foncé);
+    background-color: var(--primary-light);
+    color: var(--primary);
     overflow-x: hidden;
   }
   
 /* 🧁 Bannière */
 .banniere {
-  background-color: var(--rose-foncé);
+  background-color: var(--primary);
   padding: 1rem 1.5rem;
   text-align: center;
   border-bottom-left-radius: 30px;
@@ -53,14 +59,14 @@
 .texte-site h1 {
   font-size: 1.6rem;
   margin: 0;
-  color: var(--blanc);
+  color: var(--white);
   font-family: 'Pacifico', cursive;
 }
 
 .texte-site p {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--rose-clair);
+  color: var(--primary-light);
 }
 
 .menu-nav {
@@ -70,7 +76,7 @@
 }
 
 .nav-link {
-  color: var(--blanc);
+  color: var(--white);
   font-weight: bold;
   text-decoration: none;
   position: relative;
@@ -85,12 +91,12 @@
   bottom: 0;
   width: 0%;
   height: 2px;
-  background-color: var(--rose-clair);
+  background-color: var(--primary-light);
   transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  color: var(--rose);
+  color: var(--secondary);
 }
 
 .nav-link:hover::after {
@@ -123,13 +129,13 @@
 .banniere h1 {
   font-family: 'Times New Roman', Times, serif;
   font-weight: bold;
-  color: var(--blanc);
+  color: var(--white);
   font-size: 2.2rem;
   margin: 0.3rem 0;
 }
 
 .banniere p {
-  color: var(--rose-clair);
+  color: var(--primary-light);
   font-size: 1rem;
   margin: 0.2rem 0;
 }
@@ -158,7 +164,7 @@
   }
   
   .produit {
-    background-color: var(--blanc);
+    background-color: var(--white);
     border-radius: 20px;
     padding: 1rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -185,7 +191,7 @@
   .produit h3 {
     margin: 0.8rem 0 0.3rem;
     font-size: 1.2rem;
-    color: var(--rose-foncé);
+    color: var(--primary);
   }
   
   .produit p {
@@ -196,7 +202,7 @@
   
   /* 🛍️ Bouton Ajouter au panier */
   .btn-ajouter {
-    background-color: var(--rose-foncé);
+    background-color: var(--primary);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -207,7 +213,7 @@
   }
   
   .btn-ajouter:hover {
-    background-color: #c2185b;
+    background-color: var(--primary-dark);
     transform: scale(1.05);
   }
   
@@ -216,7 +222,7 @@
     position: fixed;
     top: 2.5rem;
     right: 2rem;
-    background-color: var(--rose-foncé);
+    background-color: var(--primary);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -229,7 +235,7 @@
   }
   
   #btn-panier:hover {
-    background-color: #c2185b;
+    background-color: var(--primary-dark);
   }
   
   /* 🧾 Sidebar panier */
@@ -239,7 +245,7 @@
     right: 0;
     width: 20rem;
     height: 100%;
-    background-color: var(--blanc);
+    background-color: var(--white);
     box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
     padding: 2rem 1.5rem;
     transform: translateX(100%);
@@ -261,13 +267,13 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--rose-foncé);
+    color: var(--primary);
   }
   
   /* 📝 Contenu du panier */
   #sidebar-panier h2 {
     margin-top: 2rem;
-    color: var(--rose-foncé);
+    color: var(--primary);
     font-size: 1.6rem;
     text-align: center;
   }
@@ -288,7 +294,7 @@
   #payer {
     margin-top: 0.5rem;
     width: 100%;
-    background-color: var(--rose-foncé);
+    background-color: var(--primary);
     color: white;
     border: none;
     padding: 0.75rem;
@@ -300,7 +306,7 @@
   }
   
   #payer:hover {
-    background-color: #c2185b;
+    background-color: var(--primary-dark);
     transform: scale(1.03);
   }
   
@@ -337,7 +343,7 @@
 .section-contact h2 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: var(--rose-foncé, #e91e63);
+  color: var(--primary);
   font-family: 'Pacifico', cursive;
 }
 
@@ -360,7 +366,7 @@
 
 .btn-envoyer {
   margin-top: 1.5rem;
-  background-color: var(--rose-foncé, #e91e63);
+  background-color: var(--primary);
   color: white;
   border: none;
   padding: 0.8rem 1.5rem;
@@ -374,14 +380,14 @@
 }
 
 .btn-envoyer:hover {
-  background-color: #c2185b;
+  background-color: var(--primary-dark);
 }
 
 .btn-contact {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
-  background-color: var(--rose-foncé, #e91e63);
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 30px;
@@ -391,7 +397,7 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 .btn-contact:hover {
-  background-color: #c2185b;
+  background-color: var(--primary-dark);
   transform: scale(1.03);
 }
 .entete-logo-texte {
@@ -403,28 +409,13 @@
   text-align: left;
 }
 
-.logo-site {
-  height: 115px;
-  width: auto;
-}
-
-.footer {
-  background-color: var(--rose-foncé);
-  color: var(--blanc);
-  text-align: center;
-  padding: 1.5rem 1rem;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  margin-top: 3rem;
-}
-
 .footer .contenu-footer p {
   margin: 0.4rem 0;
   font-size: 0.95rem;
 }
 
 .lien-footer {
-  color: var(--rose-clair);
+  color: var(--primary-light);
   text-decoration: none;
   margin: 0 0.5rem;
 }
@@ -434,7 +425,7 @@
   color: white;
 }
 .footer {
-  background-color: var(--rose-foncé);
+  background-color: var(--primary);
   color: white;
   padding: 1rem 0;
   font-family: 'Poppins', sans-serif;
@@ -471,7 +462,7 @@
 }
 
 .bandeau-taxes {
-  background-color: #d81b60;
+  background-color: var(--primary-darker);
   color: white;
   text-align: center;
   padding: 0.5rem 1rem;
@@ -485,7 +476,7 @@
 }
 
 .btn-panier:hover {
-  background-color: #c2185b;
+  background-color: var(--primary-dark);
 }
 
 /* 🎯 Animation panier */
@@ -529,7 +520,7 @@
 }
 
 .quantite-controls button {
-  background: var(--rose-foncé, #e91e63);
+  background: var(--primary);
   border: none;
   color: white;
   font-weight: bold;
@@ -559,7 +550,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #c2185b;
+  color: var(--primary-dark);
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
 }
@@ -569,16 +560,7 @@
   transform: scale(1.2);
   transition: transform 0.2s;
 }
-.ligne-panier {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-.ligne-left { flex: 1; }
-.ligne-right { display: flex; align-items: center; gap:0.5rem; }
-.quantite-controls { display:flex; align-items:center; gap:0.3rem; }
-.qte-input { width:40px; text-align:center; }
+
 
 #fiche-produit img {
   max-width: 400px;  /* largeur maximale souhaitée */
@@ -622,7 +604,7 @@
   margin: 0.5rem 0;
   border-radius: 8px;
   border: none;
-  background-color: #e91e63;
+  background-color: var(--primary);
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -630,7 +612,7 @@
 }
 
 #fiche-produit button:hover {
-  background-color: #d81b60;
+  background-color: var(--primary-darker);
 }
 
 /* 🔢 Retirer les flèches des input number (tous navigateurs) */
@@ -652,7 +634,7 @@
   transform: translateX(-50%);
   width: 90%;
   max-width: 600px;
-  background-color: var(--rose-clair, #fce4ec);
+  background-color: var(--primary-light);
   color: #333;
   padding: 1rem 1.5rem;
   border-radius: 20px;
@@ -674,7 +656,7 @@
 
 /* Liens et boutons */
 .cookie-link {
-  color: var(--rose-foncé, #e91e63);
+  color: var(--primary);
   text-decoration: underline;
   font-weight: bold;
 }
@@ -683,7 +665,7 @@
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 25px;
-  background-color: var(--rose-foncé, #e91e63);
+  background-color: var(--primary);
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -691,7 +673,7 @@
 }
 
 .btn-cookie:hover {
-  background-color: #c2185b;
+  background-color: var(--primary-dark);
   transform: scale(1.05);
 }
 
@@ -702,3 +684,162 @@
 .btn-cookie.refuse:hover {
   background-color: #999;
 }
+
+/* Classe de bouton unifiee */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+}
+.btn.btn-secondary {
+  background-color: #bbb;
+}
+.btn.btn-secondary:hover {
+  background-color: #999;
+}
+.btn.btn-large {
+  padding: 0.8rem 1.6rem;
+}
+.btn.btn-full {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+
+/* 📄 Contenu — carte blanche (a-propos, inscription, politique) */
+.contenu {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.contenu h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.contenu p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.contenu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.contenu ul li {
+  margin: 0.5rem 0;
+}
+
+/* ↩️ Bouton Retour */
+.btn-retour {
+  margin-top: 2rem;
+  background-color: var(--gray);
+  border: none;
+  color: var(--primary);
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-retour:hover {
+  background-color: var(--secondary);
+}
+
+/* ✍️ Signature (a-propos) */
+.signature {
+  font-family: 'Pacifico', cursive;
+  font-size: 5rem;
+  color: var(--primary-dark);
+  margin-top: 2rem;
+  text-align: right;
+}
+
+/* 📋 Formulaire contact — conteneur */
+.form-contact {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Ligne consentement */
+.ligne-consentement {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.ligne-consentement .consentement {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+.ligne-consentement input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+}
+
+/* 📅 Tableau Inscription */
+.table-quand {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+}
+.table-quand th {
+  background-color: var(--secondary);
+  color: #880e4f;
+  text-align: center;
+  padding: 0.8rem;
+}
+.table-quand td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  color: #333;
+  text-align: center;
+}
+.table-quand tr:nth-child(even) {
+  background-color: var(--primary-light);
+}
+
+/* 🎨 Centrage de texte */
+.texte-centré {
+  text-align: center;
+}
+
+#nav-container { min-height: 80px; }

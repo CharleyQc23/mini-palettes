@@ -14,43 +14,11 @@
   <meta name="theme-color" content="#e91e63">
 </head>
 
-<!-- 📝 Bandeau Cookies -->
-<div id="cookie-banner" class="cookie-banner">
-  <p>
-    Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
-    <a href="politique.html" class="cookie-link">En savoir plus</a>
-  </p>
-  <div class="cookie-buttons">
-    <button id="accept-cookies" class="btn-cookie">Accepter</button>
-    <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
-  </div>
-</div>
-<script src="cookies.js"></script>
-
-<body>
+<body data-subtitle="La boutique des futures Palettes Roses !">
 
 <div class="bandeau-taxes">TOUS LES PRIX INCLUENT LES TAXES</div>
 
-<header class="banniere">
-  <div class="header-container">
-    <div class="logo-texte">
-      <a href="index.html">
-        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-      </a>
-      <div class="texte-site">
-        <h1>Mini-palettes roses</h1>
-        <p>La boutique des futures Palettes Roses!</p>
-      </div>
-    </div>
-    <nav class="menu-nav">
-      <a href="index.html" class="nav-link">Accueil</a>
-      <a href="a-propos.html" class="nav-link">À propos</a>
-      <a href="inscription.html" class="nav-link">Inscription</a>
-      <a href="boutique.html" class="nav-link">Boutique</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
-  </div>
-</header>
+<div id="nav-container"></div>
 
 <button id="btn-panier" title="Voir le panier">🛒 (<span id="nb-items">0</span>)</button>
 
@@ -71,191 +39,12 @@
 <div id="footer-container"></div>
 
 <script>
-  // --- PANIER
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
-
-  function majNbItems() {
-    const totalArticles = panier.reduce((acc, item) => acc + (Number(item.quantite) || 0), 0);
-    document.getElementById('nb-items').textContent = totalArticles;
-  }
-
-  function animationPanier() {
-    const compteur = document.getElementById('nb-items');
-    const btnPanier = document.getElementById('btn-panier');
-    compteur.classList.add('animate');
-    btnPanier.classList.add('animate');
-    setTimeout(() => {
-      compteur.classList.remove('animate');
-      btnPanier.classList.remove('animate');
-    }, 400);
-  }
-
+  // --- Fiche produit
   function escapeHtml(str) {
     if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
 
-  function afficherPanier() {
-    const liste = document.getElementById('liste-panier');
-    liste.innerHTML = '';
-    let total = 0;
-
-    panier = panier.map(item => {
-      const quant = (item.quantite && Number(item.quantite)) ? Number(item.quantite) : 1;
-      const prixUnitaire = item.prixUnitaire !== undefined && !isNaN(Number(item.prixUnitaire))
-        ? Number(item.prixUnitaire)
-        : (item.prix !== undefined && quant ? Number(item.prix)/quant : 0);
-      return { ...item, quantite: quant, prixUnitaire, prix: prixUnitaire * quant };
-    });
-
-    if (!panier || panier.length === 0) {
-      liste.innerHTML = '<li style="text-align:center; color:#888;">Ton panier est vide 🛍️</li>';
-      document.getElementById('total').textContent = '0.00';
-      majNbItems();
-      return;
-    }
-
-    panier.forEach((item, index) => {
-      total += item.prix;
-      const li = document.createElement('li');
-      li.className = 'ligne-panier';
-      li.innerHTML = `
-        <div class="ligne-left">
-          <div class="nom-produit"><strong>${escapeHtml(item.nom)}</strong></div>
-          <div style="font-size:0.85rem; color:#666;">
-            ${item.taille ? escapeHtml(item.taille) : ''} ${item.personnalisation ? ' • ' + escapeHtml(item.personnalisation) : ''}
-          </div>
-        </div>
-        <div class="ligne-right">
-          <div class="quantite-controls">
-            <button class="btn-moins" data-index="${index}">➖</button>
-            <input type="number" class="qte-input" data-index="${index}" value="${item.quantite}" min="1" />
-            <button class="btn-plus" data-index="${index}">➕</button>
-          </div>
-          <div class="prix-item">${item.prix.toFixed(2)} $</div>
-          <button class="btn-supprimer" data-index="${index}">🗑️</button>
-        </div>
-      `;
-      liste.appendChild(li);
-    });
-
-    document.querySelectorAll('.btn-plus').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        panier[i].quantite++;
-        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.btn-moins').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        if (panier[i].quantite > 1) {
-          panier[i].quantite--;
-          panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        } else {
-          panier.splice(i, 1);
-        }
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.qte-input').forEach(input => {
-      input.addEventListener('change', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        let q = parseInt(e.currentTarget.value, 10);
-        if (isNaN(q) || q < 1) q = 1;
-        if (q > 99) q = 99;
-        panier[i].quantite = q;
-        panier[i].prix = panier[i].quantite * panier[i].prixUnitaire;
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.querySelectorAll('.btn-supprimer').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const i = parseInt(e.currentTarget.dataset.index, 10);
-        panier.splice(i, 1);
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-      });
-    });
-
-    document.getElementById('total').textContent = total.toFixed(2);
-    majNbItems();
-  }
-
-  // Sidebar
-  document.getElementById('btn-panier').addEventListener('click', () => {
-    document.getElementById('sidebar-panier').classList.toggle('open');
-  });
-  document.getElementById('btn-fermer-panier').addEventListener('click', () => {
-    document.getElementById('sidebar-panier').classList.remove('open');
-  });
-
-  // Paiement Stripe
-  document.getElementById('payer').addEventListener('click', async () => {
-  if (panier.length === 0) { 
-    alert("Ton panier est vide !"); 
-    return; 
-  }
-
-  // Préparer le panier pour Stripe : uniquement nom, prix, quantité, personnalisation
-  const panierStripe = panier.map(item => ({
-    nom: item.nom + (item.taille ? ` - ${item.taille}` : '') + (item.personnalisation ? ` (${item.personnalisation})` : ''),
-    prixUnitaire: Math.round(item.prixUnitaire * 100), // Stripe attend des centimes
-    quantite: item.quantite
-  }));
-
-  try {
-    const response = await fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ panier: panierStripe })
-    });
-
-    const data = await response.json();
-    console.log('Session Stripe reçue :', data);
-
-    if (data.id) {
-      const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
-      await stripe.redirectToCheckout({ sessionId: data.id });
-    } else {
-      alert('Erreur lors de la création de la session de paiement.');
-    }
-  } catch(e) {
-    console.error('Erreur Stripe :', e);
-    alert('Erreur lors du paiement.');
-  }
-});
-
-
-  // Champs broderie
-  function afficherChampsBroderie() {
-    const persoValue = document.getElementById('perso').value;
-    const detailsContainer = document.getElementById('details-broderie');
-    let contenu = '';
-    if (persoValue.includes('NOM')) {
-      contenu += `<label for="champ-nom">Nom ou prénom à indiquer :</label><br>
-                  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>`;
-    }
-    if (persoValue.includes('NUMÉRO')) {
-      contenu += `<label for="champ-numero">Numéro à indiquer :</label><br>
-                  <input type="text" id="champ-numero" placeholder="ex: 21" /><br><br>`;
-    }
-    detailsContainer.innerHTML = contenu;
-  }
-
-  // Fiche produit
   const params = new URLSearchParams(window.location.search);
   const idProduit = params.get('id');
   if (idProduit) {
@@ -280,10 +69,13 @@
             <option value="X-Large">X-Large</option>
           </select><br><br>
 
-<div class="options-broderie">
-  <p><strong>Personnalisation (incluse) :</strong></p>
-  <div id="details-broderie"></div>
-</div>
+          <div class="options-broderie">
+            <p><strong>Personnalisation (incluse) :</strong></p>
+            <label for="champ-nom">Nom à broder :</label><br>
+            <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
+            <label for="champ-numero">Numéro à broder :</label><br>
+            <input type="text" id="champ-numero" placeholder="ex: 21" maxlength="2" pattern="\d{1,2}" /><br><br>
+          </div>
 
           <label for="quantite">Quantité :</label><br>
           <input type="number" id="quantite" name="quantite" min="1" value="1" style="width:60px; padding:0.3rem; border-radius:6px; border:1px solid #ccc;" /><br><br>
@@ -293,23 +85,13 @@
         `;
 
         const selectTaille = document.getElementById('taille');
-        const selectPerso = document.getElementById('perso');
         const inputQuantite = document.getElementById('quantite');
         const boutonAjouter = document.getElementById('ajouter-panier');
-        const details = document.getElementById('details-broderie');
 
-// afficher directement les champs de broderie avec une limite de 2 caractères pour le numéro
-details.innerHTML = `
-  <label for="champ-nom">Nom à broder :</label><br>
-  <input type="text" id="champ-nom" placeholder="ex: Juliette" /><br><br>
-  <label for="champ-numero">Numéro à broder :</label><br>
-  <input type="text" id="champ-numero" placeholder="ex: 21" maxlength="2" pattern="\\d{1,2}" title="Entrez un nombre de 1 ou 2 chiffres" /><br><br>
-`;
-
-function checkReady() {
-  const qte = parseInt(inputQuantite.value, 10);
-  boutonAjouter.disabled = (!selectTaille.value || !qte || qte < 1);
-}
+        function checkReady() {
+          const qte = parseInt(inputQuantite.value, 10);
+          boutonAjouter.disabled = (!selectTaille.value || !qte || qte < 1);
+        }
 
         selectTaille.addEventListener('change', checkReady);
         inputQuantite.addEventListener('input', checkReady);
@@ -317,51 +99,59 @@ function checkReady() {
         boutonAjouter.addEventListener('click', () => {
           const taille = selectTaille.value;
           const quantite = parseInt(inputQuantite.value, 10);
-          const personnalisation = [];
-
           const nomBrode = document.getElementById('champ-nom')?.value || '';
-const numeroBrode = document.getElementById('champ-numero')?.value || '';
-if (nomBrode) personnalisation.push(`Nom : ${nomBrode}`);
-if (numeroBrode) personnalisation.push(`# : ${numeroBrode}`);
+          const numeroBrode = document.getElementById('champ-numero')?.value || '';
+          const personnalisation = [
+            nomBrode ? `Nom : ${nomBrode}` : '',
+            numeroBrode ? `# : ${numeroBrode}` : ''
+          ].filter(Boolean).join(', ');
 
           const prixUnitaire = produit.prix;
-const prixFinal = prixUnitaire * quantite;
-
-// Création de l'objet produit à ajouter au panier
-const item = {
-  id: idProduit,
-  nom: produit.nom,
-  taille: taille,
-  prixUnitaire: prixUnitaire,
-  prix: prixFinal,
-  quantite: quantite,
-  personnalisation: personnalisation.join(", ")
-};
-
-// Ajout au panier
-panier.push(item);
-localStorage.setItem('panier', JSON.stringify(panier));
-
-animationPanier();
-majNbItems();
-afficherPanier();
-document.getElementById('sidebar-panier').classList.add('open');
-alert("Produit ajouté au panier !");
-});
+          panier.push({
+            id: idProduit,
+            nom: produit.nom,
+            taille,
+            prixUnitaire,
+            prix: prixUnitaire * quantite,
+            quantite,
+            personnalisation
+          });
+          localStorage.setItem('panier', JSON.stringify(panier));
+          animationPanier();
+          majNbItems();
+          afficherPanier();
+          document.getElementById('sidebar-panier').classList.add('open');
+          alert('Produit ajouté au panier !');
+        });
 
         checkReady();
       });
   }
 
-  afficherPanier();
-  majNbItems();
-
-  // Footer
-  fetch('footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer-container').outerHTML = data;
+  // --- Payer (depuis produit.html)
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnPayer = document.getElementById('payer');
+    if (!btnPayer) return;
+    btnPayer.addEventListener('click', async () => {
+      if (!panier.length) { alert('Ton panier est vide !'); return; }
+      try {
+        const response = await fetch('/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ panier })
+        });
+        const data = await response.json();
+        if (!data.id) { alert('Erreur lors de la création de la session.'); return; }
+        const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v');
+        await stripe.redirectToCheckout({ sessionId: data.id });
+      } catch(e) {
+        alert('Erreur lors du paiement.');
+      }
     });
+  });
 </script>
+<div id="footer-container"></div>
+<script src="cookies.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

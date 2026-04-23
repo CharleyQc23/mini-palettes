@@ -5,19 +5,17 @@ let panier = JSON.parse(localStorage.getItem('panier')) || [];
 function majNbItems() {
   // somme les quantités (sécurisé si quantite absent)
   const totalArticles = panier.reduce((acc, item) => acc + (Number(item.quantite) || 0), 0);
-  document.getElementById('nb-items').textContent = totalArticles;
+  const nbItems = document.getElementById('nb-items');
+  if (nbItems) nbItems.textContent = totalArticles;
 }
 
 
 function animationPanier() {
   const compteur = document.getElementById('nb-items');
   const btnPanier = document.getElementById('btn-panier');
-
-  // lance l'anim sur le compteur
+  if (!compteur || !btnPanier) return;
   compteur.classList.add('animate');
   setTimeout(() => compteur.classList.remove('animate'), 400);
-
-  // lance aussi l'anim sur le bouton
   btnPanier.classList.add('animate');
   setTimeout(() => btnPanier.classList.remove('animate'), 400);
 }
@@ -157,13 +155,16 @@ function afficherPanier() {
 }
 
 // --- Sidebar panier
-document.getElementById('btn-panier').addEventListener('click', () => {
+const btnPanier = document.getElementById('btn-panier');
+if (btnPanier) btnPanier.addEventListener('click', () => {
   document.getElementById('sidebar-panier').classList.toggle('open');
 });
-document.getElementById('btn-fermer-panier').addEventListener('click', () => {
+const btnFermerPanier = document.getElementById('btn-fermer-panier');
+if (btnFermerPanier) btnFermerPanier.addEventListener('click', () => {
   document.getElementById('sidebar-panier').classList.remove('open');
 });
-document.getElementById('vider-panier').addEventListener('click', () => {
+const btnViderPanier = document.getElementById('vider-panier');
+if (btnViderPanier) btnViderPanier.addEventListener('click', () => {
   if (confirm("Es-tu sûr(e) de vouloir vider ton panier ?")) {
     panier = [];
     localStorage.setItem('panier', JSON.stringify(panier));
@@ -171,154 +172,33 @@ document.getElementById('vider-panier').addEventListener('click', () => {
   }
 });
 
-// --- Bouton Payer avec Stripe
-document.getElementById('payer').addEventListener('click', async () => {
-  if (panier.length === 0) {
-    alert("Ton panier est vide !");
-    return;
-  }
+// --- INITIALISATION
+if (document.getElementById('liste-panier')) {
+  afficherPanier();
+}
+if (document.getElementById('nb-items')) {
+  majNbItems();
+}
 
-  try {
-    const response = await fetch('/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ panier: panier })
-    });
-
-    const session = await response.json();
-    const stripe = Stripe('pk_live_51RlJVlDmX69ZLUq0eiZ3Vi6R2Nk7SOrHcCQ16fqpmRsWJWULAj4GPRtmYCmRLEJ5X2JW9XfFY3E0ZjA3Jmu0IFmG00Cmh7Km7v'); // clé publique
-
-    const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
-    if (error) alert("Erreur lors de la redirection vers Stripe.");
-  } catch (err) {
-    console.error(err);
-    alert("Erreur serveur, impossible de créer la session de paiement.");
-  }
-});
-
-// --- FICHE PRODUIT avec personnalisation Nom/Numéro
-const params = new URLSearchParams(window.location.search);
-const idProduit = params.get('id');
-
-if (idProduit) {
-  fetch('produits.json')
-    .then(res => res.json())
-    .then(produits => {
-      if (!produits[idProduit]) {
-        document.getElementById('fiche-produit').innerHTML = '<p>Produit introuvable.</p>';
-        return;
+// Charger le nav partagé
+const navContainer = document.getElementById('nav-container');
+if (navContainer) {
+  fetch('nav.html')
+    .then(r => r.text())
+    .then(html => {
+      navContainer.outerHTML = html;
+      const subtitle = document.body.dataset.subtitle;
+      if (subtitle) {
+        const el = document.getElementById('nav-subtitle');
+        if (el) el.textContent = subtitle;
       }
-
-      const produit = produits[idProduit];
-      const div = document.getElementById('fiche-produit');
-      div.innerHTML = `
-        <img src="${produit.image}" alt="${produit.nom}" />
-        <h2>${produit.nom}</h2>
-        <p><strong>${produit.prix.toFixed(2)} $</strong></p>
-
-        <label for="taille">Choisis une grandeur :</label><br>
-        <select id="taille">
-          <option value="">-- Sélectionner --</option>
-          <option value="X-Small">X-Small</option>
-          <option value="Small">Small</option>
-          <option value="Medium">Medium</option>
-          <option value="Large">Large</option>
-          <option value="X-Large">X-Large</option>
-        </select><br><br>
-
-        <label for="perso">Personnalisation :</label><br>
-        <select id="perso">
-          <option value="">-- Sélectionner --</option>
-          <option value="Aucune|0">Aucune (0$)</option>
-          <option value="Broderie NOM|7">Broderie NOM (+7.00 $)</option>
-          <option value="Broderie NUMÉRO|5.5">Broderie NUMÉRO (+5.50 $)</option>
-          <option value="Broderie NOM et NUMÉRO|10">Broderie NOM et NUMÉRO (+10.00 $)</option>
-        </select><br><br>
-
-        <div id="nom-broderie-container" style="display:none;">
-          <label for="nom-broderie">Nom à broder :</label><br>
-          <input type="text" id="nom-broderie" maxlength="20" placeholder="Ex: Emma" /><br><br>
-        </div>
-
-        <div id="numero-broderie-container" style="display:none;">
-          <label for="numero-broderie">Numéro :</label><br>
-          <input type="number" id="numero-broderie" min="0" placeholder="Ex: 23" /><br><br>
-        </div>
-
-        <label for="quantite">Quantité :</label><br>
-        <input type="number" id="quantite" min="1" value="1" style="width: 60px;"><br><br>
-
-        <button id="ajouter-panier" class="btn-ajouter" disabled>Ajouter au panier</button>
-        <br><button class="btn-retour" onclick="window.location.href='index.html'">← Retour à l'accueil</button>
-      `;
-
-      const selectTaille = document.getElementById('taille');
-      const selectPerso = document.getElementById('perso');
-      const inputQuantite = document.getElementById('quantite');
-      const boutonAjouter = document.getElementById('ajouter-panier');
-      const nomContainer = document.getElementById('nom-broderie-container');
-      const numeroContainer = document.getElementById('numero-broderie-container');
-      const inputNom = document.getElementById('nom-broderie');
-      const inputNumero = document.getElementById('numero-broderie');
-
-      function checkReady() {
-        const qte = parseInt(inputQuantite.value);
-        let persoSelected = selectPerso.value !== '';
-        let tailleSelected = selectTaille.value !== '';
-        let nomOk = true, numeroOk = true;
-
-        const persoText = selectPerso.value.split('|')[0];
-
-        if (persoText.includes('NOM')) nomOk = inputNom.value.trim() !== '';
-        if (persoText.includes('NUMÉRO')) numeroOk = inputNumero.value.trim() !== '';
-
-        boutonAjouter.disabled = !(persoSelected && tailleSelected && qte >= 1 && nomOk && numeroOk);
-      }
-
-      selectPerso.addEventListener('change', () => {
-        const persoText = selectPerso.value.split('|')[0];
-        nomContainer.style.display = persoText.includes('NOM') ? 'block' : 'none';
-        numeroContainer.style.display = persoText.includes('NUMÉRO') ? 'block' : 'none';
-        checkReady();
-      });
-
-      [selectTaille, inputQuantite, inputNom, inputNumero].forEach(el => el.addEventListener('input', checkReady));
-
-      boutonAjouter.addEventListener('click', () => {
-        const taille = selectTaille.value;
-        const [persoText, persoPrix] = selectPerso.value.split('|');
-        const quantite = parseInt(inputQuantite.value);
-        const prixUnitaire = produit.prix + parseFloat(persoPrix);
-        const prixFinal = prixUnitaire * quantite;
-
-        panier.push({
-          nom: produit.nom,
-          prix: prixFinal,
-          taille: taille,
-          personnalisation: persoText,
-          quantite: quantite,
-          prixUnitaire: prixUnitaire,
-          nom_broderie: inputNom.value.trim(),
-          numero_broderie: inputNumero.value.trim()
-        });
-
-        localStorage.setItem('panier', JSON.stringify(panier));
-        afficherPanier();
-        majNbItems();
-        animationPanier();
-
-        boutonAjouter.textContent = '✔️ Ajouté !';
-        boutonAjouter.disabled = true;
-        setTimeout(() => {
-          boutonAjouter.textContent = 'Ajouter au panier';
-          boutonAjouter.disabled = false;
-        }, 1200);
-      });
-
-      checkReady();
     });
 }
 
-// --- INITIALISATION
-afficherPanier();
-majNbItems();
+// Charger le footer partagé
+const footerContainer = document.getElementById('footer-container');
+if (footerContainer) {
+  fetch('footer.html')
+    .then(r => r.text())
+    .then(html => { footerContainer.outerHTML = html; });
+}

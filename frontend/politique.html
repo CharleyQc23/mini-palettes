@@ -16,59 +16,11 @@
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://www.minipalettes.ca/politique.html">
 
-  <style>
-    .contenu {
-      max-width: 800px;
-      margin: 2rem auto;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease forwards;
-    }
-    .contenu h2 {
-      color: #c2185b;
-      margin-bottom: 1rem;
-    }
-    .contenu p, .contenu ul {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: #333;
-      margin-bottom: 1rem;
-    }
-    ul {
-      list-style: disc inside;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
 
 <body>
 
-<header class="banniere">
-  <div class="header-container">
-    <div class="logo-texte">
-      <a href="index.html">
-        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-      </a>
-      <div class="texte-site">
-        <h1>Mini-palettes roses</h1>
-        <p>Le hockey pour le plaisir, entre filles</p>
-      </div>
-    </div>
-
-    <nav class="menu-nav">
-      <a href="index.html" class="nav-link">Accueil</a>
-      <a href="a-propos.html" class="nav-link">À propos</a>
-      <a href="inscription.html" class="nav-link">Inscription</a>
-      <a href="boutique.html" class="nav-link">Boutique</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
-  </div>
-</header>
+<div id="nav-container"></div>
 
 <main>
   <div class="contenu">
@@ -133,13 +85,8 @@
 </main>
 
 <div id="footer-container"></div>
-<script>
-  fetch('footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer-container').outerHTML = data;
-    });
-</script>
+<script src="cookies.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

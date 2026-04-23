@@ -26,105 +26,10 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mini Palettes Roses">
 
-  <style>
-    .form-contact {
-      max-width: 600px;
-      margin: 2rem auto;
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .form-contact label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-
-    .form-contact input,
-    .form-contact textarea {
-      width: 100%;
-      padding: 0.6rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-top: 0.3rem;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-
-    .btn-envoyer {
-      margin-top: 1.5rem;
-      padding: 0.6rem 1.5rem;
-      background-color: #c2185b;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn-envoyer:hover {
-      background-color: #e91e63;
-    }
-.ligne-consentement {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.ligne-consentement .consentement {
-  display: flex;
-  align-items: center;
-  font-size: 0.95rem;
-}
-
-.ligne-consentement input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-right: 0.5rem;
-}
-
-  </style>
 </head>
 
-<!-- 📝 Bandeau Cookies -->
-<div id="cookie-banner" class="cookie-banner">
-  <p>
-    Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
-    <a href="politique.html" class="cookie-link">En savoir plus</a>
-  </p>
-  <div class="cookie-buttons">
-    <button id="accept-cookies" class="btn-cookie">Accepter</button>
-    <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
-  </div>
-</div>
-<script src="cookies.js"></script>
-
-<body>
-<header class="banniere">
-  <div class="header-container">
-    <div class="logo-texte">
-      <a href="index.html">
-        <img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site">
-      </a>
-      <div class="texte-site">
-        <h1>Mini-palettes roses</h1>
-        <p>Le hockey pour le plaisir, entre filles</p>
-      </div>
-    </div>
-
-    <nav class="menu-nav">
-      <a href="index.html" class="nav-link">Accueil</a>
-      <a href="a-propos.html" class="nav-link">À propos</a>
-      <a href="boutique.html" class="nav-link">Boutique</a>
-      <a href="contact.html" class="nav-link">Contact</a>
-    </nav>
-  </div>
-</header>
+<body data-subtitle="Tu as une question ? Écris-nous 💌">
+<div id="nav-container"></div>
 
 <main>
   <section class="accueil">
@@ -161,21 +66,12 @@
 </main>
 
 <style>
-  .texte-centré {
-    text-align: center;
-  }
+  .texte-centré { text-align: center; }
 </style>
 
-
 <div id="footer-container"></div>
-<script>
-  fetch('footer.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('footer-container').outerHTML = data;
-    });
-</script>
-
+<script src="cookies.js"></script>
+<script src="script.js"></script>
 <script>
   const form = document.querySelector('.form-contact');
   form.addEventListener('submit', function(e) {

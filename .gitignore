@@ -1,0 +1,15 @@
+# Dépendances Node
+node_modules/
+npm-debug.log*
+
+# Variables d'environnement
+.env
+.env.local
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Fichiers temporaires
+test_write
+*.tmp

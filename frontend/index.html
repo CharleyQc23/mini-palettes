@@ -43,16 +43,6 @@
   </script>
 
   <style>
-    /* ----------------- Fade-in ----------------- */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    body.fade-in > *:not(#cookie-banner) {
-      animation: fadeIn 1s ease forwards;
-    }
-
     @keyframes slideFadeIn {
       from { opacity: 0; transform: scale(1.05); }
       to   { opacity: 1; transform: scale(1); }
@@ -206,55 +196,6 @@
       .slide-content h2 { font-size: 1.5rem; }
     }
 
-    /* ----------------- Bandeau Cookies ----------------- */
-    #cookie-banner {
-      position: fixed;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 600px;
-      background-color: var(--rose-clair, #fce4ec);
-      color: #333;
-      padding: 1rem 1.5rem;
-      border-radius: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      font-size: 0.95rem;
-      z-index: 9999;
-      animation: none !important;
-    }
-
-    #cookie-banner .cookie-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .cookie-link {
-      color: var(--rose-foncé, #e91e63);
-      text-decoration: underline;
-      font-weight: bold;
-    }
-
-    .btn-cookie {
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 25px;
-      background-color: var(--rose-foncé, #e91e63);
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .btn-cookie:hover { background-color: #c2185b; transform: scale(1.05); }
-    .btn-cookie.refuse { background-color: #bbb; }
-    .btn-cookie.refuse:hover { background-color: #999; }
-
     html, body {
       overflow-x: hidden;
     }
@@ -396,24 +337,8 @@
 
 <body class="fade-in">
 
-  <!-- Header / Slider -->
-  <header class="banniere">
-    <div class="header-container">
-      <div class="logo-texte">
-        <a href="index.html"><img src="images/MPR_logo_FINAL-vectorise.png" alt="Logo Mini Palettes Roses" class="logo-site"></a>
-        <div class="texte-site">
-          <h1>Mini-palettes roses</h1>
-          <p>Le hockey pour le plaisir, entre filles</p>
-        </div>
-      </div>
-      <nav class="menu-nav">
-        <a href="a-propos.html" class="nav-link">À propos</a>
-        <a href="inscription.html" class="nav-link">Inscription</a>
-        <a href="boutique.html" class="nav-link">Boutique</a>
-        <a href="contact.html" class="nav-link">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <!-- Navigation partagée -->
+  <div id="nav-container"></div>
 
   <div class="slider">
     <div class="slide active" style="background-image: url('images/slide-apropos.webp');">
@@ -502,18 +427,6 @@
 
   </main>
 
-  <!-- Bandeau Cookies -->
-  <div id="cookie-banner">
-    <p>
-      Nous utilisons des cookies conformément à la Loi 25 sur la protection des renseignements personnels des citoyens du Québec.
-      <a href="politique.html" class="cookie-link">En savoir plus</a>
-    </p>
-    <div class="cookie-buttons">
-      <button id="accept-cookies" class="btn-cookie">Accepter</button>
-      <button id="refuse-cookies" class="btn-cookie refuse">Seulement les témoins nécessaires</button>
-    </div>
-  </div>
-
   <div id="footer-container"></div>
 
   <!-- Scripts -->
@@ -555,10 +468,6 @@
       resetInterval();
     });
 
-    // Footer
-    fetch('footer.html')
-      .then(response => response.text())
-      .then(data => document.getElementById('footer-container').outerHTML = data);
   </script>
 
 </body>

@@ -22,10 +22,6 @@ app.use(express.json());
 // --- Servir le frontend
 const frontendPath = path.join(__dirname, '..', 'frontend');
 app.use(express.static(frontendPath));
-
-// --- Cache produits pour éviter les appels répétitifs à Stripe
-let cacheProduits = [];
-
 // --- Mot de passe pour sécuriser l’export CSV
 const EXPORT_PASSWORD = process.env.EXPORT_PASSWORD || 'Mini-MDP';
 
@@ -35,41 +31,6 @@ const escapeCSV = (text) => {
   return `"${String(text).replace(/"/g, '""')}"`;
 };
 
-// --- Fonction utilitaire : trouve ou crée un produit et son prix
-async function getOrCreateStripePrice(item) {
-  const nomProduit = item.nom.trim();
-  const montantCents = Math.round(item.prixUnitaire * 100);
-
-  let produit = cacheProduits.find(p => p.name === nomProduit);
-
-  if (!produit) {
-    const produitsStripe = await stripe.products.list({ active: true, limit: 100 });
-    produit = produitsStripe.data.find(p => p.name === nomProduit);
-
-    if (!produit) {
-      produit = await stripe.products.create({
-        name: nomProduit,
-        description: 'Produit ajouté automatiquement depuis Mini Palettes Roses',
-        images: item.image ? [item.image] : [],
-      });
-    }
-
-    cacheProduits.push(produit);
-  }
-
-  const prices = await stripe.prices.list({ product: produit.id, limit: 100 });
-  let price = prices.data.find(p => p.unit_amount === montantCents && p.currency === 'cad');
-
-  if (!price) {
-    price = await stripe.prices.create({
-      product: produit.id,
-      unit_amount: montantCents,
-      currency: 'cad',
-    });
-  }
-
-  return price.id; // retourne directement l'ID
-}
 
 // --- Endpoint Stripe Checkout
 // --- Endpoint Stripe Checkout simplifié et debug ---
@@ -109,8 +70,8 @@ app.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: 'http://localhost:4242/success.html',
-      cancel_url: 'http://localhost:4242/boutique.html',
+      success_url: `${process.env.BASE_URL || 'http://localhost:4242'}/succes.html`,
+      cancel_url: `${process.env.BASE_URL || 'http://localhost:4242'}/boutique.html`,
     });
 
     console.log("✅ Session Stripe créée :", session.id);
