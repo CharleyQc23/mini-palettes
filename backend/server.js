@@ -66,10 +66,21 @@ app.post("/create-checkout-session", async (req, res) => {
 
     console.log("➡️ Line items prêts :", line_items);
 
+    // Stocker les détails de commande dans les métadonnées Stripe
+    const metadata = {};
+    panier.forEach((item, idx) => {
+      metadata[`item_${idx}_nom`] = item.nom || '';
+      metadata[`item_${idx}_taille`] = item.taille || '';
+      metadata[`item_${idx}_quantite`] = String(item.quantite || 1);
+      metadata[`item_${idx}_nom_personnalise`] = item.nom_broderie || item.personnalisation || '';
+      metadata[`item_${idx}_numero`] = item.numero_broderie || '';
+    });
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
+      metadata,
       success_url: `${process.env.BASE_URL || 'http://localhost:4242'}/succes.html`,
       cancel_url: `${process.env.BASE_URL || 'http://localhost:4242'}/boutique.html`,
     });
