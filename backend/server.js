@@ -16,7 +16,22 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
 // --- Middleware
-app.use(cors());
+const allowedOrigins = [
+  'https://www.minipalettes.ca',
+  'https://minipalettes.ca',
+  'http://localhost:4242',
+  'http://127.0.0.1:4242',
+];
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permettre les requêtes sans origin (ex: Postman, serveur local)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS bloqué pour : ${origin}`));
+    }
+  }
+}));
 app.use(express.json());
 
 // --- Servir le frontend

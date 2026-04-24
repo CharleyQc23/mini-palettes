@@ -881,4 +881,22 @@
   100% { transform: rotate(360deg); }
 }
 
+
+/* 🗑️ Bouton vider le panier */
+#vider-panier {
+  margin-top: 0.5rem;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--primary-light);
+  color: var(--primary);
+  padding: 0.5rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+#vider-panier:hover {
+  background-color: var(--primary-light);
+}
+
 #nav-container { min-height: 80px; }
