@@ -187,10 +187,32 @@ if (navContainer) {
     .then(r => r.text())
     .then(html => {
       navContainer.outerHTML = html;
+
+      // Sous-titre personnalisé par page
       const subtitle = document.body.dataset.subtitle;
       if (subtitle) {
         const el = document.getElementById('nav-subtitle');
         if (el) el.textContent = subtitle;
+      }
+
+      // Menu hamburger mobile
+      const btnMenu = document.getElementById('btn-menu');
+      const menuNav = document.getElementById('menu-nav');
+      if (btnMenu && menuNav) {
+        btnMenu.addEventListener('click', () => {
+          const isOpen = menuNav.classList.toggle('open');
+          btnMenu.classList.toggle('open', isOpen);
+          btnMenu.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Fermer le menu quand on clique sur un lien
+        menuNav.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', () => {
+            menuNav.classList.remove('open');
+            btnMenu.classList.remove('open');
+            btnMenu.setAttribute('aria-expanded', 'false');
+          });
+        });
       }
     });
 }
