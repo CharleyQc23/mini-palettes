@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Pacifico&display=swap');
+
 :root {
   --primary: #e91e63;
   --primary-dark: #c2185b;
@@ -10,24 +12,30 @@
   --border-radius-sm: 10px;
   --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.11);
+  --text-dark: #2d2d2d;
+  --text-muted: #6b7280;
+  --bg: #f8f9fa;
 }
   
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--primary-light);
-    color: var(--primary);
+    background-color: var(--bg);
+    color: var(--text-dark);
     overflow-x: hidden;
   }
   
 /* 🧁 Bannière */
 .banniere {
-  background-color: var(--primary);
-  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  padding: 0.8rem 1.5rem;
   text-align: center;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  box-shadow: 0 4px 18px rgba(233,30,99,0.25);
 }
 
 .header-container {
@@ -164,20 +172,20 @@
   }
   
   .produit {
-    width: 200px;
-    background-color: var(--primary-light);
-    border: 1px solid #eee;
-    border-radius: 15px;
-    padding: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    width: 220px;
+    background-color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: var(--shadow-sm);
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     position: relative;
   }
   
   .produit:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(233,30,99,0.15);
   }
   
   .produit img {
@@ -193,7 +201,7 @@
   .produit h3 {
     margin: 0.8rem 0 0.3rem;
     font-size: 1.2rem;
-    color: var(--primary);
+    color: var(--text-dark);
   }
   
   .produit p {
@@ -248,7 +256,7 @@
     width: 20rem;
     height: 100%;
     background-color: var(--white);
-    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
+    box-shadow: -6px 0 30px rgba(0, 0, 0, 0.12);
     padding: 2rem 1.5rem;
     transform: translateX(100%);
     transition: transform 0.3s ease;
@@ -269,13 +277,13 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--primary);
+    color: var(--text-dark);
   }
   
   /* 📝 Contenu du panier */
   #sidebar-panier h2 {
     margin-top: 2rem;
-    color: var(--primary);
+    color: var(--text-dark);
     font-size: 1.6rem;
     text-align: center;
   }
@@ -358,12 +366,20 @@
 .form-contact input,
 .form-contact textarea {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.65rem 0.85rem;
   margin-top: 0.3rem;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+.form-contact input:focus,
+.form-contact textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(233,30,99,0.10);
 }
 
 .btn-envoyer {
@@ -371,14 +387,19 @@
   background-color: var(--primary);
   color: white;
   border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 30px;
-  font-weight: bold;
+  padding: 0.85rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
   font-size: 1rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.15s ease;
   display: block;
   width: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+.btn-envoyer:active {
+  transform: scale(0.98);
 }
 
 .btn-envoyer:hover {
@@ -432,8 +453,8 @@
   padding: 1rem 0;
   font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
   box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
   text-align: center; /* Centre le contenu */
 }
@@ -467,11 +488,12 @@
   background-color: var(--primary-darker);
   color: white;
   text-align: center;
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
   z-index: 10000;
@@ -573,14 +595,15 @@
   border-radius: 12px;
 }
 #fiche-produit {
-  max-width: 500px;        /* largeur de la boîte */
-  margin: 2rem auto;       /* centrer horizontalement et un peu d'espace vertical */
-  padding: 2rem;           /* espace intérieur */
-  background-color: #fff;  /* fond blanc */
-  border-radius: 12px;     /* coins arrondis */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* ombre douce */
-  text-align: center;      /* centre le texte et les boutons */
-  font-family: 'Arial', sans-serif;
+  max-width: 520px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 #fiche-produit img {
@@ -733,21 +756,24 @@
 .contenu {
   max-width: 800px;
   margin: 2rem auto;
-  background-color: white;
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-md);
 }
 
 .contenu h2 {
   color: var(--primary-dark);
+  font-weight: 700;
   margin-bottom: 1rem;
+  font-size: 1.4rem;
 }
 
 .contenu p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #333;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #444;
   margin-bottom: 1.5rem;
 }
 
@@ -791,10 +817,11 @@
 .form-contact {
   max-width: 600px;
   margin: 2rem auto;
-  background: white;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
 }
 
 /* ✅ Ligne consentement */
